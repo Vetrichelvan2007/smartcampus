@@ -1,6 +1,0 @@
-<svg width="260" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation:float 6s ease-in-out infinite">
-<rect width="600" height="400" rx="20" fill="white" fill-opacity="0.15"></rect>
-<path d="M120 300h360" stroke="white" stroke-width="6" opacity=".5"></path>
-<circle cx="300" cy="180" r="80" stroke="white" stroke-width="6" opacity=".6"></circle>
-<text x="300" y="190" text-anchor="middle" fill="white" font-size="40" font-family="Arial">🎓</text>
-</svg>
