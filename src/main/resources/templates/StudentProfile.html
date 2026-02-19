@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Profile</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #0f172a, #020617);
+            color: #e5e7eb;
+        }
+
+        /* ===== PAGE WRAPPER ===== */
+        .page {
+            max-width: 1400px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(14px);
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.4);
+        }
+
+        /* ===== PROFILE HEADER ===== */
+        .profile-top {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid #22d3ee;
+        }
+
+        .name h2 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        .roll {
+            margin-top: 8px;
+            background: rgba(255,255,255,0.08);
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 13px;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section-title {
+            margin: 30px 0 12px;
+            color: #22d3ee;
+            font-size: 18px;
+        }
+
+        /* ===== GRID ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .field {
+            background: rgba(255,255,255,0.08);
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .field span {
+            display: block;
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 2px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width: 768px){
+            .profile-top { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="card">
+
+        <!-- HEADER -->
+        <div class="profile-top">
+            <img src="profile.jpg" class="avatar">
+            <div class="name">
+                <h2><div th:text="${studentName}">Student name</div></h2>
+                <div class="roll"><div th:text="'Roll No: ' + ${studentRollNumber}">Roll Number</div></div>
+            </div>
+        </div>
+
+        <!-- STUDENT DETAILS -->
+        <div class="section-title">Student Details</div>
+        <div class="grid">
+            <div class="field"><span>Name</span><div class="value" th:text="${studentName}">Student name</div></div>
+            <div class="field"><span>Roll Number</span><div class="value" th:text="${studentRollNumber}">Roll Number</div></div>
+            <div class="field"><span>Email</span><div class="value" th:text="${studentEmail}">Email</div></div>
+            <div class="field"><span>Phone</span><div class="value" th:text="${studentPhone}">Phone</div></div>
+            <div class="field"><span>Department</span><div class="value" th:text="${studentDepartmet}">Department</div></div>
+            <div class="field"><span>Year</span><div class="value" th:text="${studentYear}">Current Year</div></div>
+            <div class="field"><span>Semester</span><div class="value" th:text="${studentSem}">Current Sem</div></div>
+            <div class="field"><span>Date of Birth</span><div class="value" th:text="${studentDob}">Dob</div></div>
+            <div class="field"><span>Gender</span><div class="value" th:text="${studentGender}">Gender</div></div>
+            <div class="field"><span>Nationality</span><div class="value" th:text="${studentNationality}"></div></div>
+            <div class="field"><span>Mother Tongue</span><div class="value" th:text="${studentMotherTongue}">Mother Tongue</div></div>
+            <div class="field"><span>Address</span><div class="value" th:text="${studentAddress}">Address</div></div>
+        </div>
+
+        <!-- FATHER DETAILS -->
+        <div class="section-title">Father Details</div>
+        <div class="grid">
+            <div class="field"><span>Name</span><div class="value" th:text="${fatherName}">Name</div></div>
+            <div class="field" ><span>Phone</span><div class="value" th:text="${fatherPhone}">Phone</div></div>
+            <div class="field" ><span>Email</span><div class="value" th:text="${fatherEmail}">Email</div></div>
+            <div class="field" ><span>Occupation</span><div class="value" th:text="${fatherOccupation}">Occupation</div></div>
+            <div class="field" ><span>Annual Income</span><div class="value" th:text="${fatherAnnual_income}">Annual Income</div></div>
+            <div class="field" ><span>Address</span><div class="value" th:text="${fatherAddress}">Address</div></div>
+        </div>
+
+        <!-- MOTHER DETAILS -->
+        <div class="section-title">Mother Details</div>
+        <div class="grid">
+            <div class="field"><span>Name</span><div class="value" th:text="${motherName}">Name</div></div>
+            <div class="field" ><span>Phone</span><div class="value" th:text="${motherPhone}">Phone</div></div>
+            <div class="field" ><span>Email</span><div class="value" th:text="${motherEmail}">Email</div></div>
+            <div class="field" ><span>Occupation</span><div class="value" th:text="${motherOccupation}">Occupation</div></div>
+            <div class="field" ><span>Annual Income</span><div class="value" th:text="${motherAnnual_income}">Annual Income</div></div>
+            <div class="field" ><span>Address</span><div class="value" th:text="${motherAddress}">Address</div></div>
+        </div>
+
+        <!-- IDENTITY DETAILS -->
+        <div class="section-title">Identity Details</div>
+        <div class="grid">
+            <div class="field"><span>Aadhar Number</span><div class="value" th:text="${aadharNumber}">Aadhar Number</div></div>
+            <div class="field"><span>PAN Number</span><div class="value" th:text="${panNumber}">PAN Number</div></div>
+            <div class="field"><span>Passport Number</span><div class="value" th:text="${passportNumber}">Passport Number</div></div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
