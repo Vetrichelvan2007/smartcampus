@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>College Portal Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+            --bg:#0b1220;
+            --card:#0f172a;
+            --panel:#1e293b;
+            --accent:#4f46e5;
+            --accent2:#22c55e;
+            --text:#e5e7eb;
+            --muted:#94a3b8;
+        }
+
+        *{box-sizing:border-box;font-family:Inter}
+
+        body{
+            margin:0;
+            height:100vh;
+            background:radial-gradient(circle at top,#1e293b,#020617);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .card{
+            display:flex;
+            width:900px;
+            height:520px;
+            background:var(--card);
+            border-radius:22px;
+            overflow:hidden;
+            box-shadow:0 50px 120px rgba(0,0,0,.6);
+            transition:.4s;
+        }
+
+        .card:hover{
+            transform:translateY(-4px) scale(1.01);
+        }
+
+        /* LEFT PANEL */
+        .left{
+            width:50%;
+            background:linear-gradient(135deg,#4f46e5,#22c55e);
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            color:white;
+            padding:50px;
+            position:relative;
+            overflow:hidden;
+        }
+
+        .left::after{
+            content:"";
+            position:absolute;
+            width:400px;height:400px;
+            background:white;
+            opacity:.08;
+            border-radius:50%;
+            top:-100px;right:-100px;
+        }
+
+        .left img{
+            width:260px;
+            animation:float 6s ease-in-out infinite;
+        }
+
+        @keyframes float{
+            0%,100%{transform:translateY(0)}
+            50%{transform:translateY(-18px)}
+        }
+
+        .left h1{
+            margin-top:25px;
+            font-weight:600;
+        }
+
+        /* RIGHT PANEL */
+        .right{
+            width:50%;
+            padding:50px 60px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+        }
+
+        h2{
+            color:var(--text);
+            margin-bottom:5px;
+        }
+
+        p{
+            color:var(--muted);
+            margin-bottom:30px;
+        }
+
+        .field{
+            position:relative;
+            margin-bottom:25px;
+        }
+
+        .field input,
+        .field select{
+            width:100%;
+            padding:14px;
+            background:#020617;
+            border:1px solid #334155;
+            border-radius:10px;
+            color:var(--text);
+            outline:none;
+            transition:.3s;
+        }
+
+        .field input:hover,
+        .field select:hover{
+            border-color:#6366f1;
+        }
+
+        .field input:focus,
+        .field select:focus{
+            border-color:var(--accent);
+            box-shadow:0 0 0 3px #4f46e530;
+        }
+
+        /* Floating label */
+        .field label{
+            position:absolute;
+            left:12px;
+            top:50%;
+            transform:translateY(-50%);
+            color:var(--muted);
+            transition:.3s;
+            background:#020617;
+            padding:0 6px;
+            pointer-events:none;
+        }
+
+        /* INPUT label logic */
+        .field input:focus + label,
+        .field input:not(:placeholder-shown) + label{
+            top:-8px;
+            font-size:12px;
+            color:var(--accent);
+        }
+
+        .field select:focus + label,
+        .field select:valid + label{
+            top:-8px;
+            font-size:12px;
+            color:var(--accent);
+        }
+
+        select:invalid{
+            color:var(--muted);
+        }
+        select option{
+            color:white;
+        }
+
+        button{
+            margin-top:10px;
+            padding:14px;
+            border:none;
+            border-radius:12px;
+            background:linear-gradient(135deg,#4f46e5,#22c55e);
+            color:white;
+            font-weight:600;
+            font-size:16px;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        button:hover{
+            box-shadow:0 15px 40px #4f46e550;
+            transform:translateY(-2px);
+        }
+
+        footer{
+            margin-top:30px;
+            color:var(--muted);
+            font-size:13px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+    <!-- LEFT SIDE -->
+    <div class="left">
+        <img src="\images\download.svg" alt="Education">
+        <h1>College Portal</h1>
+        <p>Smart learning. Smart management.</p>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="right">
+        <h2>Login</h2>
+        <p>Access your dashboard</p>
+
+        <form action="/login" method="post">
+            <div class="field">
+                <input type="email" name="username" required placeholder=" ">
+                <label>Email</label>
+            </div>
+
+            <div class="field">
+                <input type="password" name="password" required placeholder=" ">
+                <label>Password</label>
+            </div>
+
+            <div class="field">
+                <select name="role" required>
+                    <option value="" disabled selected hidden></option>
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <label>Role</label>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <footer>© 2026 College Management System</footer>
+    </div>
+
+</div>
+
+</body>
+</html>

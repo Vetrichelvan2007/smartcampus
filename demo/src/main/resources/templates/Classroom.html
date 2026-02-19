@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Classroom</title>
+
+    <style>
+
+        /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #0f172a, #020617);
+            color: #e5e7eb;
+            line-height: 1.5;
+        }
+
+        /* ===== TOP BAR ===== */
+        .topbar {
+            height: 64px;
+            padding: 0 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .topbar h1 {
+            font-size: 20px;
+            letter-spacing: .5px;
+        }
+
+        .topbar input {
+            width: 42%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: #020617;
+            color: #e5e7eb;
+            transition: all .25s ease;
+        }
+
+        .topbar input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,.25);
+        }
+
+        /* ===== LAYOUT ===== */
+        .container {
+            padding: 42px;
+        }
+
+        .layout {
+            display: flex;
+            gap: 40px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            background: rgba(2, 6, 23, 0.75);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 22px;
+            padding: 24px;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 18px;
+            letter-spacing: .4px;
+        }
+
+        /* ===== SEM BUTTON ===== */
+        .sem-btn {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            border-radius: 14px;
+            border: none;
+            background: #020617;
+            color: #9ca3af;
+            cursor: pointer;
+            text-align: left;
+            transition: all .22s ease;
+        }
+
+        /* hover */
+        .sem-btn:hover {
+            background: rgba(59,130,246,.18);
+            color: #bfdbfe;
+            transform: translateX(4px);
+        }
+
+        /* focus */
+        .sem-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59,130,246,.35);
+        }
+
+        /* active */
+        .sem-btn.active {
+            background: rgba(59,130,246,.28);
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        /* ===== CONTENT ===== */
+        .content {
+            flex: 1;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 32px;
+            align-items: stretch;   /* 👈 ensures equal height */
+        }
+
+        /* ===== COURSE LINK ===== */
+        .course-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ===== CARD ===== */
+        .course-card {
+            position: relative;
+            padding: 34px 28px 26px;
+            border-radius: 24px;
+            background: linear-gradient(
+                    180deg,
+                    rgba(2,6,23,.85),
+                    rgba(2,6,23,.65)
+            );
+            border: 1px solid rgba(255,255,255,0.08);
+
+            min-height: 170px;   /* 👈 ADD THIS */
+
+            display: flex;       /* 👈 ADD THIS */
+            flex-direction: column; /* 👈 ADD THIS */
+
+            opacity: 0;
+            transform: translateY(18px) scale(.98);
+            transition: all .35s ease;
+        }
+
+        /* show animation */
+        .course-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* hover lift */
+        .course-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow:
+                    0 30px 60px rgba(0,0,0,.55),
+                    inset 0 0 0 1px rgba(255,255,255,.04);
+        }
+
+        /* click press */
+        .course-card:active {
+            transform: scale(.97);
+        }
+
+        /* keyboard focus */
+        .course-link:focus-visible .course-card {
+            box-shadow: 0 0 0 3px rgba(59,130,246,.35);
+        }
+
+        /* ===== TEXT ===== */
+        .course-card h3 {
+            font-size: 19px;
+            margin-bottom: 12px;
+            letter-spacing: .3px;
+        }
+
+        .code {
+            font-size: 14px;
+            color: #93c5fd;
+            letter-spacing: .5px;
+        }
+
+        /* ===== BADGE ===== */
+        .badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .5px;
+            backdrop-filter: blur(6px);
+            transition: transform .2s ease;
+        }
+
+        .course-card:hover .badge {
+            transform: scale(1.08);
+        }
+
+        /* LOT */
+        .lot {
+            background: rgba(34,197,94,.18);
+            color: #22c55e;
+        }
+
+        /* THEORY */
+        .theory {
+            background: rgba(59,130,246,.18);
+            color: #3b82f6;
+        }
+
+        /* ===== DEBUG TEXT ===== */
+        p {
+            margin-bottom: 16px;
+            color: #9ca3af;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header class="topbar">
+    <h1>🎓 College Portal</h1>
+    <input type="text" placeholder="Search courses..." />
+</header>
+
+<main class="container">
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <h3>Semester</h3>
+
+            <button
+                    th:each="sem : ${#numbers.sequence(1, current_sem)}"
+                    th:text="'Semester ' + ${sem}"
+                    th:data-sem="${sem}"
+                    class="sem-btn"
+                    th:classappend="${sem == current_sem} ? ' active' : ''">
+            </button>
+
+        </aside>
+
+        <!-- COURSES -->
+        <section class="content">
+
+            <!-- DEBUG (remove later if you want) -->
+            <p th:text="'Courses loaded: ' + ${#lists.size(courseDatas)}"></p>
+
+            <div class="course-grid">
+
+                <a th:each="c : ${courseDatas}"
+                   th:href="@{/course/{code}(code=${c.courseCode})}"
+                   class="course-link">
+
+                    <div class="course-card"
+                         th:data-sem="${c.courseSem}">
+
+                        <span class="badge"
+                              th:text="${c.courseType}"
+                              th:classappend="' ' + ${#strings.toLowerCase(c.courseType)}">
+                        </span>
+
+                        <h3 th:text="${c.courseName}"></h3>
+                        <div class="code" th:text="${c.courseCode}"></div>
+
+                    </div>
+
+                </a>
+
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<!-- ===== JS ===== -->
+<script th:inline="javascript">
+
+    const currentSem = [[${current_sem}]];
+
+    // 🔥 Select the wrapper (important fix)
+    const courseLinks = document.querySelectorAll(".course-link");
+    const buttons = document.querySelectorAll(".sem-btn");
+
+    // Load current semester on page load
+    filterCourses(currentSem);
+    setActiveButton(currentSem);
+
+    // Button click event
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const sem = Number(btn.dataset.sem);
+            filterCourses(sem);
+            setActiveButton(sem);
+        });
+    });
+
+    // 🔥 Correct filtering
+    function filterCourses(sem) {
+
+        courseLinks.forEach(link => {
+
+            const card = link.querySelector(".course-card");
+            const cardSem = Number(card.dataset.sem);
+
+            if (cardSem === sem) {
+                link.style.display = "block";   // show full grid item
+                requestAnimationFrame(() => {
+                    card.classList.add("show");
+                });
+            } else {
+                link.style.display = "none";    // hide full grid item
+                card.classList.remove("show");
+            }
+
+        });
+    }
+
+    function setActiveButton(sem) {
+        buttons.forEach(btn => {
+            btn.classList.toggle(
+                "active",
+                Number(btn.dataset.sem) === sem
+            );
+        });
+    }
+
+</script>
+
+
+</body>
+</html>
