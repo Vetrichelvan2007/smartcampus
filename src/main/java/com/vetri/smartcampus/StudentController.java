@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class studentController {
+public class StudentController {
 
     @GetMapping("/login")
     public String login() {
