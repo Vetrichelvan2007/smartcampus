@@ -1,0 +1,15 @@
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (1, 'TCH-AIDS-01', 'Dr. Ram Kumar', 'ram.aids@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (2, 'TCH-AIDS-02', 'Dr. Lakshmi Priya', 'lakshmi.aids@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (3, 'TCH-AIDS-03', 'Mr. Suresh B', 'suresh.aids@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (4, 'TCH-AIDS-04', 'Ms. Kavya R', 'kavya.aids@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (5, 'TCH-AIML-01', 'Dr. Manoj K', 'manoj.aiml@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (6, 'TCH-AIML-02', 'Ms. Revathi S', 'revathi.aiml@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (7, 'TCH-AIML-03', 'Dr. Pradeep N', 'pradeep.aiml@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (8, 'TCH-AIML-04', 'Mr. Arun V', 'arun.aiml@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (9, 'TCH-CSE-01', 'Dr. Raghavan P', 'raghavan.cse@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (10, 'TCH-CSE-02', 'Ms. Divya K', 'divya.cse@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (11, 'TCH-CSE-03', 'Dr. Hari Shankar', 'hari.cse@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (12, 'TCH-CSE-04', 'Ms. Swetha M', 'swetha.cse@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (13, 'TCH-MATH-01', 'Dr. Meenakshi Iyer', 'meenakshi.math@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (14, 'TCH-PHY-01', 'Dr. Srinivasan R', 'srinivasan.physics@college.edu');
+INSERT INTO smartcampus.teacher (id, teacher_clg_id, name, email) VALUES (15, 'TCH-ENG-01', 'Ms. Anjali Thomas', 'anjali.english@college.edu');
