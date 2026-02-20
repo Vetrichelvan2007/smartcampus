@@ -1,242 +1,612 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Drive</title>
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-
-        * {
+        /* ── Reset ── */
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Segoe UI", sans-serif;
         }
 
+        /* ── Base / Background ── */
         body {
             min-height: 100vh;
-            background: radial-gradient(circle at top, #0f172a, #020617);
-            color: #e5e7eb;
+            background: #0a0e27;
+            font-family: 'Poppins', sans-serif;
+            color: #f1f5f9;
+            overflow-x: hidden;
+            position: relative;
         }
 
+        /* ── Ambient Orbs ── */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb-indigo {
+            width: 420px;
+            height: 420px;
+            background: #6366f1;
+            top: -80px;
+            right: -60px;
+        }
+        .orb-pink {
+            width: 380px;
+            height: 380px;
+            background: #ec4899;
+            bottom: -100px;
+            left: -80px;
+        }
+        .orb-cyan {
+            width: 300px;
+            height: 300px;
+            background: #06b6d4;
+            top: 45%;
+            right: -40px;
+        }
+
+        /* ── Topbar ── */
         .topbar {
-            height: 64px;
+            position: relative;
+            z-index: 10;
+            height: 68px;
             padding: 0 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
+        .topbar h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* ── Container ── */
         .container {
+            position: relative;
+            z-index: 10;
             padding: 40px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
+        /* ── Breadcrumb ── */
         .breadcrumb {
-            margin-bottom: 20px;
-            color: #93c5fd;
+            margin-bottom: 24px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
             font-weight: 500;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
+        .breadcrumb-sep {
+            color: #475569;
+        }
+
+        .breadcrumb-active {
+            color: #f1f5f9;
+        }
+
+        /* ── Action Bar ── */
         .action-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
         }
 
         .left-actions {
             display: flex;
-            gap: 15px;
+            gap: 12px;
         }
 
         .btn {
-            padding: 8px 16px;
-            border-radius: 10px;
-            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
             cursor: pointer;
-            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .btn-upload {
-            background: rgba(34,197,94,.25);
-            color: #22c55e;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-upload:hover {
+            box-shadow: 0 6px 28px rgba(99, 102, 241, 0.45);
+            transform: translateY(-1px);
         }
 
         .btn-folder {
-            background: rgba(59,130,246,.25);
-            color: #60a5fa;
+            background: rgba(15, 23, 42, 0.7);
+            color: #94a3b8;
+        }
+
+        .btn-folder:hover {
+            background: rgba(15, 23, 42, 0.9);
+            color: #f1f5f9;
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .btn-icon {
+            font-size: 1rem;
+        }
+
+        /* ── Search Box ── */
+        .search-box {
+            position: relative;
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: #475569;
+            pointer-events: none;
         }
 
         .search-box input {
-            padding: 10px 14px;
+            padding: 10px 16px 10px 40px;
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: #020617;
-            color: #e5e7eb;
-            width: 260px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #f1f5f9;
+            width: 280px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            outline: none;
         }
 
+        .search-box input::placeholder {
+            color: #475569;
+        }
+
+        .search-box input:focus {
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* ── Glass Table Card ── */
+        .table-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow:
+                    0 8px 32px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* ── File Table ── */
         .file-table {
             width: 100%;
             border-collapse: collapse;
-            background: linear-gradient(
-                    180deg,
-                    rgba(2,6,23,.85),
-                    rgba(2,6,23,.65)
-            );
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .file-table th,
-        .file-table td {
-            padding: 16px 20px;
-            text-align: left;
         }
 
         .file-table th {
-            background: rgba(255,255,255,0.05);
-            color: #93c5fd;
+            padding: 16px 24px;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            background: rgba(10, 14, 27, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .file-table tr {
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: background .2s;
+        .file-table td {
+            padding: 16px 24px;
+            text-align: left;
+            font-size: 0.9rem;
         }
 
-        .file-table tr:hover {
-            background: rgba(59,130,246,.08);
+        .file-table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.25s ease;
+            cursor: default;
         }
 
-        .file-name {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .file-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .file-table tbody tr:hover {
+            background: rgba(99, 102, 241, 0.06);
+        }
+
+        .file-table tbody tr.folder-row {
             cursor: pointer;
         }
 
-        .folder-icon { color: #facc15; }
-        .file-icon { color: #60a5fa; }
-
-        .owner, .modified {
-            color: #9ca3af;
+        .file-table tbody tr.folder-row:hover {
+            background: rgba(99, 102, 241, 0.1);
         }
 
+        /* ── File Name Cell ── */
+        .file-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-wrapper {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .icon-wrapper.folder-icon {
+            background: rgba(250, 204, 21, 0.12);
+        }
+
+        .icon-wrapper.file-icon {
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+        .icon-wrapper svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .file-label {
+            font-weight: 500;
+            color: #f1f5f9;
+        }
+
+        .file-label-sub {
+            font-weight: 400;
+            color: #94a3b8;
+        }
+
+        .owner, .modified {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        /* ── Folder Toggle Arrow ── */
+        .folder-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+            color: #475569;
+        }
+
+        .folder-arrow.open {
+            transform: rotate(90deg);
+        }
+
+        .folder-arrow svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* ── Hidden Rows ── */
         .hidden-row {
             display: none;
         }
 
-        .indent-1 { padding-left: 40px !important; }
-        .indent-2 { padding-left: 70px !important; }
+        .hidden-row td {
+            background: rgba(10, 14, 27, 0.3);
+        }
 
+        .hidden-row:hover td {
+            background: rgba(99, 102, 241, 0.06) !important;
+        }
+
+        .indent-1 {
+            padding-left: 56px !important;
+        }
+
+        .indent-2 {
+            padding-left: 86px !important;
+        }
+
+        /* ── Stats Bar ── */
+        .stats-bar {
+            margin-top: 24px;
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 16px;
+            padding: 20px 28px;
+            flex: 1;
+            min-width: 180px;
+            box-shadow:
+                    0 8px 32px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .stat-value.accent {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 20px;
+            }
+            .action-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box input {
+                width: 100%;
+            }
+            .file-table th:nth-child(3),
+            .file-table td:nth-child(3) {
+                display: none;
+            }
+            .stats-bar {
+                flex-direction: column;
+            }
+        }
     </style>
-
 </head>
 <body>
 
+<!-- Ambient Orbs -->
+<div class="orb orb-indigo"></div>
+<div class="orb orb-pink"></div>
+<div class="orb orb-cyan"></div>
+
+<!-- Topbar -->
 <div class="topbar">
-    <h2>📂 Drive</h2>
+    <h2>Drive</h2>
+    <div class="topbar-right">
+        <div class="topbar-avatar">U</div>
+    </div>
 </div>
 
+<!-- Main Container -->
 <div class="container">
 
+    <!-- Breadcrumb -->
     <div class="breadcrumb">
-        Drive > My Drive
+        <span>Drive</span>
+        <span class="breadcrumb-sep">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+        <span class="breadcrumb-active">My Drive</span>
     </div>
 
+    <!-- Action Bar -->
     <div class="action-bar">
         <div class="left-actions">
-            <button class="btn btn-upload">⬆ Upload</button>
-            <button class="btn btn-folder">📁 New Folder</button>
+            <button class="btn btn-upload">
+                <span class="btn-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </span>
+                Upload
+            </button>
+            <button class="btn btn-folder">
+                <span class="btn-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+                </span>
+                New Folder
+            </button>
         </div>
 
         <div class="search-box">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" placeholder="Search in Drive...">
         </div>
     </div>
 
-    <table class="file-table">
+    <!-- File Table -->
+    <div class="table-card">
+        <table class="file-table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Owner</th>
+                <th>Last Modified</th>
+            </tr>
+            </thead>
+            <tbody>
 
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Owner</th>
-            <th>Last Modified</th>
-        </tr>
-        </thead>
+            <!-- FOLDER 1: Courses -->
+            <tr class="folder-row" onclick="toggleFolder('courses')">
+                <td class="file-name">
+                    <span class="folder-arrow" id="arrow-courses">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </span>
+                    <span class="icon-wrapper folder-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    </span>
+                    <span class="file-label">Courses</span>
+                </td>
+                <td class="owner">You</td>
+                <td class="modified">Jul 12, 2024</td>
+            </tr>
 
-        <tbody>
+            <tr class="hidden-row courses">
+                <td class="file-name indent-1">
+                    <span class="icon-wrapper file-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </span>
+                    <span class="file-label-sub">DBMS Notes.pdf</span>
+                </td>
+                <td class="owner">You</td>
+                <td class="modified">2 days ago</td>
+            </tr>
 
-        <!-- FOLDER 1 -->
-        <tr onclick="toggleFolder('courses')">
-            <td class="file-name">
-                <span class="folder-icon">📁</span>
-                Courses
-            </td>
-            <td class="owner">You</td>
-            <td class="modified">Jul 12, 2024</td>
-        </tr>
+            <tr class="hidden-row courses">
+                <td class="file-name indent-1">
+                    <span class="icon-wrapper file-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </span>
+                    <span class="file-label-sub">OS Assignment.docx</span>
+                </td>
+                <td class="owner">You</td>
+                <td class="modified">1 week ago</td>
+            </tr>
 
-        <tr class="hidden-row courses">
-            <td class="file-name indent-1">
-                <span class="file-icon">📄</span>
-                DBMS Notes.pdf
-            </td>
-            <td class="owner">You</td>
-            <td class="modified">2 days ago</td>
-        </tr>
+            <!-- FOLDER 2: Booth -->
+            <tr class="folder-row" onclick="toggleFolder('booth')">
+                <td class="file-name">
+                    <span class="folder-arrow" id="arrow-booth">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </span>
+                    <span class="icon-wrapper folder-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    </span>
+                    <span class="file-label">Booth</span>
+                </td>
+                <td class="owner">You</td>
+                <td class="modified">Jul 12, 2024</td>
+            </tr>
 
-        <tr class="hidden-row courses">
-            <td class="file-name indent-1">
-                <span class="file-icon">📄</span>
-                OS Assignment.docx
-            </td>
-            <td class="owner">You</td>
-            <td class="modified">1 week ago</td>
-        </tr>
+            <tr class="hidden-row booth">
+                <td class="file-name indent-1">
+                    <span class="icon-wrapper file-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </span>
+                    <span class="file-label-sub">Poster.png</span>
+                </td>
+                <td class="owner">You</td>
+                <td class="modified">3 months ago</td>
+            </tr>
 
-        <!-- FOLDER 2 -->
-        <tr onclick="toggleFolder('booth')">
-            <td class="file-name">
-                <span class="folder-icon">📁</span>
-                Booth
-            </td>
-            <td class="owner">You</td>
-            <td class="modified">Jul 12, 2024</td>
-        </tr>
+            <!-- NORMAL FILE -->
+            <tr>
+                <td class="file-name">
+                    <span style="width:20px;display:inline-block;"></span>
+                    <span class="icon-wrapper file-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </span>
+                    <span class="file-label">Resume.pdf</span>
+                </td>
+                <td class="owner">You</td>
+                <td class="modified">6 months ago</td>
+            </tr>
 
-        <tr class="hidden-row booth">
-            <td class="file-name indent-1">
-                <span class="file-icon">📄</span>
-                Poster.png
-            </td>
-            <td class="owner">You</td>
-            <td class="modified">3 months ago</td>
-        </tr>
+            </tbody>
+        </table>
+    </div>
 
-        <!-- NORMAL FILE -->
-        <tr>
-            <td class="file-name">
-                <span class="file-icon">📄</span>
-                Resume.pdf
-            </td>
-            <td class="owner">You</td>
-            <td class="modified">6 months ago</td>
-        </tr>
-
-        </tbody>
-    </table>
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-label">Total Files</div>
+            <div class="stat-value accent">4</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Folders</div>
+            <div class="stat-value">2</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Storage Used</div>
+            <div class="stat-value accent">128 MB</div>
+        </div>
+    </div>
 
 </div>
 
 <script>
-
     function toggleFolder(folderClass) {
-
         const rows = document.querySelectorAll("." + folderClass);
+        const arrow = document.getElementById("arrow-" + folderClass);
 
         rows.forEach(row => {
             if (row.style.display === "table-row") {
@@ -246,8 +616,10 @@
             }
         });
 
+        if (arrow) {
+            arrow.classList.toggle("open");
+        }
     }
-
 </script>
 
 </body>

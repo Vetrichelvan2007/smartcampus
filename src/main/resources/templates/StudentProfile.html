@@ -3,160 +3,636 @@
 <head>
     <meta charset="UTF-8">
     <title>Student Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
+        /* ════════════════════════════════════════════
+           DESIGN TOKENS — login page exact system
+        ════════════════════════════════════════════ */
+        :root {
+            --base:           #0a0e27;
+            --card-surface:   rgba(15, 23, 42, 0.70);
+            --card-inset:     rgba(10, 14, 27, 0.55);
+            --card-deep:      rgba(15, 23, 42, 0.85);
+
+            --accent-start:   #6366f1;
+            --accent-mid:     #8b5cf6;
+            --accent-end:     #ec4899;
+            --accent-cyan:    #06b6d4;
+            --accent-grad:    linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+
+            --border:         rgba(255,255,255,0.06);
+            --border-mid:     rgba(255,255,255,0.10);
+            --accent-border:  rgba(99,102,241,0.30);
+
+            --text-primary:   #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted:     #64748b;
+            --text-dim:       #475569;
+
+            --shadow-card:
+                    0 8px 32px rgba(0,0,0,0.30),
+                    0 0 0 1px rgba(255,255,255,0.05),
+                    inset 0 1px 0 rgba(255,255,255,0.08);
+            --shadow-lift:
+                    0 16px 48px rgba(0,0,0,0.45),
+                    0 0 0 1px rgba(255,255,255,0.05),
+                    inset 0 1px 0 rgba(255,255,255,0.08);
+
+            --r-sm:  10px;
+            --r-md:  14px;
+            --r-lg:  18px;
+            --r-xl:  24px;
+
+            --glow-indigo: rgba(99,102,241,0.55);
+        }
+
+        /* ════════════════════════════════════════════
+           KEYFRAMES
+        ════════════════════════════════════════════ */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes float1 {
+            0%,100% { transform: translate(0,0); }
+            50%      { transform: translate(30px,-40px); }
+        }
+        @keyframes float2 {
+            0%,100% { transform: translate(0,0); }
+            50%      { transform: translate(-50px,50px); }
+        }
+        @keyframes float3 {
+            0%,100% { transform: translate(0,0); }
+            50%      { transform: translate(-30px,30px); }
+        }
+        @keyframes shimmerSweep {
+            0%   { background-position: -200% center; }
+            100% { background-position:  200% center; }
+        }
+        @keyframes glowPulse {
+            0%,100% { box-shadow: 0 0 12px rgba(99,102,241,0.15), 0 0 0 1px rgba(99,102,241,0.20); }
+            50%      { box-shadow: 0 0 28px rgba(99,102,241,0.30), 0 0 0 1px rgba(139,92,246,0.35); }
+        }
+        @keyframes avatarRing {
+            0%   { --angle: 0deg; }
+            100% { --angle: 360deg; }
+        }
+        @property --angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+        @keyframes borderSpin {
+            0%   { --angle: 0deg; }
+            100% { --angle: 360deg; }
+        }
+        @keyframes sectionBarPulse {
+            0%,100% { opacity:1; }
+            50%      { opacity:0.55; }
+        }
+
+        /* ════════════════════════════════════════════
+           RESET & BASE
+        ════════════════════════════════════════════ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { min-height: 100%; }
+
         body {
-            margin: 0;
-            font-family: "Segoe UI", sans-serif;
-            background: radial-gradient(circle at top, #0f172a, #020617);
-            color: #e5e7eb;
+            font-family: 'Poppins', sans-serif;
+            background: var(--base);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            position: relative;
         }
 
-        /* ===== PAGE WRAPPER ===== */
+        /* Radial overlays — login body::before exact */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                    radial-gradient(circle at 20% 50%, rgba(99,102,241,0.12) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(236,72,153,0.12) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 0%,  rgba(6,182,212,0.08)  0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ════════════════════════════════════════════
+           ORBS — login animated-bg exact
+        ════════════════════════════════════════════ */
+        .animated-bg {
+            position: fixed; inset: 0;
+            z-index: 0; overflow: hidden; pointer-events: none;
+        }
+        .orb {
+            position: absolute; border-radius: 50%;
+            filter: blur(80px); opacity: 0.25;
+        }
+        .orb-1 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, #6366f1, transparent);
+            top: -150px; right: -100px;
+            animation: float1 15s ease-in-out infinite;
+        }
+        .orb-2 {
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, #ec4899, transparent);
+            bottom: -80px; left: -60px;
+            animation: float2 20s ease-in-out infinite;
+        }
+        .orb-3 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, #06b6d4, transparent);
+            top: 50%; right: 5%;
+            animation: float3 18s ease-in-out infinite;
+        }
+
+        /* ════════════════════════════════════════════
+           PAGE WRAPPER
+        ════════════════════════════════════════════ */
         .page {
-            max-width: 1400px;
+            max-width: 1100px;
             margin: auto;
-            padding: 30px;
+            padding: 36px 24px 60px;
+            position: relative;
+            z-index: 1;
+            animation: fadeUp 0.6s ease-out both;
         }
 
-        /* ===== CARD ===== */
+        /* ════════════════════════════════════════════
+           PAGE HEADER ROW
+        ════════════════════════════════════════════ */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            animation: fadeUp 0.5s ease-out 0.05s both;
+        }
+
+        .page-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: var(--accent-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid var(--border-mid);
+            background: var(--card-inset);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12.5px;
+            font-weight: 500;
+            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+        .back-btn:hover {
+            background: rgba(99,102,241,0.08);
+            border-color: var(--accent-border);
+            color: var(--text-primary);
+        }
+
+        /* ════════════════════════════════════════════
+           MAIN CARD — login .card exact glass
+        ════════════════════════════════════════════ */
         .card {
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(14px);
-            border-radius: 18px;
-            padding: 30px;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.4);
+            background: var(--card-surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--r-xl);
+            padding: 36px;
+            border: 1px solid var(--border-mid);
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
         }
 
-        /* ===== PROFILE HEADER ===== */
+        /* Top sheen — login inset 0 1px 0 rgba(255,255,255,0.1) */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
+        }
+
+        /* ════════════════════════════════════════════
+           PROFILE TOP
+        ════════════════════════════════════════════ */
         .profile-top {
             display: flex;
             align-items: center;
-            gap: 25px;
-            margin-bottom: 30px;
+            gap: 28px;
+            margin-bottom: 36px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+            animation: fadeUp 0.6s ease-out 0.10s both;
+        }
+
+        /* Avatar with spinning gradient ring */
+        .avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .avatar-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -2.5px;
+            border-radius: 50%;
+            background: conic-gradient(
+                    from var(--angle),
+                    transparent 0%,
+                    rgba(99,102,241,0.90)  20%,
+                    rgba(139,92,246,1.00)  40%,
+                    rgba(236,72,153,0.90)  55%,
+                    rgba(6,182,212,0.80)   70%,
+                    transparent 85%
+            );
+            animation: borderSpin 5s linear infinite;
+            z-index: 0;
+        }
+
+        .avatar-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border-radius: 50%;
+            background: var(--base);
+            z-index: 1;
         }
 
         .avatar {
-            width: 110px;
-            height: 110px;
+            position: relative;
+            z-index: 2;
+            width: 100px; height: 100px;
             border-radius: 50%;
-            border: 3px solid #22d3ee;
+            object-fit: cover;
+            display: block;
         }
 
-        .name h2 {
-            margin: 0;
-            font-size: 26px;
+        /* Glow beneath avatar */
+        .avatar-glow {
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99,102,241,0.25), transparent 70%);
+            z-index: 0;
+            animation: glowPulse 3s ease-in-out infinite;
         }
 
-        .roll {
-            margin-top: 8px;
-            background: rgba(255,255,255,0.08);
-            padding: 6px 12px;
+        .name-block { flex: 1; }
+
+        .name-block h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
+        }
+
+        .roll-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
             border-radius: 20px;
-            display: inline-block;
-            font-size: 13px;
+            background: var(--card-inset);
+            border: 1px solid var(--accent-border);
+            font-size: 12px;
+            font-weight: 500;
+            color: #a5b4fc;
+            letter-spacing: 0.04em;
+            box-shadow: 0 0 10px rgba(99,102,241,0.12);
         }
 
-        /* ===== SECTIONS ===== */
+        .roll-badge::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent-grad);
+            box-shadow: 0 0 6px rgba(99,102,241,0.70);
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        /* Status chips */
+        .profile-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .meta-chip {
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(10,14,27,0.55);
+            border: 1px solid var(--border-mid);
+            font-size: 11.5px;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        /* ════════════════════════════════════════════
+           SECTION TITLE
+        ════════════════════════════════════════════ */
         .section-title {
-            margin: 30px 0 12px;
-            color: #22d3ee;
-            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 34px 0 16px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
         }
 
-        /* ===== GRID ===== */
+        /* Left accent bar — animated */
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 3px; height: 18px;
+            flex-shrink: 0;
+            border-radius: 2px;
+            background: var(--accent-grad);
+            box-shadow: 0 0 8px rgba(99,102,241,0.60), 0 0 16px rgba(139,92,246,0.30);
+            animation: sectionBarPulse 2.5s ease-in-out infinite;
+        }
+
+        /* Right separator line */
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(99,102,241,0.25), transparent);
+        }
+
+        /* ════════════════════════════════════════════
+           GRID
+        ════════════════════════════════════════════ */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
         }
 
+        /* ════════════════════════════════════════════
+           FIELD — login input surface depth
+        ════════════════════════════════════════════ */
         .field {
-            background: rgba(255,255,255,0.08);
+            background: var(--card-deep);
+            border: 1.5px solid rgba(100,116,139,0.18);
+            border-radius: var(--r-md);
             padding: 14px 16px;
-            border-radius: 12px;
-            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+            transition:
+                    border-color 0.30s ease,
+                    box-shadow   0.30s ease,
+                    transform    0.30s ease,
+                    background   0.30s ease;
+            cursor: default;
+        }
+
+        /* Top sheen consistent with card lighting */
+        .field::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
+        }
+
+        /* Shimmer sweep on hover */
+        .field::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                    110deg,
+                    transparent 20%,
+                    rgba(255,255,255,0.04) 40%,
+                    rgba(165,180,252,0.07) 50%,
+                    rgba(255,255,255,0.04) 60%,
+                    transparent 80%
+            );
+            background-size: 200% 100%;
+            background-position: -200% center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .field:hover {
+            border-color: rgba(99,102,241,0.30);
+            background: rgba(15,23,42,0.92);
+            transform: translateY(-2px);
+            box-shadow:
+                    0 6px 20px rgba(0,0,0,0.30),
+                    0 0 0 1px rgba(99,102,241,0.12),
+                    inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+
+        .field:hover::after {
+            opacity: 1;
+            animation: shimmerSweep 0.65s ease forwards;
         }
 
         .field span {
             display: block;
-            font-size: 11px;
-            color: #94a3b8;
-            margin-bottom: 2px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 5px;
         }
 
-        /* ===== RESPONSIVE ===== */
-        @media(max-width: 768px){
-            .profile-top { flex-direction: column; text-align: center; }
+        .field .value {
+            font-size: 13.5px;
+            font-weight: 400;
+            color: var(--text-primary);
+            line-height: 1.5;
         }
+
+        /* Left accent on hover — matches sidebar hover bar */
+        .field:hover .value {
+            color: var(--text-primary);
+        }
+
+        /* ════════════════════════════════════════════
+           SECTION ANIMATIONS
+        ════════════════════════════════════════════ */
+        .section-block { animation: fadeUp 0.5s ease-out both; }
+        .section-block:nth-child(1) { animation-delay: 0.12s; }
+        .section-block:nth-child(2) { animation-delay: 0.18s; }
+        .section-block:nth-child(3) { animation-delay: 0.24s; }
+        .section-block:nth-child(4) { animation-delay: 0.30s; }
+        .section-block:nth-child(5) { animation-delay: 0.36s; }
+
+        /* ════════════════════════════════════════════
+           DIVIDER
+        ════════════════════════════════════════════ */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-mid), transparent);
+            margin: 8px 0;
+        }
+
+        /* ════════════════════════════════════════════
+           RESPONSIVE
+        ════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .profile-top { flex-direction: column; text-align: center; }
+            .profile-meta { justify-content: center; }
+            .card { padding: 22px 16px; }
+            .page { padding: 20px 14px 48px; }
+        }
+
+        /* ════════════════════════════════════════════
+           SCROLLBAR
+        ════════════════════════════════════════════ */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.25); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.35); }
     </style>
 </head>
 
 <body>
 
+<!-- Orbs — identical to login page -->
+<div class="animated-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
+
 <div class="page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <h1>🎓 Smart Campus</h1>
+        <a href="/student-dashboard" class="back-btn">← Dashboard</a>
+    </div>
 
     <div class="card">
 
-        <!-- HEADER -->
+        <!-- ── PROFILE TOP ── -->
         <div class="profile-top">
-            <img src="profile.jpg" class="avatar">
-            <div class="name">
-                <h2><div th:text="${studentName}">Student name</div></h2>
-                <div class="roll"><div th:text="'Roll No: ' + ${studentRollNumber}">Roll Number</div></div>
+            <div class="avatar-wrap">
+                <div class="avatar-glow"></div>
+                <img src="profile.jpg" class="avatar" alt="Profile Photo">
+            </div>
+            <div class="name-block">
+                <h2><div th:text="${studentName}">Student Name</div></h2>
+                <div class="roll-badge">
+                    <div th:text="'Roll No: ' + ${studentRollNumber}">Roll Number</div>
+                </div>
+                <div class="profile-meta">
+                    <span class="meta-chip" th:text="${studentDepartmet}">Department</span>
+                    <span class="meta-chip" th:text="'Year ' + ${studentYear}">Year</span>
+                    <span class="meta-chip" th:text="'Sem ' + ${studentSem}">Semester</span>
+                </div>
             </div>
         </div>
 
-        <!-- STUDENT DETAILS -->
-        <div class="section-title">Student Details</div>
-        <div class="grid">
-            <div class="field"><span>Name</span><div class="value" th:text="${studentName}">Student name</div></div>
-            <div class="field"><span>Roll Number</span><div class="value" th:text="${studentRollNumber}">Roll Number</div></div>
-            <div class="field"><span>Email</span><div class="value" th:text="${studentEmail}">Email</div></div>
-            <div class="field"><span>Phone</span><div class="value" th:text="${studentPhone}">Phone</div></div>
-            <div class="field"><span>Department</span><div class="value" th:text="${studentDepartmet}">Department</div></div>
-            <div class="field"><span>Year</span><div class="value" th:text="${studentYear}">Current Year</div></div>
-            <div class="field"><span>Semester</span><div class="value" th:text="${studentSem}">Current Sem</div></div>
-            <div class="field"><span>Date of Birth</span><div class="value" th:text="${studentDob}">Dob</div></div>
-            <div class="field"><span>Gender</span><div class="value" th:text="${studentGender}">Gender</div></div>
-            <div class="field"><span>Nationality</span><div class="value" th:text="${studentNationality}"></div></div>
-            <div class="field"><span>Mother Tongue</span><div class="value" th:text="${studentMotherTongue}">Mother Tongue</div></div>
-            <div class="field"><span>Address</span><div class="value" th:text="${studentAddress}">Address</div></div>
+        <!-- ── STUDENT DETAILS ── -->
+        <div class="section-block">
+            <div class="section-title">Student Details</div>
+            <div class="grid">
+                <div class="field"><span>Name</span><div class="value" th:text="${studentName}">Student name</div></div>
+                <div class="field"><span>Roll Number</span><div class="value" th:text="${studentRollNumber}">Roll Number</div></div>
+                <div class="field"><span>Email</span><div class="value" th:text="${studentEmail}">Email</div></div>
+                <div class="field"><span>Phone</span><div class="value" th:text="${studentPhone}">Phone</div></div>
+                <div class="field"><span>Department</span><div class="value" th:text="${studentDepartmet}">Department</div></div>
+                <div class="field"><span>Year</span><div class="value" th:text="${studentYear}">Current Year</div></div>
+                <div class="field"><span>Semester</span><div class="value" th:text="${studentSem}">Current Sem</div></div>
+                <div class="field"><span>Date of Birth</span><div class="value" th:text="${studentDob}">DOB</div></div>
+                <div class="field"><span>Gender</span><div class="value" th:text="${studentGender}">Gender</div></div>
+                <div class="field"><span>Nationality</span><div class="value" th:text="${studentNationality}">Nationality</div></div>
+                <div class="field"><span>Mother Tongue</span><div class="value" th:text="${studentMotherTongue}">Mother Tongue</div></div>
+                <div class="field"><span>Address</span><div class="value" th:text="${studentAddress}">Address</div></div>
+            </div>
         </div>
 
-        <!-- FATHER DETAILS -->
-        <div class="section-title">Father Details</div>
-        <div class="grid">
-            <div class="field"><span>Name</span><div class="value" th:text="${fatherName}">Name</div></div>
-            <div class="field" ><span>Phone</span><div class="value" th:text="${fatherPhone}">Phone</div></div>
-            <div class="field" ><span>Email</span><div class="value" th:text="${fatherEmail}">Email</div></div>
-            <div class="field" ><span>Occupation</span><div class="value" th:text="${fatherOccupation}">Occupation</div></div>
-            <div class="field" ><span>Annual Income</span><div class="value" th:text="${fatherAnnual_income}">Annual Income</div></div>
-            <div class="field" ><span>Address</span><div class="value" th:text="${fatherAddress}">Address</div></div>
+        <div class="divider"></div>
+
+        <!-- ── FATHER DETAILS ── -->
+        <div class="section-block">
+            <div class="section-title">Father Details</div>
+            <div class="grid">
+                <div class="field"><span>Name</span><div class="value" th:text="${fatherName}">Name</div></div>
+                <div class="field"><span>Phone</span><div class="value" th:text="${fatherPhone}">Phone</div></div>
+                <div class="field"><span>Email</span><div class="value" th:text="${fatherEmail}">Email</div></div>
+                <div class="field"><span>Occupation</span><div class="value" th:text="${fatherOccupation}">Occupation</div></div>
+                <div class="field"><span>Annual Income</span><div class="value" th:text="${fatherAnnual_income}">Annual Income</div></div>
+                <div class="field"><span>Address</span><div class="value" th:text="${fatherAddress}">Address</div></div>
+            </div>
         </div>
 
-        <!-- MOTHER DETAILS -->
-        <div class="section-title">Mother Details</div>
-        <div class="grid">
-            <div class="field"><span>Name</span><div class="value" th:text="${motherName}">Name</div></div>
-            <div class="field" ><span>Phone</span><div class="value" th:text="${motherPhone}">Phone</div></div>
-            <div class="field" ><span>Email</span><div class="value" th:text="${motherEmail}">Email</div></div>
-            <div class="field" ><span>Occupation</span><div class="value" th:text="${motherOccupation}">Occupation</div></div>
-            <div class="field" ><span>Annual Income</span><div class="value" th:text="${motherAnnual_income}">Annual Income</div></div>
-            <div class="field" ><span>Address</span><div class="value" th:text="${motherAddress}">Address</div></div>
+        <div class="divider"></div>
+
+        <!-- ── MOTHER DETAILS ── -->
+        <div class="section-block">
+            <div class="section-title">Mother Details</div>
+            <div class="grid">
+                <div class="field"><span>Name</span><div class="value" th:text="${motherName}">Name</div></div>
+                <div class="field"><span>Phone</span><div class="value" th:text="${motherPhone}">Phone</div></div>
+                <div class="field"><span>Email</span><div class="value" th:text="${motherEmail}">Email</div></div>
+                <div class="field"><span>Occupation</span><div class="value" th:text="${motherOccupation}">Occupation</div></div>
+                <div class="field"><span>Annual Income</span><div class="value" th:text="${motherAnnual_income}">Annual Income</div></div>
+                <div class="field"><span>Address</span><div class="value" th:text="${motherAddress}">Address</div></div>
+            </div>
         </div>
 
-        <!-- IDENTITY DETAILS -->
-        <div class="section-title">Identity Details</div>
-        <div class="grid">
-            <div class="field"><span>Aadhar Number</span><div class="value" th:text="${aadharNumber}">Aadhar Number</div></div>
-            <div class="field"><span>PAN Number</span><div class="value" th:text="${panNumber}">PAN Number</div></div>
-            <div class="field"><span>Passport Number</span><div class="value" th:text="${passportNumber}">Passport Number</div></div>
+        <div class="divider"></div>
+
+        <!-- ── IDENTITY DETAILS ── -->
+        <div class="section-block">
+            <div class="section-title">Identity Details</div>
+            <div class="grid">
+                <div class="field"><span>Aadhar Number</span><div class="value" th:text="${aadharNumber}">Aadhar Number</div></div>
+                <div class="field"><span>PAN Number</span><div class="value" th:text="${panNumber}">PAN Number</div></div>
+                <div class="field"><span>Passport Number</span><div class="value" th:text="${passportNumber}">Passport Number</div></div>
+            </div>
         </div>
 
     </div>
-
 </div>
+
+<script>
+    /* Magnetic micro-interaction on fields — same as sidebar */
+    document.querySelectorAll('.field').forEach(field => {
+        field.addEventListener('mousemove', e => {
+            const rect = field.getBoundingClientRect();
+            const cx = rect.left + rect.width  / 2;
+            const cy = rect.top  + rect.height / 2;
+            const dx = (e.clientX - cx) / (rect.width  / 2);
+            const dy = (e.clientY - cy) / (rect.height / 2);
+            field.style.transform = `translateY(-2px) translate(${dx * 3}px, ${dy * 1.5}px)`;
+        });
+        field.addEventListener('mouseleave', () => {
+            field.style.transform = '';
+        });
+    });
+</script>
 
 </body>
 </html>

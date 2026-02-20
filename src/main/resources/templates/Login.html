@@ -2,236 +2,818 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>College Portal Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Portal - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
-        :root{
-            --bg:#0b1220;
-            --card:#0f172a;
-            --panel:#1e293b;
-            --accent:#4f46e5;
-            --accent2:#22c55e;
-            --text:#e5e7eb;
-            --muted:#94a3b8;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        *{box-sizing:border-box;font-family:Inter}
-
-        body{
-            margin:0;
-            height:100vh;
-            background:radial-gradient(circle at top,#1e293b,#020617);
-            display:flex;
-            justify-content:center;
-            align-items:center;
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
-        .card{
-            display:flex;
-            width:900px;
-            height:520px;
-            background:var(--card);
-            border-radius:22px;
-            overflow:hidden;
-            box-shadow:0 50px 120px rgba(0,0,0,.6);
-            transition:.4s;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0e27;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            position: relative;
         }
 
-        .card:hover{
-            transform:translateY(-4px) scale(1.01);
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 40% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
-        /* LEFT PANEL */
-        .left{
-            width:50%;
-            background:linear-gradient(135deg,#4f46e5,#22c55e);
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-            align-items:center;
-            color:white;
-            padding:50px;
-            position:relative;
-            overflow:hidden;
+        .animated-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
         }
 
-        .left::after{
-            content:"";
-            position:absolute;
-            width:400px;height:400px;
-            background:white;
-            opacity:.08;
-            border-radius:50%;
-            top:-100px;right:-100px;
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
         }
 
-        .left img{
-            width:260px;
-            animation:float 6s ease-in-out infinite;
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #6366f1, transparent);
+            top: -100px;
+            right: -100px;
+            animation: float1 15s ease-in-out infinite;
         }
 
-        @keyframes float{
-            0%,100%{transform:translateY(0)}
-            50%{transform:translateY(-18px)}
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #ec4899, transparent);
+            bottom: -50px;
+            left: -50px;
+            animation: float2 20s ease-in-out infinite;
         }
 
-        .left h1{
-            margin-top:25px;
-            font-weight:600;
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, #06b6d4, transparent);
+            top: 50%;
+            right: 10%;
+            animation: float3 18s ease-in-out infinite;
         }
 
-        /* RIGHT PANEL */
-        .right{
-            width:50%;
-            padding:50px 60px;
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -40px); }
         }
 
-        h2{
-            color:var(--text);
-            margin-bottom:5px;
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-50px, 50px); }
         }
 
-        p{
-            color:var(--muted);
-            margin-bottom:30px;
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, 30px); }
         }
 
-        .field{
-            position:relative;
-            margin-bottom:25px;
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1000px;
+            height: 90vh;
+            max-height: 620px;
+            margin: 0 auto;
+            padding: 20px;
+            animation: containerFadeIn 0.8s ease-out;
         }
 
-        .field input,
-        .field select{
-            width:100%;
-            padding:14px;
-            background:#020617;
-            border:1px solid #334155;
-            border-radius:10px;
-            color:var(--text);
-            outline:none;
-            transition:.3s;
+        @keyframes containerFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
-        .field input:hover,
-        .field select:hover{
-            border-color:#6366f1;
+        .card {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: all 0.5s ease;
         }
 
-        .field input:focus,
-        .field select:focus{
-            border-color:var(--accent);
-            box-shadow:0 0 0 3px #4f46e530;
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, #6366f1, #ec4899, #06b6d4, #6366f1);
+            border-radius: 24px;
+            opacity: 0;
+            z-index: -1;
+            filter: blur(20px);
+            transition: opacity 0.5s ease;
+            animation: gradientRotate 8s linear infinite;
         }
 
-        /* Floating label */
-        .field label{
-            position:absolute;
-            left:12px;
-            top:50%;
-            transform:translateY(-50%);
-            color:var(--muted);
-            transition:.3s;
-            background:#020617;
-            padding:0 6px;
-            pointer-events:none;
+        .card:hover::before {
+            opacity: 0.4;
         }
 
-        /* INPUT label logic */
-        .field input:focus + label,
-        .field input:not(:placeholder-shown) + label{
-            top:-8px;
-            font-size:12px;
-            color:var(--accent);
+        @keyframes gradientRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .field select:focus + label,
-        .field select:valid + label{
-            top:-8px;
-            font-size:12px;
-            color:var(--accent);
+        .left-section {
+            flex: 1;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
         }
 
-        select:invalid{
-            color:var(--muted);
-        }
-        select option{
-            color:white;
-        }
-
-        button{
-            margin-top:10px;
-            padding:14px;
-            border:none;
-            border-radius:12px;
-            background:linear-gradient(135deg,#4f46e5,#22c55e);
-            color:white;
-            font-weight:600;
-            font-size:16px;
-            cursor:pointer;
-            transition:.3s;
+        .left-section::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -50px;
+            right: -50px;
+            animation: pulse 4s ease-in-out infinite;
         }
 
-        button:hover{
-            box-shadow:0 15px 40px #4f46e550;
-            transform:translateY(-2px);
+        .left-section::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            bottom: -80px;
+            left: -80px;
         }
 
-        footer{
-            margin-top:30px;
-            color:var(--muted);
-            font-size:13px;
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 30px rgba(255, 255, 255, 0);
+            }
+        }
+
+        .left-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            animation: slideInLeft 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .logo-circle {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-size: 60px;
+            animation: rotateLogo 8s linear infinite;
+        }
+
+        @keyframes rotateLogo {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .left-section h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .left-section > p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0 0 40px;
+            font-weight: 300;
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 280px;
+            text-align: left;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: white;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .feature:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .feature:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        .feature-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        .feature:nth-child(2) .feature-dot {
+            animation-delay: 0.4s;
+        }
+
+        .feature:nth-child(3) .feature-dot {
+            animation-delay: 0.8s;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .right-section {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgba(10, 14, 27, 0.5);
+            backdrop-filter: blur(10px);
+            animation: slideInRight 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .right-section h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .right-section > p {
+            font-size: 15px;
+            color: #94a3b8;
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-group {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .form-group.focused .input-icon {
+            color: #6366f1;
+            filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6));
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            transition: all 0.3s ease;
+            z-index: 2;
+            pointer-events: none;
+            width: 20px;
+            height: 20px;
+        }
+
+        .input-icon-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1.5px solid rgba(100, 116, 139, 0.3);
+            border-radius: 12px;
+            color: #f1f5f9;
+            font-size: 15px;
+            font-weight: 400;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        select {
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 48px;
+        }
+
+        select option {
+            background: #0f172a;
+            color: #f1f5f9;
+            padding: 10px;
+        }
+
+        input[type="email"]::placeholder,
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder {
+            color: transparent;
+        }
+
+        .form-label {
+            position: absolute;
+            left: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 15px;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            background: transparent;
+            padding: 0 4px;
+            z-index: 2;
+        }
+
+        .form-group.filled .form-label,
+        .form-group.focused .form-label,
+        input:focus + .form-label,
+        input:not(:placeholder-shown) + .form-label {
+            top: -10px;
+            left: 44px;
+            font-size: 12px;
+            color: #6366f1;
+            background: rgba(10, 14, 27, 0.95);
+            font-weight: 500;
+        }
+
+        select:focus + .form-label,
+        .form-group.filled select + .form-label {
+            top: -10px;
+            left: 44px;
+            font-size: 12px;
+            color: #6366f1;
+            background: rgba(10, 14, 27, 0.95);
+            font-weight: 500;
+        }
+
+        .input-border {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #6366f1, #ec4899, #06b6d4);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .form-group.focused .input-border {
+            transform: scaleX(1);
+        }
+
+        input[type="email"]:hover,
+        input[type="password"]:hover,
+        input[type="text"]:hover,
+        select:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="text"]:focus,
+        select:focus {
+            border-color: #6366f1;
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1),
+            0 0 20px rgba(99, 102, 241, 0.25);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 3;
+            font-size: 18px;
+        }
+
+        .password-toggle:hover {
+            color: #6366f1;
+            filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.4));
+        }
+
+        .submit-btn {
+            position: relative;
+            margin-top: 10px;
+            padding: 16px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4),
+            0 0 20px rgba(99, 102, 241, 0);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6),
+            0 0 40px rgba(236, 72, 153, 0.3);
+        }
+
+        .submit-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .form-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .forgot-link {
+            color: #94a3b8;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+        }
+
+        .forgot-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+
+        .forgot-link:hover {
+            color: #6366f1;
+        }
+
+        .forgot-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        .copyright {
+            margin-top: 40px;
+            color: #475569;
+            font-size: 13px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column;
+                border-radius: 20px;
+            }
+
+            .left-section {
+                padding: 40px 30px;
+                min-height: 280px;
+            }
+
+            .logo-circle {
+                width: 90px;
+                height: 90px;
+                font-size: 45px;
+            }
+
+            .left-section h1 {
+                font-size: 28px;
+            }
+
+            .left-section > p {
+                font-size: 14px;
+            }
+
+            .right-section {
+                padding: 40px 30px;
+            }
+
+            .right-section h2 {
+                font-size: 26px;
+            }
+
+            .right-section > p {
+                font-size: 14px;
+            }
+
+            .form {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .card {
+                border-radius: 16px;
+            }
+
+            .left-section {
+                padding: 30px 20px;
+                min-height: 220px;
+            }
+
+            .logo-circle {
+                width: 80px;
+                height: 80px;
+                font-size: 40px;
+            }
+
+            .left-section h1 {
+                font-size: 24px;
+            }
+
+            .left-section > p {
+                font-size: 13px;
+            }
+
+            .features {
+                max-width: 100%;
+            }
+
+            .feature {
+                font-size: 12px;
+            }
+
+            .right-section {
+                padding: 30px 20px;
+            }
+
+            .right-section h2 {
+                font-size: 24px;
+            }
+
+            .right-section > p {
+                font-size: 13px;
+            }
+
+            input[type="email"],
+            input[type="password"],
+            select {
+                padding: 14px 14px 14px 44px;
+                font-size: 14px;
+            }
+
+            .submit-btn {
+                padding: 14px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
-
-<div class="card">
-
-    <!-- LEFT SIDE -->
-    <div class="left">
-        <img src="\images\download.svg" alt="Education">
-        <h1>College Portal</h1>
-        <p>Smart learning. Smart management.</p>
-    </div>
-
-    <!-- RIGHT SIDE -->
-    <div class="right">
-        <h2>Login</h2>
-        <p>Access your dashboard</p>
-
-        <form action="/login" method="post">
-            <div class="field">
-                <input type="email" name="username" required placeholder=" ">
-                <label>Email</label>
-            </div>
-
-            <div class="field">
-                <input type="password" name="password" required placeholder=" ">
-                <label>Password</label>
-            </div>
-
-            <div class="field">
-                <select name="role" required>
-                    <option value="" disabled selected hidden></option>
-                    <option value="student">Student</option>
-                    <option value="teacher">Teacher</option>
-                    <option value="admin">Admin</option>
-                </select>
-                <label>Role</label>
-            </div>
-
-            <button type="submit">Login</button>
-        </form>
-
-        <footer>© 2026 College Management System</footer>
-    </div>
-
+<div class="animated-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 </div>
 
+<div class="container">
+    <div class="card">
+        <div class="left-section">
+            <div class="left-content">
+                <div class="logo-circle">🎓</div>
+                <h1>SMART CAMPUS</h1>
+                <p>Smart learning. Smart management.</p>
+
+            </div>
+        </div>
+
+        <div class="right-section">
+            <h2>Welcome Back</h2>
+            <p>Access your dashboard</p>
+
+            <form class="form" id="loginForm" action="/login" method="post">
+
+                <div class="form-group" id="emailGroup">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                    </svg>
+                    <!-- changed id + name -->
+                    <input type="email" id="username" name="username" required placeholder=" ">
+                    <label class="form-label">Email</label>
+                    <div class="input-border"></div>
+                </div>
+
+                <div class="form-group" id="passwordGroup">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <input type="password" id="password" name="password" required placeholder=" ">
+                    <button type="button" class="password-toggle" onclick="togglePassword()">👁</button>
+                    <label class="form-label">Password</label>
+                    <div class="input-border"></div>
+                </div>
+
+                <div class="form-group" id="roleGroup">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <select id="role" name="role" required>
+                        <option value="" disabled selected></option>
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <label class="form-label">Role</label>
+                    <div class="input-border"></div>
+                </div>
+
+                <button type="submit" class="submit-btn">Login</button>
+
+            </form>
+
+            <footer class="copyright">© 2026 College Management System</footer>
+        </div>
+    </div>
+</div>
+
+<script>
+    const emailInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const roleSelect = document.getElementById('role');
+
+    const emailGroup = document.getElementById('emailGroup');
+    const passwordGroup = document.getElementById('passwordGroup');
+    const roleGroup = document.getElementById('roleGroup');
+
+    function updateGroupState(input, group) {
+        if (input.value.trim()) {
+            group.classList.add('filled');
+        } else {
+            group.classList.remove('filled');
+        }
+    }
+
+    function togglePassword() {
+        passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+    }
+
+    emailInput.addEventListener('focus', () => emailGroup.classList.add('focused'));
+    emailInput.addEventListener('blur', () => emailGroup.classList.remove('focused'));
+    emailInput.addEventListener('input', () => updateGroupState(emailInput, emailGroup));
+
+    passwordInput.addEventListener('focus', () => passwordGroup.classList.add('focused'));
+    passwordInput.addEventListener('blur', () => passwordGroup.classList.remove('focused'));
+    passwordInput.addEventListener('input', () => updateGroupState(passwordInput, passwordGroup));
+
+    roleSelect.addEventListener('focus', () => roleGroup.classList.add('focused'));
+    roleSelect.addEventListener('blur', () => roleGroup.classList.remove('focused'));
+    roleSelect.addEventListener('change', () => updateGroupState(roleSelect, roleGroup));
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateGroupState(emailInput, emailGroup);
+        updateGroupState(passwordInput, passwordGroup);
+        updateGroupState(roleSelect, roleGroup);
+    });
+</script>
 </body>
 </html>

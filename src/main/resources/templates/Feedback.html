@@ -2,95 +2,269 @@
 <html>
 <head>
   <title>Student Feedback</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --bg-base: #0a0e27;
+      --card-surface: rgba(15, 23, 42, 0.7);
+      --card-border: rgba(255,255,255,0.10);
+      --card-sheen: inset 0 1px 0 rgba(255,255,255,0.10);
+      --card-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      --right-inset: rgba(10, 14, 27, 0.5);
+      --input-bg: rgba(15, 23, 42, 0.8);
+      --accent-1: #6366f1;
+      --accent-2: #8b5cf6;
+      --accent-3: #ec4899;
+      --accent-4: #06b6d4;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+    }
 
     /* ===== RESET ===== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: "Segoe UI", sans-serif;
     }
 
     body {
       min-height: 100vh;
-      background: radial-gradient(circle at top, #0f172a, #020617);
-      color: #e5e7eb;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ===== AMBIENT ORBS ===== */
+    .orbs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+    }
+
+    .orb-1 {
+      width: 600px; height: 600px;
+      background: #6366f1;
+      top: -150px; right: -100px;
+      animation: floatOrb1 12s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 500px; height: 500px;
+      background: #ec4899;
+      bottom: -120px; left: -80px;
+      animation: floatOrb2 15s ease-in-out infinite;
+    }
+
+    .orb-3 {
+      width: 400px; height: 400px;
+      background: #06b6d4;
+      top: 40%; right: 10%;
+      animation: floatOrb3 10s ease-in-out infinite;
+    }
+
+    @keyframes floatOrb1 {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50%       { transform: translate(-30px, 40px) scale(1.05); }
+    }
+    @keyframes floatOrb2 {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50%       { transform: translate(40px, -30px) scale(0.95); }
+    }
+    @keyframes floatOrb3 {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50%       { transform: translate(-20px, 20px) scale(1.08); }
     }
 
     /* ===== TOPBAR ===== */
+    .topbar, .container {
+      position: relative;
+      z-index: 1;
+    }
+
     .topbar {
-      height: 64px;
-      padding: 0 36px;
+      height: 70px;
+      padding: 0 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(10, 14, 39, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--card-border);
+      box-shadow: var(--card-sheen), 0 1px 0 rgba(0,0,0,0.4);
     }
 
-    .topbar h1 {
-      font-size: 20px;
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar-brand .icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 15px rgba(99,102,241,0.4);
+    }
+
+    .topbar-brand h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      background: linear-gradient(90deg, #f1f5f9, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .search-wrapper {
+      position: relative;
+      width: 38%;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 14px;
+      pointer-events: none;
     }
 
     .topbar input {
-      width: 40%;
-      padding: 10px 14px;
+      width: 100%;
+      padding: 11px 16px 11px 40px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: #020617;
-      color: #e5e7eb;
+      border: 1px solid var(--card-border);
+      background: var(--input-bg);
+      backdrop-filter: blur(20px);
+      color: var(--text-primary);
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      transition: all 0.25s ease;
+      box-shadow: var(--card-sheen);
     }
+
+    .topbar input::placeholder { color: var(--text-muted); }
 
     .topbar input:focus {
       outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59,130,246,.25);
+      border-color: var(--accent-1);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.2), var(--card-sheen);
     }
+
+    .avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .avatar:hover { transform: scale(1.05); }
 
     /* ===== CONTAINER ===== */
     .container {
-      padding: 42px;
+      padding: 40px 40px 60px;
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
     }
 
     .page-title {
-      margin-bottom: 25px;
-      font-size: 22px;
-      font-weight: 600;
+      font-family: 'Orbitron', monospace;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-primary);
     }
 
     /* ===== SEARCH BOX ===== */
     .search-box {
-      margin-bottom: 25px;
+      position: relative;
+      width: 320px;
+    }
+
+    .search-box .search-icon {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 14px;
+      pointer-events: none;
     }
 
     .search-box input {
-      width: 35%;
-      padding: 12px 16px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: #020617;
-      color: #e5e7eb;
+      width: 100%;
+      padding: 10px 16px 10px 38px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: var(--input-bg);
+      backdrop-filter: blur(20px);
+      color: var(--text-primary);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      transition: all 0.25s ease;
+      box-shadow: var(--card-sheen);
     }
+
+    .search-box input::placeholder { color: var(--text-muted); }
 
     .search-box input:focus {
       outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59,130,246,.25);
+      border-color: var(--accent-1);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.2), var(--card-sheen);
     }
 
     /* ===== TABLE WRAPPER ===== */
     .table-wrapper {
-      background: linear-gradient(
-              180deg,
-              rgba(2,6,23,.85),
-              rgba(2,6,23,.65)
-      );
-      border: 1px solid rgba(255,255,255,0.08);
+      background: var(--card-surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
       border-radius: 22px;
+      box-shadow: var(--card-shadow), var(--card-sheen);
       overflow: hidden;
+      position: relative;
+    }
+
+    .table-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
     }
 
     table {
@@ -99,65 +273,133 @@
     }
 
     thead {
-      background: rgba(255,255,255,0.05);
+      background: var(--right-inset);
     }
 
     th, td {
-      padding: 18px 24px;
+      padding: 16px 24px;
       text-align: left;
     }
 
     th {
+      font-family: 'Orbitron', monospace;
+      font-size: 11px;
       font-weight: 600;
-      color: #93c5fd;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--card-border);
     }
 
-    tr {
+    tbody tr {
       border-bottom: 1px solid rgba(255,255,255,0.05);
-      transition: background .2s ease;
+      transition: background 0.2s ease;
     }
 
-    tr:hover {
-      background: rgba(59,130,246,.08);
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: rgba(99,102,241,0.06);
+    }
+
+    td {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+    }
+
+    td:first-child {
+      color: var(--text-primary);
+      font-weight: 500;
     }
 
     /* ===== STATUS BADGES ===== */
     .status {
-      font-weight: 600;
-      letter-spacing: .5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 13px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .status::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
     }
 
     .submitted {
-      color: #22c55e;
+      background: rgba(34,197,94,0.12);
+      color: #4ade80;
+      border: 1px solid rgba(34,197,94,0.2);
+    }
+
+    .submitted::before {
+      background: #4ade80;
+      box-shadow: 0 0 6px #4ade80;
     }
 
     .not-submitted {
-      color: #ef4444;
+      background: rgba(239,68,68,0.12);
+      color: #f87171;
+      border: 1px solid rgba(239,68,68,0.2);
     }
 
-  </style>
+    .not-submitted::before {
+      background: #f87171;
+      box-shadow: 0 0 6px #f87171;
+    }
 
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.5); }
+  </style>
 </head>
+
 <body>
 
-<div class="topbar">
-  <h1>🎓 College Portal</h1>
-  <input type="text" placeholder="Search Digicampus">
+<!-- AMBIENT ORBS -->
+<div class="orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 </div>
 
-<div class="container">
-
-  <div class="page-title">
-    Feedback
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="icon">🎓</div>
+    <h1>COLLEGE PORTAL</h1>
   </div>
 
-  <div class="search-box">
-    <input type="text" placeholder="Search by Feedback">
+  <div class="search-wrapper">
+    <span class="search-icon">⌕</span>
+    <input type="text" placeholder="Search Digicampus">
+  </div>
+
+  <div class="avatar">S</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <div class="page-header">
+    <div class="page-title">Feedback</div>
+
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
+      <input type="text" placeholder="Search by Feedback">
+    </div>
   </div>
 
   <div class="table-wrapper">
-
     <table>
       <thead>
       <tr>
@@ -171,18 +413,16 @@
       <tr>
         <td>B.E/B.Tech_25-26_Mid Term Feedback_2024 Batch_3rd Sem</td>
         <td>B.E/B.Tech ACY 2025-26 ODD_3rd Sem</td>
-        <td class="status submitted">SUBMITTED</td>
+        <td><span class="status submitted">SUBMITTED</span></td>
       </tr>
 
       <tr>
         <td>B.E/B.Tech_25-26_End Term Course Feedback_2024 Batch_3rd Sem</td>
         <td>B.E/B.Tech ACY 2025-26 ODD_3rd Sem</td>
-        <td class="status not-submitted">NOT SUBMITTED</td>
+        <td><span class="status not-submitted">NOT SUBMITTED</span></td>
       </tr>
       </tbody>
-
     </table>
-
   </div>
 
 </div>
