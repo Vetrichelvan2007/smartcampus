@@ -29,7 +29,7 @@ public class studentController {
 
     @GetMapping("/")
     public String welcome() {
-        return "Login";
+        return "Welcome";
     }
 
     @PostMapping("/login")
