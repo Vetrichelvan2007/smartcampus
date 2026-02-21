@@ -497,6 +497,170 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.5); }
+
+        /* ===== SUMMARY MODAL ===== */
+        .summary-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 12, 30, 0.75);
+            backdrop-filter: blur(18px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .summary-modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .summary-content {
+            width: 460px;
+            max-width: 95%;
+            padding: 35px 32px;
+            border-radius: 22px;
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow:
+                    0 25px 80px rgba(0,0,0,0.6),
+                    inset 0 1px 0 rgba(255,255,255,0.08);
+            animation: modalPop 0.25s ease;
+        }
+
+        @keyframes modalPop {
+            from {
+                transform: scale(0.96);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .summary-content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+
+        .summary-content h3::after {
+            content: "";
+            display: block;
+            height: 2px;
+            width: 60px;
+            margin-top: 8px;
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            border-radius: 2px;
+        }
+
+        .summary-content ul {
+            list-style: none;
+            margin-bottom: 22px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .summary-content li {
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.03);
+            margin-bottom: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .summary-content li:hover {
+            background: rgba(255,255,255,0.06);
+        }
+
+        .summary-content p {
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .summary-content button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(99,102,241,0.4);
+            background: linear-gradient(
+                    135deg,
+                    rgba(99,102,241,0.25),
+                    rgba(139,92,246,0.18)
+            );
+            color: #c7d2fe;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .summary-content button:hover {
+            background: linear-gradient(
+                    135deg,
+                    rgba(99,102,241,0.4),
+                    rgba(139,92,246,0.3)
+            );
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99,102,241,0.25);
+        }
+
+        .summary-content button:active {
+            transform: scale(0.97);
+        }
+        .summary-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .back-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(148,163,184,0.4);
+            background: rgba(148,163,184,0.12);
+            color: #cbd5f5;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(148,163,184,0.25);
+        }
+
+        .final-submit-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(34,197,94,0.4);
+            background: linear-gradient(
+                    135deg,
+                    rgba(34,197,94,0.25),
+                    rgba(6,182,212,0.18)
+            );
+            color: #4ade80;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .final-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34,197,94,0.25);
+        }
     </style>
 </head>
 
@@ -551,7 +715,8 @@
             <div class="course-grid">
 
                 <div class="course-card"
-                     th:each="course : ${courses}">
+                     th:each="course : ${courses}"
+                     th:attr="data-course-id=${course.courseId}">
 
                     <span class="badge"
                           th:text="${course.courseType}"
@@ -587,6 +752,186 @@
         </div>
     </div>
 </div>
+<!-- SUMMARY MODAL -->
+<div id="summaryModal" class="summary-modal">
+    <div class="summary-content">
+        <h3>Selected Courses Summary</h3>
 
+        <ul id="summaryList"></ul>
+        <p>Total Courses: <span id="totalCount">0</span></p>
+
+        <div class="summary-actions">
+            <button id="backBtn" class="back-btn">Back</button>
+            <button id="finalSubmitBtn" class="final-submit-btn">Submit</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const selectedCourses = [];
+
+        document.querySelectorAll(".course-card").forEach(function (card) {
+
+            const select = card.querySelector("select");
+            const btn = card.querySelector(".register-btn");
+            const courseName = card.querySelector("h3").innerText;
+            const courseId = card.getAttribute("data-course-id");
+
+            /* Initial State */
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            btn.style.cursor = "not-allowed";
+
+            /* Dropdown Change */
+            select.addEventListener("change", function () {
+
+                if (select.value !== "") {
+
+                    btn.disabled = false;
+                    btn.style.opacity = "1";
+                    btn.style.cursor = "pointer";
+
+                    // If already registered → reset
+                    if (btn.classList.contains("done")) {
+
+                        btn.innerText = "Register";
+                        btn.classList.remove("done");
+                        btn.disabled = false;
+                        btn.style.opacity = "1";
+
+                        const index = selectedCourses.findIndex(
+                            item => item.courseId == courseId
+                        );
+
+                        if (index !== -1) {
+                            selectedCourses.splice(index, 1);
+                        }
+                    }
+
+                } else {
+
+                    btn.disabled = true;
+                    btn.style.opacity = "0.5";
+                    btn.style.cursor = "not-allowed";
+
+                    btn.innerText = "Register";
+                    btn.classList.remove("done");
+
+                    const index = selectedCourses.findIndex(
+                        item => item.courseId == courseId
+                    );
+
+                    if (index !== -1) {
+                        selectedCourses.splice(index, 1);
+                    }
+                }
+            });
+
+            /* Register Button */
+            btn.addEventListener("click", function () {
+
+                if (!select.value) {
+                    alert("Please select a teacher first!");
+                    return;
+                }
+
+                if (btn.classList.contains("done")) return;
+
+                const teacherId = select.value;
+                const teacherName = select.selectedOptions[0].text;
+
+                selectedCourses.push({
+                    courseId: Number(courseId),
+                    teacherId: Number(teacherId),
+                    courseName: courseName,
+                    teacherName: teacherName
+                });
+
+                console.log("Added:", courseId, teacherId);
+
+                btn.innerText = "Registered ✓";
+                btn.classList.add("done");
+                btn.disabled = true;
+                btn.style.opacity = "0.6";
+            });
+
+        });
+
+        /* Submit All */
+        document.querySelector(".submit-all").addEventListener("click", function () {
+
+            const allCards = document.querySelectorAll(".course-card");
+            const registeredButtons = document.querySelectorAll(".register-btn.done");
+
+            allCards.forEach(function (card) {
+                card.style.borderColor = "rgba(255,255,255,0.10)";
+            });
+
+            if (registeredButtons.length !== allCards.length) {
+
+                allCards.forEach(function (card) {
+                    const btn = card.querySelector(".register-btn");
+                    if (!btn.classList.contains("done")) {
+                        card.style.borderColor = "rgba(239,68,68,0.8)";
+                    }
+                });
+
+                alert("Please register ALL courses before submitting!");
+                return;
+            }
+
+            const list = document.getElementById("summaryList");
+            const total = document.getElementById("totalCount");
+            const modal = document.getElementById("summaryModal");
+
+            list.innerHTML = "";
+
+            selectedCourses.forEach(function (item) {
+                const li = document.createElement("li");
+                li.textContent = item.courseName + " - " + item.teacherName;
+                list.appendChild(li);
+            });
+
+            total.textContent = selectedCourses.length;
+
+            modal.classList.add("active");
+        });
+
+        /* Back Button */
+        document.getElementById("backBtn").addEventListener("click", function () {
+            document.getElementById("summaryModal").classList.remove("active");
+        });
+
+        /* Final Submit */
+        document.getElementById("finalSubmitBtn").addEventListener("click", function () {
+
+            console.log("Sending JSON:", JSON.stringify(selectedCourses));
+
+            fetch("/courseregistraction-submit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(selectedCourses)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Courses submitted successfully!");
+                        window.location.href = "/success-page";
+                    } else {
+                        alert("Submission failed!");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Something went wrong!");
+                });
+
+        });
+
+    });
+</script>
 </body>
 </html>

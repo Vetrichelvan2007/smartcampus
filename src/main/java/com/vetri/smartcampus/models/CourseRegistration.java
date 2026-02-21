@@ -52,7 +52,6 @@ public class CourseRegistration {
         return teacherNames;
     }
 
-
     public void setCourseId(Long courseId) {
         this.courseId = courseId;
     }
