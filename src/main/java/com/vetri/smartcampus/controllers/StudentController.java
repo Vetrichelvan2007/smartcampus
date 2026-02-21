@@ -12,8 +12,6 @@ import com.vetri.smartcampus.models.CourseDTO;
 import com.vetri.smartcampus.models.CourseRegistration;
 import com.vetri.smartcampus.models.DataBaseConnection;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -24,7 +22,7 @@ public class StudentController {
 
     @GetMapping("/student-dashboard")
     public String studentDashboard() {
-        return "StudentDashboard";
+        return "Student/StudentDashboard";
     }
 
     @GetMapping("/student-profile")
@@ -109,7 +107,7 @@ public class StudentController {
             e.printStackTrace();
         }
 
-        return "StudentProfile";
+        return "Student/StudentProfile";
     }
 
     @GetMapping("/student-classroom")
@@ -179,7 +177,7 @@ public class StudentController {
             e.printStackTrace();
         }
 
-        return "Classroom";
+        return "Student/Classroom";
     }
 
     @GetMapping("/course/{courseCode}")
@@ -202,7 +200,7 @@ public class StudentController {
         }
 
         model.addAttribute("resources", List.of());
-        return "Course";
+        return "Student/Course";
     }
 
     @GetMapping("/course/{id}/quizzes")
@@ -211,7 +209,7 @@ public class StudentController {
         model.addAttribute("courseName", "DBMS");
         model.addAttribute("activeTab", "quizzes");
         model.addAttribute("resources", List.of());
-        return "Course";
+        return "Student/Course";
     }
 
     @GetMapping("/courseregistration")
@@ -297,7 +295,7 @@ public class StudentController {
             e.printStackTrace();
         }
 
-        return "CourseRegistration";
+        return "Student/CourseRegistration";
     }
 
     @PostMapping("/courseregistraction-submit")
@@ -339,22 +337,22 @@ public class StudentController {
 
     @GetMapping("/feedback")
     public String feedback(HttpSession session, Model model){
-        return "Feedback";
+        return "Student/Feedback";
     }
 
     @GetMapping("/online-exam")
     public String onlineexam(){
-        return "OnlineExam";
+        return "Student/OnlineExam";
     }
 
     @GetMapping("/calendar")
     public String calendar(){
-        return "Calendar";
+        return "Student/Calendar";
     }
 
     @GetMapping("/drive")
     public String drive(){
-        return "Drive";
+        return "Student/Drive";
     }
 
 }

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Subject – Data Structures & Algorithms</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg-base: #0a0e27;
+            --card-bg: rgba(15, 23, 42, 0.7);
+            --card-border: rgba(255,255,255,0.10);
+            --card-sheen: inset 0 1px 0 rgba(255,255,255,0.1);
+            --card-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            --accent-from: #6366f1;
+            --accent-mid: #8b5cf6;
+            --accent-to: #ec4899;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #475569;
+            --topbar-height: 64px;
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+        .orb  { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; }
+        .orb-1 { width: 600px; height: 600px; background: #6366f1; top: -150px; right: -150px; }
+        .orb-2 { width: 500px; height: 500px; background: #ec4899; bottom: -100px; left: -100px; }
+        .orb-3 { width: 400px; height: 400px; background: #06b6d4; top: 40%; right: 5%; }
+
+        .topbar {
+            position: sticky; top: 0;
+            height: var(--topbar-height);
+            background: rgba(10, 14, 39, 0.88);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center;
+            padding: 0 40px; gap: 16px;
+            z-index: 90;
+        }
+
+        .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+        .logo-icon {
+            width: 34px; height: 34px;
+            background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
+            border-radius: 9px; display: flex; align-items: center; justify-content: center;
+        }
+        .logo-text {
+            font-family: var(--font-heading); font-size: 13px; font-weight: 700; letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .topbar-divider { width: 1px; height: 24px; background: var(--card-border); }
+
+        .breadcrumb {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 13px; color: var(--text-muted); flex: 1;
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--text-secondary); }
+        .breadcrumb-sep { font-size: 12px; }
+        .breadcrumb-current { color: var(--text-secondary); }
+
+        .topbar-actions { display: flex; align-items: center; gap: 10px; }
+        .topbar-btn {
+            width: 36px; height: 36px; border-radius: 9px;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: border-color 0.2s, color 0.2s;
+        }
+        .topbar-btn:hover { border-color: rgba(99,102,241,0.4); color: var(--text-primary); }
+        .notif-wrap { position: relative; }
+        .notif-dot {
+            position: absolute; top: 5px; right: 5px;
+            width: 8px; height: 8px; background: var(--accent-to);
+            border-radius: 50%; border: 2px solid var(--bg-base);
+        }
+        .topbar-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; cursor: pointer; flex-shrink: 0;
+        }
+
+        .page {
+            position: relative; z-index: 1;
+            padding: 36px 48px 72px;
+            max-width: 1600px; margin: 0 auto;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--card-shadow), var(--card-sheen);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+        }
+
+        .section-label {
+            font-family: var(--font-heading);
+            font-size: 11px; font-weight: 600;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--card-border); }
+
+        /* SUBJECT HEADER */
+        .subject-header { padding: 32px 36px; margin-bottom: 28px; }
+
+        .subject-header-top { display: flex; align-items: flex-start; gap: 22px; flex-wrap: wrap; }
+        .subject-icon {
+            width: 64px; height: 64px;
+            background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
+            border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .subject-title-block { flex: 1; min-width: 0; }
+        .subject-name {
+            font-family: var(--font-heading);
+            font-size: clamp(18px, 2vw, 27px);
+            font-weight: 700; letter-spacing: 1px; line-height: 1.3;
+            color: var(--text-primary); margin-bottom: 12px;
+        }
+
+        .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+        .badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 12px; border-radius: 6px;
+            font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+        }
+        .badge-code    { background: rgba(99,102,241,0.18); border: 1px solid rgba(99,102,241,0.35); color: #a5b4fc; }
+        .badge-dept    { background: rgba(6,182,212,0.15);  border: 1px solid rgba(6,182,212,0.3);  color: #67e8f9; }
+        .badge-sem     { background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3); color: #c4b5fd; }
+        .badge-credits { background: rgba(236,72,153,0.15); border: 1px solid rgba(236,72,153,0.3); color: #f9a8d4; }
+        .badge-section { background: rgba(34,197,94,0.15);  border: 1px solid rgba(34,197,94,0.3);  color: #86efac; }
+
+        .subject-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.75; max-width: 800px; }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 14px; margin-top: 26px; padding-top: 26px;
+            border-top: 1px solid var(--card-border);
+        }
+        .stat-pill {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--card-border);
+            border-radius: 12px; padding: 14px 16px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .stat-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .si-blue   { background: rgba(99,102,241,0.2); color: #a5b4fc; }
+        .si-cyan   { background: rgba(6,182,212,0.2);  color: #67e8f9; }
+        .si-purple { background: rgba(139,92,246,0.2); color: #c4b5fd; }
+        .si-pink   { background: rgba(236,72,153,0.2); color: #f9a8d4; }
+        .stat-val  { font-family: var(--font-heading); font-size: 22px; font-weight: 700; color: var(--text-primary); line-height: 1; margin-bottom: 3px; }
+        .stat-lbl  { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* FEATURE GRID */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px; margin-bottom: 28px;
+        }
+        .feat-card {
+            padding: 24px; border-radius: 16px;
+            display: flex; flex-direction: column; gap: 14px;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+        .feat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 44px rgba(0,0,0,0.4), var(--card-sheen);
+            border-color: rgba(255,255,255,0.18);
+        }
+        .feat-icon { width: 48px; height: 48px; border-radius: 13px; display: flex; align-items: center; justify-content: center; }
+        .fi-indigo { background: rgba(99,102,241,0.2); color: #a5b4fc; }
+        .fi-purple { background: rgba(139,92,246,0.2); color: #c4b5fd; }
+        .fi-pink   { background: rgba(236,72,153,0.2); color: #f9a8d4; }
+        .fi-cyan   { background: rgba(6,182,212,0.2);  color: #67e8f9; }
+        .fi-green  { background: rgba(34,197,94,0.2);  color: #86efac; }
+        .fi-amber  { background: rgba(245,158,11,0.2); color: #fcd34d; }
+        .feat-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+        .feat-desc  { font-size: 12px; color: var(--text-secondary); line-height: 1.65; flex: 1; }
+
+        /* BUTTONS */
+        .btn-primary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+            padding: 9px 18px; border-radius: 9px; border: none;
+            background: linear-gradient(135deg, var(--accent-from), var(--accent-mid), var(--accent-to));
+            color: #fff; font-family: var(--font-body); font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+            text-decoration: none; white-space: nowrap; width: fit-content;
+        }
+        .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-ghost {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border-radius: 8px;
+            border: 1px solid var(--card-border); background: rgba(255,255,255,0.04);
+            color: var(--text-secondary); font-family: var(--font-body); font-size: 12px; font-weight: 500;
+            cursor: pointer; transition: border-color 0.2s, color 0.2s; text-decoration: none;
+        }
+        .btn-ghost:hover { border-color: rgba(99,102,241,0.4); color: var(--text-primary); }
+
+        /* TABS */
+        .tabs-wrap { margin-bottom: 8px; }
+        .tabs-nav {
+            display: flex; gap: 2px; padding: 6px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--card-border);
+            border-radius: 16px 16px 0 0; flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 9px 24px; border-radius: 9px; border: none; background: none;
+            color: var(--text-muted); font-family: var(--font-body); font-size: 13px; font-weight: 500;
+            cursor: pointer; transition: background 0.2s, color 0.2s; white-space: nowrap;
+        }
+        .tab-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-secondary); }
+        .tab-btn.active { background: rgba(99,102,241,0.2); color: #a5b4fc; font-weight: 600; }
+        .tab-pane { display: none; padding: 30px 34px; }
+        .tab-pane.active { display: block; }
+
+        /* SHARED TABLE */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table thead tr { border-bottom: 1px solid var(--card-border); }
+        .data-table th {
+            text-align: left; padding: 10px 14px;
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.8px; color: var(--text-muted);
+        }
+        .data-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
+        .data-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+        .data-table tbody tr:last-child { border-bottom: none; }
+        .data-table td { padding: 13px 14px; color: var(--text-secondary); vertical-align: middle; }
+        .data-table td:first-child { color: var(--text-primary); }
+
+        .status-dot { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+        .status-dot::before { content: ''; width: 7px; height: 7px; border-radius: 50%; }
+        .sd-active::before  { background: #86efac; }
+        .sd-pending::before { background: #fcd34d; }
+        .sd-closed::before  { background: var(--text-muted); }
+
+        /* STUDENTS */
+        .students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+        .student-card {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
+            border-radius: 12px; padding: 14px 16px;
+            display: flex; align-items: center; gap: 12px; transition: border-color 0.2s;
+        }
+        .student-card:hover { border-color: rgba(99,102,241,0.3); }
+        .s-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; flex-shrink: 0;
+        }
+        .s-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+        .s-id   { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        /* ASSIGNMENTS */
+        .assignment-list { display: flex; flex-direction: column; gap: 12px; }
+        .assignment-item {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
+            border-radius: 12px; padding: 16px 20px;
+            display: flex; align-items: center; gap: 16px; flex-wrap: wrap; transition: border-color 0.2s;
+        }
+        .assignment-item:hover { border-color: rgba(99,102,241,0.3); }
+        .asgn-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: rgba(99,102,241,0.15); color: #a5b4fc;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .asgn-info { flex: 1; min-width: 160px; }
+        .asgn-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+        .asgn-meta  { font-size: 12px; color: var(--text-muted); }
+        .asgn-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+        /* ATTENDANCE */
+        .att-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; margin-bottom: 22px; }
+        .att-stat { background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px; text-align: center; }
+        .att-val  { font-family: var(--font-heading); font-size: 26px; font-weight: 700; margin-bottom: 5px; }
+        .att-lbl  { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .c-green  { color: #86efac; }
+        .c-red    { color: #fca5a5; }
+        .c-cyan   { color: #67e8f9; }
+        .c-amber  { color: #fcd34d; }
+
+        /* MATERIALS */
+        .material-list { display: flex; flex-direction: column; gap: 12px; }
+        .material-item {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
+            border-radius: 12px; padding: 14px 18px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap; transition: border-color 0.2s;
+        }
+        .material-item:hover { border-color: rgba(34,197,94,0.3); }
+        .mat-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(34,197,94,0.15); color: #86efac; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .mat-info { flex: 1; min-width: 140px; }
+        .mat-name { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+        .mat-meta { font-size: 11px; color: var(--text-muted); }
+
+        .tab-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+        .tab-header-info { font-size: 13px; color: var(--text-muted); }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .page { padding: 24px 20px 60px; }
+            .subject-header { padding: 22px; }
+            .tab-pane { padding: 22px; }
+            .topbar { padding: 0 20px; }
+            .feature-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+        }
+        @media (max-width: 600px) {
+            .page { padding: 16px 12px 48px; }
+            .feature-grid { grid-template-columns: 1fr 1fr; }
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .tab-pane { padding: 16px; }
+        }
+        @media (max-width: 400px) {
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+    <a class="logo-wrap" href="#">
+        <div class="logo-icon">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+        </div>
+        <span class="logo-text">Smart Campus</span>
+    </a>
+    <div class="topbar-divider"></div>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/teacher-dashboard">Dashboard</a>
+        <span class="breadcrumb-sep">›</span>
+        <a href="teacher-mysubjects">My Subjects</a>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Data Structures &amp; Algorithms</span>
+    </nav>
+    <div class="topbar-actions">
+        <div class="notif-wrap">
+            <button class="topbar-btn" aria-label="Notifications">
+                <div class="notif-dot"></div>
+                <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            </button>
+        </div>
+        <!-- <button class="topbar-btn" aria-label="Settings">
+          <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button> -->
+        <div class="topbar-avatar">JD</div>
+    </div>
+</header>
+
+<!-- PAGE -->
+<main class="page">
+
+    <!-- 1. SUBJECT HEADER -->
+    <section class="glass-card subject-header" aria-label="Subject information">
+        <div class="subject-header-top">
+            <div class="subject-icon">
+                <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+                    <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                </svg>
+            </div>
+            <div class="subject-title-block">
+                <h1 class="subject-name">Data Structures &amp; Algorithms</h1>
+                <div class="badge-row">
+          <span class="badge badge-code">
+            <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+            CS-301
+          </span>
+                    <span class="badge badge-dept">
+            <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+            Computer Science
+          </span>
+
+                    <span class="badge badge-credits">
+            <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            4 Credits
+          </span>
+                    <span class="badge badge-section">
+            <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Section A
+          </span>
+                </div>
+                <p class="subject-desc">An in-depth study of fundamental data structures—arrays, linked lists, trees, graphs, and hash tables—combined with algorithm design paradigms including divide-and-conquer, dynamic programming, and greedy approaches. Students apply computational complexity analysis to evaluate and optimize solutions.</p>
+            </div>
+        </div>
+        <div class="stats-row">
+            <div class="stat-pill">
+                <div class="stat-icon si-blue">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                </div>
+                <div><div class="stat-val">62</div><div class="stat-lbl">Total Students</div></div>
+            </div>
+            <div class="stat-pill">
+                <div class="stat-icon si-cyan">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                </div>
+                <div><div class="stat-val">8</div><div class="stat-lbl">Assignments</div></div>
+            </div>
+            <div class="stat-pill">
+                <div class="stat-icon si-purple">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                </div>
+                <div><div class="stat-val">87%</div><div class="stat-lbl">Attendance</div></div>
+            </div>
+            <div class="stat-pill">
+                <div class="stat-icon si-pink">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div><div class="stat-val">3</div><div class="stat-lbl">Active Quizzes</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. FEATURE GRID -->
+    <div class="section-label">Quick Actions</div>
+    <div class="feature-grid" role="list">
+
+        <article class="glass-card feat-card" role="listitem">
+            <div class="feat-icon fi-indigo">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div><div class="feat-title">View Students</div><div class="feat-desc">Browse enrolled students, check profiles, and monitor individual academic progress for this subject.</div></div>
+            <button class="btn-primary">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                View Students
+            </button>
+        </article>
+
+        <article class="glass-card feat-card" role="listitem">
+            <div class="feat-icon fi-purple">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div><div class="feat-title">Assign Quiz</div><div class="feat-desc">Create and schedule a new quiz with custom questions, time limits, and automated grading criteria.</div></div>
+            <button class="btn-primary">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+                Create Quiz
+            </button>
+        </article>
+
+        <article class="glass-card feat-card" role="listitem">
+            <div class="feat-icon fi-pink">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            </div>
+            <div><div class="feat-title">Assign Feedback Form</div><div class="feat-desc">Send structured feedback forms to collect course evaluations and student improvement suggestions.</div></div>
+            <button class="btn-primary">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+                Create Feedback Form
+            </button>
+        </article>
+
+        <article class="glass-card feat-card" role="listitem">
+            <div class="feat-icon fi-cyan">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            </div>
+            <div><div class="feat-title">Manage Attendance</div><div class="feat-desc">Record today's attendance, view historical logs, and export attendance reports for this subject.</div></div>
+            <button class="btn-primary">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+                Take Attendance
+            </button>
+        </article>
+
+        <article class="glass-card feat-card" role="listitem">
+            <div class="feat-icon fi-green">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10M12 21V3M3 9l9-6 9 6"/></svg>
+            </div>
+            <div><div class="feat-title">Upload Study Material</div><div class="feat-desc">Share lecture slides, notes, reference PDFs, and supplementary resources with enrolled students.</div></div>
+            <button class="btn-primary">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                Upload Material
+            </button>
+        </article>
+
+        <article class="glass-card feat-card" role="listitem">
+            <div class="feat-icon fi-amber">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            </div>
+            <div><div class="feat-title">Upload Assignment</div><div class="feat-desc">Create a new assignment with instructions, rubric, file attachments, and submission deadlines.</div></div>
+            <button class="btn-primary">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                Upload Assignment
+            </button>
+        </article>
+
+    </div>
+
+    <!-- 3. SUBJECT DETAILS TABS (no Overview) -->
+    <div class="section-label">Subject Details</div>
+    <div class="glass-card tabs-wrap">
+
+        <div class="tabs-nav" role="tablist" aria-label="Subject detail tabs">
+            <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="students">Students</button>
+            <button class="tab-btn"        role="tab" aria-selected="false" data-tab="assignments">Assignments</button>
+            <button class="tab-btn"        role="tab" aria-selected="false" data-tab="attendance">Attendance</button>
+            <button class="tab-btn"        role="tab" aria-selected="false" data-tab="materials">Materials</button>
+        </div>
+
+        <!-- STUDENTS TAB -->
+        <div class="tab-pane active" id="tab-students" role="tabpanel">
+            <div class="tab-header">
+                <span class="tab-header-info">62 students enrolled in Section A</span>
+                <button class="btn-primary" style="font-size:12px;padding:8px 16px;">
+                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                    Export List
+                </button>
+            </div>
+            <div class="students-grid">
+                <div class="student-card"><div class="s-avatar">AR</div><div><div class="s-name">Aditya Rao</div><div class="s-id">CS21B001</div></div></div>
+                <div class="student-card"><div class="s-avatar">PK</div><div><div class="s-name">Priya Kumar</div><div class="s-id">CS21B002</div></div></div>
+                <div class="student-card"><div class="s-avatar">RS</div><div><div class="s-name">Rahul Sharma</div><div class="s-id">CS21B003</div></div></div>
+                <div class="student-card"><div class="s-avatar">AM</div><div><div class="s-name">Ananya Menon</div><div class="s-id">CS21B004</div></div></div>
+                <div class="student-card"><div class="s-avatar">VN</div><div><div class="s-name">Vikram Nair</div><div class="s-id">CS21B005</div></div></div>
+                <div class="student-card"><div class="s-avatar">SJ</div><div><div class="s-name">Sneha Joshi</div><div class="s-id">CS21B006</div></div></div>
+                <div class="student-card"><div class="s-avatar">KP</div><div><div class="s-name">Karan Patel</div><div class="s-id">CS21B007</div></div></div>
+                <div class="student-card"><div class="s-avatar">DG</div><div><div class="s-name">Divya Gupta</div><div class="s-id">CS21B008</div></div></div>
+                <div class="student-card"><div class="s-avatar">MR</div><div><div class="s-name">Meera Reddy</div><div class="s-id">CS21B009</div></div></div>
+                <div class="student-card"><div class="s-avatar">SB</div><div><div class="s-name">Sahil Bansal</div><div class="s-id">CS21B010</div></div></div>
+                <div class="student-card"><div class="s-avatar">TS</div><div><div class="s-name">Tanya Singh</div><div class="s-id">CS21B011</div></div></div>
+                <div class="student-card"><div class="s-avatar">NI</div><div><div class="s-name">Nikhil Iyer</div><div class="s-id">CS21B012</div></div></div>
+            </div>
+            <p style="font-size:12px;color:var(--text-muted);margin-top:18px;text-align:center;">
+                Showing 12 of 62 students · <a href="#" style="color:#a5b4fc;text-decoration:none;">View all students</a>
+            </p>
+        </div>
+
+        <!-- ASSIGNMENTS TAB -->
+        <div class="tab-pane" id="tab-assignments" role="tabpanel">
+            <div class="tab-header">
+                <span class="tab-header-info">8 assignments · 3 active</span>
+                <button class="btn-primary" style="font-size:12px;padding:8px 16px;">
+                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+                    New Assignment
+                </button>
+            </div>
+            <div class="assignment-list">
+                <div class="assignment-item">
+                    <div class="asgn-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+                    <div class="asgn-info"><div class="asgn-title">Graph Traversal – DFS &amp; BFS</div><div class="asgn-meta">Due: Feb 25, 2026 · 62 submissions pending</div></div>
+                    <div class="asgn-right"><span class="status-dot sd-active">Active</span><button class="btn-ghost">View</button></div>
+                </div>
+                <div class="assignment-item">
+                    <div class="asgn-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+                    <div class="asgn-info"><div class="asgn-title">Balanced BST Implementation</div><div class="asgn-meta">Due: Feb 21, 2026 · 58 / 62 submitted</div></div>
+                    <div class="asgn-right"><span class="status-dot sd-pending">Grading</span><button class="btn-ghost">Grade</button></div>
+                </div>
+                <div class="assignment-item">
+                    <div class="asgn-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+                    <div class="asgn-info"><div class="asgn-title">Hash Table Implementation</div><div class="asgn-meta">Due: Feb 12, 2026 · 61 / 62 submitted</div></div>
+                    <div class="asgn-right"><span class="status-dot sd-closed">Closed</span><button class="btn-ghost">Results</button></div>
+                </div>
+                <div class="assignment-item">
+                    <div class="asgn-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+                    <div class="asgn-info"><div class="asgn-title">Linked List Operations</div><div class="asgn-meta">Due: Jan 28, 2026 · 62 / 62 submitted</div></div>
+                    <div class="asgn-right"><span class="status-dot sd-closed">Graded</span><button class="btn-ghost">Results</button></div>
+                </div>
+                <div class="assignment-item">
+                    <div class="asgn-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+                    <div class="asgn-info"><div class="asgn-title">Stack &amp; Queue Problems</div><div class="asgn-meta">Due: Jan 14, 2026 · 60 / 62 submitted</div></div>
+                    <div class="asgn-right"><span class="status-dot sd-closed">Graded</span><button class="btn-ghost">Results</button></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ATTENDANCE TAB -->
+        <div class="tab-pane" id="tab-attendance" role="tabpanel">
+            <div class="tab-header">
+                <span class="tab-header-info">28 lectures recorded this semester</span>
+                <button class="btn-primary" style="font-size:12px;padding:8px 16px;">
+                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+                    Take Attendance
+                </button>
+            </div>
+            <div class="att-summary">
+                <div class="att-stat"><div class="att-val c-green">87%</div><div class="att-lbl">Avg. Attendance</div></div>
+                <div class="att-stat"><div class="att-val c-cyan">28</div><div class="att-lbl">Classes Held</div></div>
+                <div class="att-stat"><div class="att-val c-amber">54</div><div class="att-lbl">Above 75%</div></div>
+                <div class="att-stat"><div class="att-val c-red">8</div><div class="att-lbl">Below 75%</div></div>
+            </div>
+            <div style="overflow-x:auto;">
+                <table class="data-table" aria-label="Attendance records">
+                    <thead>
+                    <tr><th>Date</th><th>Lecture</th><th>Present</th><th>Absent</th><th>Percentage</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>Feb 18, 2026</td><td>Lecture 14 – Graph Traversal</td><td style="color:#86efac;font-weight:600;">58</td><td style="color:#fca5a5;font-weight:600;">4</td><td>93.5%</td><td><button class="btn-ghost">Edit</button></td></tr>
+                    <tr><td>Feb 15, 2026</td><td>Lecture 13 – Dijkstra's Algorithm</td><td style="color:#86efac;font-weight:600;">55</td><td style="color:#fca5a5;font-weight:600;">7</td><td>88.7%</td><td><button class="btn-ghost">Edit</button></td></tr>
+                    <tr><td>Feb 11, 2026</td><td>Lecture 12 – Heap &amp; Priority Queue</td><td style="color:#86efac;font-weight:600;">60</td><td style="color:#fca5a5;font-weight:600;">2</td><td>96.7%</td><td><button class="btn-ghost">Edit</button></td></tr>
+                    <tr><td>Feb 08, 2026</td><td>Lecture 11 – AVL Trees</td><td style="color:#86efac;font-weight:600;">51</td><td style="color:#fca5a5;font-weight:600;">11</td><td>82.2%</td><td><button class="btn-ghost">Edit</button></td></tr>
+                    <tr><td>Feb 04, 2026</td><td>Lecture 10 – Hash Tables</td><td style="color:#86efac;font-weight:600;">57</td><td style="color:#fca5a5;font-weight:600;">5</td><td>91.9%</td><td><button class="btn-ghost">Edit</button></td></tr>
+                    <tr><td>Jan 31, 2026</td><td>Lecture 9 – Binary Search Trees</td><td style="color:#86efac;font-weight:600;">53</td><td style="color:#fca5a5;font-weight:600;">9</td><td>85.5%</td><td><button class="btn-ghost">Edit</button></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MATERIALS TAB -->
+        <div class="tab-pane" id="tab-materials" role="tabpanel">
+            <div class="tab-header">
+                <span class="tab-header-info">14 files uploaded across 3 folders</span>
+                <button class="btn-primary" style="font-size:12px;padding:8px 16px;">
+                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                    Upload File
+                </button>
+            </div>
+            <div class="material-list">
+                <div class="material-item">
+                    <div class="mat-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
+                    <div class="mat-info"><div class="mat-name">Week 7 – Graph Algorithms Slides.pdf</div><div class="mat-meta">3.2 MB · Uploaded Feb 15, 2026</div></div>
+                    <button class="btn-ghost"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download</button>
+                </div>
+                <div class="material-item">
+                    <div class="mat-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
+                    <div class="mat-info"><div class="mat-name">Dynamic Programming Reference Notes.pdf</div><div class="mat-meta">1.8 MB · Uploaded Feb 10, 2026</div></div>
+                    <button class="btn-ghost"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download</button>
+                </div>
+                <div class="material-item">
+                    <div class="mat-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
+                    <div class="mat-info"><div class="mat-name">Week 6 – Binary Trees &amp; BST.pdf</div><div class="mat-meta">2.5 MB · Uploaded Feb 05, 2026</div></div>
+                    <button class="btn-ghost"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download</button>
+                </div>
+                <div class="material-item">
+                    <div class="mat-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
+                    <div class="mat-info"><div class="mat-name">Complexity Analysis Cheat Sheet.pdf</div><div class="mat-meta">0.6 MB · Uploaded Jan 28, 2026</div></div>
+                    <button class="btn-ghost"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download</button>
+                </div>
+                <div class="material-item">
+                    <div class="mat-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
+                    <div class="mat-info"><div class="mat-name">Sorting Algorithms Visualized.pptx</div><div class="mat-meta">5.1 MB · Uploaded Jan 20, 2026</div></div>
+                    <button class="btn-ghost"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    (function () {
+        document.querySelectorAll('.tab-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.tab-btn').forEach(function (b) {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                });
+                document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.remove('active'); });
+                btn.classList.add('active');
+                btn.setAttribute('aria-selected', 'true');
+                var pane = document.getElementById('tab-' + btn.getAttribute('data-tab'));
+                if (pane) pane.classList.add('active');
+            });
+        });
+    })();
+</script>
+</body>
+</html>

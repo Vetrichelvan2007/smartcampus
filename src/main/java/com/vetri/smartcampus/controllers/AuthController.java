@@ -1,6 +1,7 @@
 package com.vetri.smartcampus.controllers;
 
 import com.vetri.smartcampus.models.DataBaseConnection;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +17,12 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login() {
-        return "Login";
+        return "Auth/Login";
     }
 
     @GetMapping("/")
     public String welcome() {
-        return "Welcome";
+        return "Auth/Welcome";
     }
 
     @PostMapping("/login")
@@ -65,6 +66,24 @@ public class AuthController {
 
                     return "redirect:/student-dashboard";
                 }
+                if ("teacher".equals(role)) {
+
+                    PreparedStatement teacherPs = DataBaseConnection.getPreparedStatement(con,"SELECT * FROM teacher WHERE email=?");
+                    teacherPs.setString(1, username);
+
+                    ResultSet teacherRs = teacherPs.executeQuery();
+
+//                    if (teacherRs.next()) {
+//                        session.setAttribute("studentId", teacherRs.getLong("id"));
+//                        session.setAttribute("studentRollNumber", teacherRs.getString("roll_number"));
+//                        session.setAttribute("studentName", teacherRs.getString("name"));
+//                        session.setAttribute("department_id", teacherRs.getString("dept_id"));
+//                    }
+                    teacherPs.close();
+                    teacherRs.close();
+
+                    return "redirect:/teacher-dashboard";
+                }
             }
             userPs.close();
             userRs.close();
@@ -73,6 +92,17 @@ public class AuthController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "redirect:/login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
         return "redirect:/login";
     }
 
