@@ -21,7 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class StudentController {
 
     @GetMapping("/student-dashboard")
-    public String studentDashboard() {
+    public String studentDashboard(HttpSession session) {
+
+        Object sid = session.getAttribute("studentId");
+        if (sid == null) {
+            return "redirect:/login";
+        }
         return "Student/StudentDashboard";
     }
 
@@ -225,32 +230,39 @@ public class StudentController {
 
             Long studentId = Long.parseLong(sid.toString());
 
-            // 🔹 Get student department + semester
-            PreparedStatement ps1 = DataBaseConnection.getPreparedStatement(
-                    con,
-                    "SELECT dept_id, current_semester FROM student WHERE id=?");
-
+            PreparedStatement ps1 = DataBaseConnection.getPreparedStatement(con, "SELECT dept_id, current_semester FROM student WHERE id=?");
             ps1.setLong(1, studentId);
             ResultSet rs1 = ps1.executeQuery();
 
             Long deptId = null;
             int currentSemester = 1;
 
-            if(rs1.next()){
+            if (rs1.next()) {
                 deptId = rs1.getLong("dept_id");
                 currentSemester = rs1.getInt("current_semester");
+            } else {
+                return "redirect:/login";
+            }
+
+            PreparedStatement ps0 = DataBaseConnection.getPreparedStatement(con,"select student_id from student_course_teacher where student_id =? and semester = ?");
+            ps0.setLong(1,studentId);
+            ps0.setInt(2, currentSemester);
+
+            ResultSet rs0 = ps0.executeQuery();
+
+            if(rs0.next()) {
+                return "redirect:/registered-course";
             }
 
             model.addAttribute("current_semester", currentSemester);
 
-            // 🔥 Fetch courses based on dept + semester (WITH course_code)
             PreparedStatement ps2 = DataBaseConnection.getPreparedStatement(con,
                     "SELECT c.id, c.course_code, c.course_name, c.course_type, cfd.sem, " +
                             "t.id, t.name " +
                             "FROM course_for_depts cfd " +
                             "JOIN course c ON c.id = cfd.course_id " +
-                            "JOIN course_teacher_allocation cta ON c.id = cta.course_id " +
-                            "JOIN teacher t ON cta.teacher_id = t.id " +
+                            "LEFT JOIN course_teacher_allocation cta ON c.id = cta.course_id " +
+                            "LEFT JOIN teacher t ON cta.teacher_id = t.id " +
                             "WHERE cfd.dept_id = ? AND cfd.sem = ? " +
                             "ORDER BY c.id");
 
@@ -264,26 +276,30 @@ public class StudentController {
             while(rs2.next()){
 
                 Long courseId = rs2.getLong(1);
-                String courseCode = rs2.getString(2);   // 🔥 new
+                String courseCode = rs2.getString(2);
                 String courseName = rs2.getString(3);
                 String courseType = rs2.getString(4);
                 int courseSem = rs2.getInt(5);
-                Long teacherId = rs2.getLong(6);
+
+
+                Long teacherId = (Long) rs2.getObject(6);
                 String teacherName = rs2.getString(7);
 
                 CourseRegistration course = courseMap.get(courseId);
 
                 if(course == null){
                     course = new CourseRegistration(courseId, courseName, courseType);
-                    course.setCourseCode(courseCode);   // 🔥 set code
+                    course.setCourseCode(courseCode);
                     course.setCourseSem(courseSem);
                     course.setTeacherIds(new ArrayList<>());
                     course.setTeacherNames(new ArrayList<>());
                     courseMap.put(courseId, course);
                 }
 
-                course.getTeacherIds().add(teacherId);
-                course.getTeacherNames().add(teacherName);
+                if (teacherId != null && teacherName != null) {
+                    course.getTeacherIds().add(teacherId);
+                    course.getTeacherNames().add(teacherName);
+                }
             }
 
             List<CourseRegistration> courses =
@@ -294,12 +310,56 @@ public class StudentController {
         } catch(Exception e){
             e.printStackTrace();
         }
-
         return "Student/CourseRegistration";
     }
 
     @PostMapping("/courseregistraction-submit")
-    public String handleCourseRegistration(@RequestBody List<CourseDTO> selectedCourses, HttpSession session) {
+    public String handleCourseRegistration(@RequestBody List<CourseDTO> selectedCourses,HttpSession session) {
+
+        try {
+            Object sid = session.getAttribute("studentId");
+            if (sid == null) return "redirect:/login";
+
+            Long studentId = Long.parseLong(sid.toString());
+            Connection con = DataBaseConnection.getConnection();
+            con.setAutoCommit(false);
+
+            PreparedStatement getStudent = DataBaseConnection.getPreparedStatement(con,"SELECT current_semester FROM student WHERE id = ?");
+            getStudent.setLong(1, studentId);
+
+            ResultSet rs = getStudent.executeQuery();
+
+            if (!rs.next()) return "redirect:/login";
+
+            int currentSem = rs.getInt("current_semester");
+
+            PreparedStatement ps = DataBaseConnection.getPreparedStatement(con,
+                    "INSERT INTO student_course_teacher " +
+                            "(student_id, course_id, teacher_id, semester, status) " +
+                            "VALUES (?, ?, ?, ?, ?)");
+
+            for (CourseDTO dto : selectedCourses) {
+                ps.setLong(1, studentId);
+                ps.setLong(2, dto.getCourseId());
+                ps.setLong(3, dto.getTeacherId());
+                ps.setInt(4, currentSem);
+                ps.setString(5, "ACTIVE");
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+            con.commit();
+
+            return "redirect:/registered-course";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/courseregistration";
+        }
+    }
+
+    @GetMapping("/registered-course")
+    public String registeredcourse(HttpSession session, Model model) {
 
         try {
             Object sid = session.getAttribute("studentId");
@@ -308,33 +368,79 @@ public class StudentController {
             }
 
             Long studentId = Long.parseLong(sid.toString());
-
             Connection con = DataBaseConnection.getConnection();
-            for (CourseDTO dto : selectedCourses) {
-                System.out.println("CourseId: " + dto.getCourseId());
-                System.out.println("TeacherId: " + dto.getTeacherId());
-            }
-            for (CourseDTO dto : selectedCourses) {
 
-                PreparedStatement ps = con.prepareStatement(
-                        "INSERT INTO student_course_teacher " +
-                                "(student_id, course_id, teacher_id) VALUES (?, ?, ?)");
 
-                ps.setLong(1, studentId);
-                ps.setLong(2, dto.getCourseId());
-                ps.setLong(3, dto.getTeacherId());
+            PreparedStatement ps1 = DataBaseConnection.getPreparedStatement(con, "SELECT current_semester FROM student WHERE id = ?");
+            ps1.setLong(1, studentId);
+            ResultSet rs1 = ps1.executeQuery();
 
-                ps.executeUpdate();
+            int currentSemester = 1;
+
+            if (rs1.next()) {
+                currentSemester = rs1.getInt("current_semester");
+            } else {
+                return "redirect:/login";
             }
 
-            return "redirect:/success-page";
+            model.addAttribute("current_semester", currentSemester);
+
+            // 🔹 2️⃣ Fetch registered courses
+            PreparedStatement ps2 = DataBaseConnection.getPreparedStatement(con,
+                    "SELECT c.id, c.course_code, c.course_name, c.course_type, sct.semester, " +
+                            "t.id, t.name " +
+                            "FROM student_course_teacher sct " +
+                            "JOIN course c ON sct.course_id = c.id " +
+                            "LEFT JOIN teacher t ON sct.teacher_id = t.id " +
+                            "WHERE sct.student_id = ? AND sct.semester = ? " +
+                            "ORDER BY c.id");
+
+            ps2.setLong(1, studentId);
+            ps2.setInt(2, currentSemester);
+
+            ResultSet rs2 = ps2.executeQuery();
+
+            Map<Long, CourseRegistration> courseMap = new LinkedHashMap<>();
+
+            while (rs2.next()) {
+
+                Long courseId = rs2.getLong(1);
+                String courseCode = rs2.getString(2);
+                String courseName = rs2.getString(3);
+                String courseType = rs2.getString(4);
+                int courseSem = rs2.getInt(5);
+
+                Long teacherId = (Long) rs2.getObject(6);
+                String teacherName = rs2.getString(7);
+
+                CourseRegistration course = courseMap.get(courseId);
+
+                if (course == null) {
+                    course = new CourseRegistration(courseId, courseName, courseType);
+                    course.setCourseCode(courseCode);
+                    course.setCourseSem(courseSem);
+                    course.setTeacherIds(new ArrayList<>());
+                    course.setTeacherNames(new ArrayList<>());
+                    courseMap.put(courseId, course);
+                }
+
+                if (teacherId != null && teacherName != null) {
+                    course.getTeacherIds().add(teacherId);
+                    course.getTeacherNames().add(teacherName);
+                }
+            }
+
+            List<CourseRegistration> courses =
+                    new ArrayList<>(courseMap.values());
+
+            model.addAttribute("courses", courses);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/courseregistration";
         }
-    }
 
+        return "Student/RegisteredCourse";
+    }
     @GetMapping("/feedback")
     public String feedback(HttpSession session, Model model){
         return "Student/Feedback";

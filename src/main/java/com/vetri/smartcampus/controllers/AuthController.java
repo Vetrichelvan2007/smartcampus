@@ -16,7 +16,12 @@ import java.sql.ResultSet;
 public class AuthController {
 
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpSession session) {
+
+        Object sid = session.getAttribute("studentId");
+        if (sid != null) {
+            return "redirect:/student-dashboard";
+        }
         return "Auth/Login";
     }
 
@@ -68,19 +73,29 @@ public class AuthController {
                 }
                 if ("teacher".equals(role)) {
 
-                    PreparedStatement teacherPs = DataBaseConnection.getPreparedStatement(con,"SELECT * FROM teacher WHERE email=?");
+                    PreparedStatement teacherPs =
+                            DataBaseConnection.getPreparedStatement(con,
+                                    "SELECT * FROM teacher WHERE email=?");
+
                     teacherPs.setString(1, username);
 
                     ResultSet teacherRs = teacherPs.executeQuery();
 
-//                    if (teacherRs.next()) {
-//                        session.setAttribute("studentId", teacherRs.getLong("id"));
-//                        session.setAttribute("studentRollNumber", teacherRs.getString("roll_number"));
-//                        session.setAttribute("studentName", teacherRs.getString("name"));
-//                        session.setAttribute("department_id", teacherRs.getString("dept_id"));
-//                    }
-                    teacherPs.close();
+                    if (teacherRs.next()) {
+
+                        session.setAttribute("teacherId", teacherRs.getLong("id"));
+                        session.setAttribute("teacherName", teacherRs.getString("name"));
+                        session.setAttribute("teacherEmail", teacherRs.getString("email"));
+                        session.setAttribute("teacherClgId", teacherRs.getString("teacher_clg_id"));
+                        session.setAttribute("department_id", teacherRs.getLong("department_id"));
+                        session.setAttribute("designation", teacherRs.getString("designation"));
+                        session.setAttribute("staffType", teacherRs.getString("staff_type"));
+                        session.setAttribute("accountStatus", teacherRs.getString("account_status"));
+
+                    }
+
                     teacherRs.close();
+                    teacherPs.close();
 
                     return "redirect:/teacher-dashboard";
                 }
@@ -103,7 +118,7 @@ public class AuthController {
             session.invalidate();
         }
 
-        return "redirect:/login";
+        return "redirect:/";
     }
 
 }
