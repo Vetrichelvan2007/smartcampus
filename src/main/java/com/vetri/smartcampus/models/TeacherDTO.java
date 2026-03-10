@@ -1,4 +1,4 @@
-package com.vetri.smartcampus.controllers;
+package com.vetri.smartcampus.models;
 
 import java.sql.Date;
 import java.sql.Timestamp;

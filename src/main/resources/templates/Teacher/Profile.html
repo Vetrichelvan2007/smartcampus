@@ -691,7 +691,7 @@
                                 <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                                 Current Position
                             </div>
-                            <div class="info-value">Associate Professor</div>
+                            <div class="info-value" th:text="${teacher.designation}">Associate Professor</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">
@@ -705,7 +705,7 @@
                                 <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                                 Staff Type
                             </div>
-                            <div class="info-value">Teaching Faculty</div>
+                            <div class="info-value" th:text="${teacher.staffType}">Teaching Faculty</div>
                         </div>
                     </div>
                 </div>
@@ -765,11 +765,11 @@
                 </div>
                 <div class="card-body">
                     <div class="research-stats">
-                        <div class="res-stat"><div class="res-stat-val rsv-indigo">24</div><div class="res-stat-lbl">Papers Published</div></div>
-                        <div class="res-stat"><div class="res-stat-val rsv-purple">11</div><div class="res-stat-lbl">Conferences</div></div>
-                        <div class="res-stat"><div class="res-stat-val rsv-cyan">8</div><div class="res-stat-lbl">Workshops / FDPs</div></div>
-                        <div class="res-stat"><div class="res-stat-val rsv-pink">2</div><div class="res-stat-lbl">Patents</div></div>
-                        <div class="res-stat"><div class="res-stat-val rsv-green">3</div><div class="res-stat-lbl">Funded Projects</div></div>
+                        <div class="res-stat"><div class="res-stat-val rsv-indigo" th:text="${teacher.papersPublished}"></div><div class="res-stat-lbl">Papers Published</div></div>
+                        <div class="res-stat"><div class="res-stat-val rsv-purple" th:text="${teacher.conferencesAttended}"></div><div class="res-stat-lbl">Conferences</div></div>
+                        <div class="res-stat"><div class="res-stat-val rsv-cyan" th:text="${teacher.workshopsAttended}"></div><div class="res-stat-lbl">Workshops / FDPs</div></div>
+                        <div class="res-stat"><div class="res-stat-val rsv-pink"th:text="${teacher.patents}"></div><div class="res-stat-lbl">Patents</div></div>
+                        <div class="res-stat"><div class="res-stat-val rsv-green" th:text="${teacher.fundedProjects}"></div><div class="res-stat-lbl">Funded Projects</div></div>
                     </div>
                     <div class="card-divider"></div>
                     <div class="research-list">

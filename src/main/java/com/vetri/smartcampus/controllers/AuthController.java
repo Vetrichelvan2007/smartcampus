@@ -75,7 +75,11 @@ public class AuthController {
 
                     PreparedStatement teacherPs =
                             DataBaseConnection.getPreparedStatement(con,
-                                    "SELECT * FROM teacher WHERE email=?");
+                                    "SELECT t.id, t.name, t.email, t.teacher_clg_id, t.account_status, " +
+                                            "e.department_id, e.designation, e.staff_type " +
+                                            "FROM teacher t " +
+                                            "LEFT JOIN teacher_employment_details e ON t.id = e.teacher_id " +
+                                            "WHERE t.email=?");
 
                     teacherPs.setString(1, username);
 
