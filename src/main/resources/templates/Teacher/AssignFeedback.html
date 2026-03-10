@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Feedback Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0e27;
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bg-orb.one { width: 340px; height: 340px; background: #6366f1; top: -80px; right: -80px; }
+        .bg-orb.two { width: 300px; height: 300px; background: #ec4899; bottom: -100px; left: -60px; }
+        .page {
+            max-width: 960px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .card {
+            background: rgba(15, 23, 42, 0.78);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 40px rgba(0,0,0,0.35);
+            padding: 26px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .subtitle {
+            color: #94a3b8;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+        .back-btn {
+            color: #c4b5fd;
+            text-decoration: none;
+            font-size: 13px;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 10px;
+            padding: 10px 14px;
+            background: rgba(139, 92, 246, 0.12);
+        }
+        .section-title {
+            margin: 22px 0 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .field.full { grid-column: 1 / -1; }
+        label {
+            font-size: 12px;
+            letter-spacing: 0.3px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(2, 6, 23, 0.75);
+            border-radius: 10px;
+            color: #f8fafc;
+            font-size: 14px;
+            padding: 12px 14px;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+        textarea { min-height: 92px; resize: vertical; }
+        .check-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .check-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(148, 163, 184, 0.08);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            padding: 8px 10px;
+            border-radius: 9px;
+            font-size: 13px;
+            color: #e2e8f0;
+        }
+        .check-item input { accent-color: #8b5cf6; }
+        .actions {
+            margin-top: 22px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: none;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 11px 18px;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            color: #fff;
+        }
+        .btn-secondary {
+            background: rgba(148, 163, 184, 0.15);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            color: #cbd5e1;
+        }
+        @media (max-width: 768px) {
+            body { padding: 14px; }
+            .card { padding: 18px; }
+            .grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-orb one"></div>
+<div class="bg-orb two"></div>
+
+<main class="page">
+    <div class="card">
+        <div class="header">
+            <div>
+                <h1 class="title">Assign Feedback Form</h1>
+                <p class="subtitle">Create and assign a feedback form for a selected course.</p>
+            </div>
+            <a class="back-btn" th:href="@{/teacher-dashboard}">Back to Dashboard</a>
+        </div>
+
+        <form th:action="@{/teacher-assign-feedback}" method="post">
+            <div class="section-title">Form Details</div>
+            <div class="grid">
+                <div class="field">
+                    <label for="course">Course</label>
+                    <select id="course" name="course" required>
+                        <option value="">Select Course</option>
+                        <option value="CS301">CS301 - Data Structures</option>
+                        <option value="CS402">CS402 - DBMS</option>
+                        <option value="CS501">CS501 - Computer Networks</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="formTitle">Form Title</label>
+                    <input id="formTitle" name="formTitle" type="text" placeholder="Course Feedback - Unit 1" required>
+                </div>
+                <div class="field">
+                    <label for="startDate">Start Date</label>
+                    <input id="startDate" name="startDate" type="date" required>
+                </div>
+                <div class="field">
+                    <label for="endDate">End Date</label>
+                    <input id="endDate" name="endDate" type="date" required>
+                </div>
+                <div class="field full">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Explain what this feedback is for..."></textarea>
+                </div>
+            </div>
+
+            <div class="section-title">Questions</div>
+            <div class="grid">
+                <div class="field full">
+                    <label for="q1">Question 1</label>
+                    <input id="q1" name="q1" type="text" placeholder="How clear was the course explanation?" required>
+                </div>
+                <div class="field full">
+                    <label for="q2">Question 2</label>
+                    <input id="q2" name="q2" type="text" placeholder="Was the pace of teaching suitable?" required>
+                </div>
+                <div class="field full">
+                    <label for="q3">Question 3</label>
+                    <input id="q3" name="q3" type="text" placeholder="Any suggestions to improve this course?">
+                </div>
+            </div>
+
+            <div class="section-title">Response Settings</div>
+            <div class="grid">
+                <div class="field full">
+                    <label>Feedback Type</label>
+                    <div class="check-group">
+                        <label class="check-item"><input type="checkbox" name="feedbackType" value="RATING"> Rating (1-5)</label>
+                        <label class="check-item"><input type="checkbox" name="feedbackType" value="YESNO"> Yes / No</label>
+                        <label class="check-item"><input type="checkbox" name="feedbackType" value="TEXT"> Text Response</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="targetSection">Target Section</label>
+                    <select id="targetSection" name="targetSection" required>
+                        <option value="">Select Section</option>
+                        <option value="A">Section A</option>
+                        <option value="B">Section B</option>
+                        <option value="ALL">All Sections</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="anonymous">Anonymous Responses</label>
+                    <select id="anonymous" name="anonymous" required>
+                        <option value="YES">Yes</option>
+                        <option value="NO">No</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">Assign Feedback Form</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

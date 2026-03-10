@@ -358,7 +358,7 @@
         <span class="breadcrumb-sep">›</span>
         <a href="teacher-mysubjects">My Subjects</a>
         <span class="breadcrumb-sep">›</span>
-        <span class="breadcrumb-current">Data Structures &amp; Algorithms</span>
+        <span class="breadcrumb-current" th:text="${course.coursename}"></span>
     </nav>
     <div class="topbar-actions">
         <div class="notif-wrap">
@@ -386,28 +386,25 @@
                 </svg>
             </div>
             <div class="subject-title-block">
-                <h1 class="subject-name">Data Structures &amp; Algorithms</h1>
+                <h1 class="subject-name" th:text="${course.coursename}">Data Structures &amp; Algorithms</h1>
                 <div class="badge-row">
-          <span class="badge badge-code">
+          <span class="badge badge-code" th:text="${course.coursecode}">
             <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
-            CS-301
+
           </span>
-                    <span class="badge badge-dept">
+                    <span class="badge badge-dept" th:text="${course.coursedept}">
             <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-            Computer Science
+            Dept
           </span>
 
-                    <span class="badge badge-credits">
+                    <span class="badge badge-credits" th:text="${course.credits} + ' Credit'">
             <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            4 Credits
+            Credits
           </span>
-                    <span class="badge badge-section">
+                    <span class="badge badge-section" th:text="${course.sem}+ ' Sem'">
             <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            Section A
+            Section
           </span>
-                </div>
-                <p class="subject-desc">An in-depth study of fundamental data structures—arrays, linked lists, trees, graphs, and hash tables—combined with algorithm design paradigms including divide-and-conquer, dynamic programming, and greedy approaches. Students apply computational complexity analysis to evaluate and optimize solutions.</p>
-            </div>
         </div>
         <div class="stats-row">
             <div class="stat-pill">
@@ -446,10 +443,10 @@
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
             </div>
             <div><div class="feat-title">View Students</div><div class="feat-desc">Browse enrolled students, check profiles, and monitor individual academic progress for this subject.</div></div>
-            <button class="btn-primary">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            <a class="btn-primary" href="/teacher-view-student">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
                 View Students
-            </button>
+            </a>
         </article>
 
         <article class="glass-card feat-card" role="listitem">
@@ -457,10 +454,12 @@
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <div><div class="feat-title">Assign Quiz</div><div class="feat-desc">Create and schedule a new quiz with custom questions, time limits, and automated grading criteria.</div></div>
-            <button class="btn-primary">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+            <a href="/teacher-create-quiz" class="btn-primary">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path d="M12 4v16m8-8H4"/>
+                </svg>
                 Create Quiz
-            </button>
+            </a>
         </article>
 
         <article class="glass-card feat-card" role="listitem">
@@ -468,10 +467,10 @@
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
             </div>
             <div><div class="feat-title">Assign Feedback Form</div><div class="feat-desc">Send structured feedback forms to collect course evaluations and student improvement suggestions.</div></div>
-            <button class="btn-primary">
+            <a class="btn-primary" href="/teacher-assign-feedback">
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
                 Create Feedback Form
-            </button>
+            </a>
         </article>
 
         <article class="glass-card feat-card" role="listitem">
@@ -490,10 +489,10 @@
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10M12 21V3M3 9l9-6 9 6"/></svg>
             </div>
             <div><div class="feat-title">Upload Study Material</div><div class="feat-desc">Share lecture slides, notes, reference PDFs, and supplementary resources with enrolled students.</div></div>
-            <button class="btn-primary">
+            <a class="btn-primary" href="/teacher-upload-material">
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                 Upload Material
-            </button>
+            </a>
         </article>
 
         <article class="glass-card feat-card" role="listitem">

@@ -695,13 +695,25 @@
                 <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 Attendance
             </a>
+            <a class="nav-item" th:href="@{/teacher-view-student}">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                View Student
+            </a>
 
             <div class="sidebar-nav-label">Academics</div>
             <a class="nav-item" href="#">
                 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 Internal Marks
             </a>
-            <a class="nav-item" href="#">
+            <a class="nav-item" th:href="@{/teacher-create-quiz}">
+                <svg viewBox="0 0 24 24"><path d="M12 4v16"/><path d="M4 12h16"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                Create Quiz
+            </a>
+            <a class="nav-item" th:href="@{/teacher-assign-feedback}">
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg>
+                Assign Feedback
+            </a>
+            <a class="nav-item" th:href="@{/teacher-upload-material}">
                 <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 Materials
             </a>
@@ -833,6 +845,7 @@
                         <h2 class="section-title">My Subjects</h2>
                         <a class="section-action" href="#">View All</a>
                     </div>
+
                     <div class="table-wrap">
                         <table>
                             <thead>
@@ -844,48 +857,26 @@
                                 <th>Action</th>
                             </tr>
                             </thead>
+
                             <tbody>
-                            <tr>
-                                <td>Data Structures &amp; Algorithms</td>
-                                <td>CS301</td>
-                                <td><span class="dept-badge">CSE</span></td>
-                                <td>III</td>
-                                <td><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button></td>
-                            </tr>
-                            <tr>
-                                <td>Database Management Systems</td>
-                                <td>CS402</td>
-                                <td><span class="dept-badge">CSE</span></td>
-                                <td>IV</td>
-                                <td><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button></td>
-                            </tr>
-                            <tr>
-                                <td>Operating Systems</td>
-                                <td>CS305</td>
-                                <td><span class="dept-badge">CSE</span></td>
-                                <td>III</td>
-                                <td><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button></td>
-                            </tr>
-                            <tr>
-                                <td>Computer Networks</td>
-                                <td>CS501</td>
-                                <td><span class="dept-badge">CSE</span></td>
-                                <td>V</td>
-                                <td><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button></td>
-                            </tr>
-                            <tr>
-                                <td>Machine Learning</td>
-                                <td>CS601</td>
-                                <td><span class="dept-badge">CSE</span></td>
-                                <td>VI</td>
-                                <td><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button></td>
-                            </tr>
-                            <tr>
-                                <td>Software Engineering</td>
-                                <td>CS504</td>
-                                <td><span class="dept-badge">CSE</span></td>
-                                <td>V</td>
-                                <td><button class="btn-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button></td>
+                            <tr th:each="c : ${courses}">
+                                <td th:text="${c.coursename}"></td>
+                                <td th:text="${c.coursecode}"></td>
+
+                                <td>
+                        <span class="dept-badge"
+                              th:text="${c.coursedept}">
+                        </span>
+                                </td>
+
+                                <td th:text="${c.sem}"></td>
+
+                                <td>
+                                    <a class="btn-view" style="text-decoration: none;"
+                                       th:href="@{/view-subject/{id}(id=${c.courseid})}">
+                                        View
+                                    </a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -898,63 +889,9 @@
                         <h2 class="section-title">Upcoming Classes</h2>
                         <a class="section-action" href="#">Full Schedule</a>
                     </div>
+
                     <div class="upcoming-list">
-                        <div class="upcoming-item">
-                            <div class="upcoming-time">
-                                <span class="upcoming-time-value">9:00</span>
-                                <span class="upcoming-time-period">AM</span>
-                            </div>
-                            <div class="upcoming-details">
-                                <div class="upcoming-subject">Data Structures &amp; Algorithms</div>
-                                <div class="upcoming-room">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                    Room 301 - Block A
-                                </div>
-                            </div>
-                            <div class="upcoming-status status-live"></div>
-                        </div>
-                        <div class="upcoming-item">
-                            <div class="upcoming-time">
-                                <span class="upcoming-time-value">11:00</span>
-                                <span class="upcoming-time-period">AM</span>
-                            </div>
-                            <div class="upcoming-details">
-                                <div class="upcoming-subject">Database Management Systems</div>
-                                <div class="upcoming-room">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                    Room 205 - Block B
-                                </div>
-                            </div>
-                            <div class="upcoming-status status-upcoming"></div>
-                        </div>
-                        <div class="upcoming-item">
-                            <div class="upcoming-time">
-                                <span class="upcoming-time-value">2:00</span>
-                                <span class="upcoming-time-period">PM</span>
-                            </div>
-                            <div class="upcoming-details">
-                                <div class="upcoming-subject">Operating Systems</div>
-                                <div class="upcoming-room">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                    Lab 102 - Block C
-                                </div>
-                            </div>
-                            <div class="upcoming-status status-upcoming"></div>
-                        </div>
-                        <div class="upcoming-item">
-                            <div class="upcoming-time">
-                                <span class="upcoming-time-value">4:00</span>
-                                <span class="upcoming-time-period">PM</span>
-                            </div>
-                            <div class="upcoming-details">
-                                <div class="upcoming-subject">Machine Learning</div>
-                                <div class="upcoming-room">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                    Room 408 - Block A
-                                </div>
-                            </div>
-                            <div class="upcoming-status status-upcoming"></div>
-                        </div>
+                        <!-- your upcoming items -->
                     </div>
                 </div>
 

@@ -1,22 +1,79 @@
 package com.vetri.smartcampus.controllers;
 
+import com.vetri.smartcampus.models.AssignedCourses;
 import com.vetri.smartcampus.models.DataBaseConnection;
 import com.vetri.smartcampus.models.TeacherDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+import java.util.*;
 @Controller
 public class TeacherController {
 
     @GetMapping("/teacher-dashboard")
-    public String teacerdashboard(){
+    public String teacherDashboard(HttpSession session, Model model){
+
+        try{
+
+            Object tid = session.getAttribute("teacherId");
+            if (tid == null) {
+                return "redirect:/login";
+            }
+
+            Long teacherId = Long.parseLong(tid.toString());
+
+            Connection con = DataBaseConnection.getConnection();
+
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT DISTINCT\n" +
+                            "c.id as course_id,\n"+
+                            "c.course_name,\n" +
+                            "c.course_code,\n" +
+                            "d.dept_name,\n" +
+                            "cfd.sem,\n" +
+                            "c.credit\n" +
+                            "FROM course_teacher_allocation cta\n" +
+                            "JOIN course c ON c.id = cta.course_id\n" +
+                            "JOIN course_for_depts cfd ON cfd.course_id = c.id\n" +
+                            "JOIN department d ON d.id = cfd.dept_id\n" +
+                            "WHERE cta.teacher_id = ?"
+            );
+
+            ps.setLong(1, teacherId);
+
+            ResultSet rs = ps.executeQuery();
+
+            List<AssignedCourses> courses = new ArrayList<>();
+
+            while(rs.next()){
+
+                AssignedCourses ac = new AssignedCourses();
+                ac.setCourseid(rs.getLong("course_id"));
+                ac.setCoursename(rs.getString("course_name"));
+                ac.setCoursecode(rs.getString("course_code"));
+                ac.setCoursedept(rs.getString("dept_name"));
+                ac.setSem(rs.getInt("sem"));
+                ac.setCredits(rs.getInt("credit"));
+
+                courses.add(ac);
+            }
+
+            model.addAttribute("courses", courses);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/login";
+        }
+
         return "Teacher/Dashboard";
     }
 
@@ -25,8 +82,72 @@ public class TeacherController {
         return "Teacher/MySubjects";
     }
 
-    @GetMapping("/view-subject")
-    public String viewsubject(){
+    @GetMapping("/teacher-create-quiz")
+    public String teacherCreateQuiz() {
+        return "Teacher/CreateQuiz";
+    }
+
+    @GetMapping("/teacher-view-student")
+    public String teacherViewStudent() {
+        return "Teacher/ViewStudent";
+    }
+
+    @GetMapping("/teacher-upload-material")
+    public String teacherUploadMaterial() {
+        return "Teacher/UploadMaterial";
+    }
+
+    @PostMapping("/teacher-upload-material")
+    public String teacherUploadMaterialSubmit() {
+        return "Teacher/UploadMaterial";
+    }
+
+    @GetMapping("/teacher-assign-feedback")
+    public String teacherAssignFeedback() {
+        return "Teacher/AssignFeedback";
+    }
+
+    @PostMapping("/teacher-assign-feedback")
+    public String teacherAssignFeedbackSubmit() {
+        return "Teacher/AssignFeedback";
+    }
+
+
+    @GetMapping("/view-subject/{courseid}")
+    public String viewsubject(@PathVariable("courseid") int courseid, Model model){
+
+        try{
+            Connection con = DataBaseConnection.getConnection();
+
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT c.id, c.course_name, c.course_code, c.credit, cfd.sem, d.dept_name " +
+                            "FROM course c " +
+                            "JOIN course_for_depts cfd ON c.id = cfd.course_id " +
+                            "JOIN department d ON cfd.dept_id = d.id " +
+                            "WHERE c.id = ?"
+            );
+
+            ps.setInt(1, courseid);
+
+            ResultSet rs = ps.executeQuery();
+
+            AssignedCourses course = new AssignedCourses();
+
+            if(rs.next()){
+                course.setCourseid(rs.getLong("id"));
+                course.setCoursename(rs.getString("course_name"));
+                course.setCoursecode(rs.getString("course_code"));
+                course.setCredits(rs.getInt("credit"));
+                course.setSem(rs.getInt("sem"));
+                course.setCoursedept(rs.getString("dept_name"));
+            }
+
+            model.addAttribute("course", course);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return "Teacher/ViewSubject";
     }
 
@@ -121,5 +242,7 @@ public class TeacherController {
 
         return "teacher/profile";
     }
+
+
 
 }
