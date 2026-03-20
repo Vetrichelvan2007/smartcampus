@@ -731,23 +731,17 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td><span class="degree-badge">B.E. CSE</span></td>
-                                <td>Computer Science</td>
-                                <td>Anna University, Chennai</td>
-                                <td>2007</td>
+                            <tr th:if="${qualificationDetails == null or #lists.isEmpty(qualificationDetails)}">
+                                <td colspan="4">No qualification details available.</td>
                             </tr>
-                            <tr>
-                                <td><span class="degree-badge">M.E. CSE</span></td>
-                                <td>Distributed Computing</td>
-                                <td>College of Engineering, Guindy</td>
-                                <td>2009</td>
-                            </tr>
-                            <tr>
-                                <td><span class="degree-badge phd-badge">Ph.D.</span></td>
-                                <td>Graph Neural Networks</td>
-                                <td>IIT Madras</td>
-                                <td>2014</td>
+                            <tr th:each="q : ${qualificationDetails}">
+                                <td>
+                                    <span class="degree-badge"
+                                          th:text="${(q.ugDegree != null ? q.ugDegree : '') + (q.ugDegree != null and q.pgDegree != null ? ' / ' : '') + (q.pgDegree != null ? q.pgDegree : '')}"></span>
+                                </td>
+                                <td th:text="${q.specialization}"></td>
+                                <td th:text="${q.universityName}"></td>
+                                <td th:text="${q.yearOfPassing}"></td>
                             </tr>
                             </tbody>
                         </table>

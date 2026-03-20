@@ -43,7 +43,7 @@ public class StudentController {
 
         String url = "jdbc:mysql://localhost:3306/smartcampus";
         String dbUser = "root";
-        String dbPass = "";
+        String dbPass = "root";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -447,7 +447,7 @@ public class StudentController {
     }
 
     @GetMapping("/online-exam")
-    public String onlineexam(){
+    public String onlinexam(){
         return "Student/OnlineExam";
     }
 

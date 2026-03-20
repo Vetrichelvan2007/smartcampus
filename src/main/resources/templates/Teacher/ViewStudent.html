@@ -206,19 +206,6 @@
 
         <div class="filters">
             <input type="text" placeholder="Search by name, register number, or email">
-            <select>
-                <option>All Departments</option>
-                <option>CSE</option>
-                <option>ECE</option>
-                <option>EEE</option>
-            </select>
-            <select>
-                <option>All Semesters</option>
-                <option>Semester 1</option>
-                <option>Semester 2</option>
-                <option>Semester 3</option>
-                <option>Semester 4</option>
-            </select>
         </div>
 
         <div class="table-wrap">
@@ -235,45 +222,26 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Akhil Raj</td>
-                    <td>SC2024CSE001</td>
-                    <td>CSE</td>
-                    <td>4</td>
-                    <td>91%</td>
-                    <td><span class="badge badge-active">Good</span></td>
-                    <td><a href="#" class="btn-view">View</a></td>
+                <tr th:if="${students == null or #lists.isEmpty(students)}">
+                    <td colspan="7">No students found for this course.</td>
                 </tr>
-                <tr>
-                    <td>Harini M</td>
-                    <td>SC2024CSE023</td>
-                    <td>CSE</td>
-                    <td>4</td>
-                    <td>87%</td>
-                    <td><span class="badge badge-active">Good</span></td>
-                    <td><a href="#" class="btn-view">View</a></td>
-                </tr>
-                <tr>
-                    <td>Pranav K</td>
-                    <td>SC2024ECE012</td>
-                    <td>ECE</td>
-                    <td>3</td>
-                    <td>73%</td>
-                    <td><span class="badge badge-warning">Need Attention</span></td>
+                <tr th:each="student : ${students}">
+                    <td th:text="${student.studentName}"></td>
+                    <td th:text="${student.studentRegisterNumber}"></td>
+                    <td th:text="${student.department}"></td>
+                    <td th:text="${student.semester}"></td>
+                    <td>-</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${student.status != null and student.status.equalsIgnoreCase('ACTIVE')} ? ' badge-active' : ' badge-warning'"
+                              th:text="${student.status}"></span>
+                    </td>
                     <td><a href="#" class="btn-view">View</a></td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="profile-card">
-            <div class="avatar">AR</div>
-            <div>
-                <div class="profile-name">Akhil Raj</div>
-                <div class="profile-meta">SC2024CSE001 • CSE • Semester 4 • akhil.raj@smartcampus.edu</div>
-                <div class="profile-meta">Current CGPA: 8.6 • Attendance: 91% • Advisor: Dr. Vetriselvan</div>
-            </div>
-        </div>
     </section>
 </main>
 </body>

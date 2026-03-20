@@ -3,6 +3,8 @@ package com.vetri.smartcampus.controllers;
 import com.vetri.smartcampus.models.AssignedCourses;
 import com.vetri.smartcampus.models.DataBaseConnection;
 import com.vetri.smartcampus.models.TeacherDTO;
+import com.vetri.smartcampus.models.TeacherQualificationDTO;
+import com.vetri.smartcampus.models.ViewStudentDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,8 +89,45 @@ public class TeacherController {
         return "Teacher/CreateQuiz";
     }
 
-    @GetMapping("/teacher-view-student")
-    public String teacherViewStudent() {
+    @GetMapping("/teacher-view-student/{teacherId}/{courseId}")
+    public String teacherViewStudentByCourse(@PathVariable("teacherId") long teacherId, @PathVariable("courseId") long courseId, Model model) {
+        try {
+            Connection con = DataBaseConnection.getConnection();
+
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT s.name, s.roll_number, d.dept_name, sct.semester, sct.status " +
+                            "FROM student_course_teacher sct " +
+                            "JOIN student s ON sct.student_id = s.id " +
+                            "JOIN department d ON s.dept_id = d.id " +
+                            "WHERE sct.teacher_id = ? AND sct.course_id = ?"
+            );
+
+            ps.setLong(1, teacherId);
+            ps.setLong(2, courseId);
+
+            ResultSet rs = ps.executeQuery();
+            List<ViewStudentDTO> students = new ArrayList<>();
+
+            while (rs.next()) {
+                ViewStudentDTO dto = new ViewStudentDTO();
+                dto.setStudentName(rs.getString("name"));
+                dto.setStudentRegisterNumber(rs.getString("roll_number"));
+                dto.setDepartment(rs.getString("dept_name"));
+                dto.setSemester(rs.getInt("semester"));
+                dto.setStatus(rs.getString("status"));
+                students.add(dto);
+            }
+
+            model.addAttribute("teacherId", teacherId);
+            model.addAttribute("courseId", courseId);
+            model.addAttribute("students", students);
+
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return "Teacher/ViewStudent";
     }
 
@@ -114,9 +153,17 @@ public class TeacherController {
 
 
     @GetMapping("/view-subject/{courseid}")
-    public String viewsubject(@PathVariable("courseid") int courseid, Model model){
+    public String viewsubject(@PathVariable("courseid") int courseid, Model model, HttpSession session){
 
         try{
+            Object tid = session.getAttribute("teacherId");
+            if (tid == null) {
+                return "redirect:/login";
+            }
+
+            Long teacherId = Long.parseLong(tid.toString());
+            model.addAttribute("teacherId", teacherId);
+
             Connection con = DataBaseConnection.getConnection();
 
             PreparedStatement ps = con.prepareStatement(
@@ -233,6 +280,32 @@ public class TeacherController {
 
             rs.close();
             ps.close();
+
+            PreparedStatement psQual = con.prepareStatement(
+                    "SELECT teacher_id, ug_degree, pg_degree, teacher_qualification_details.phd_status, " +
+                            "specialization, university_name, year_of_passing " +
+                            "FROM teacher_qualification_details WHERE teacher_id = 1"
+            );
+
+            ResultSet rsQual = psQual.executeQuery();
+            List<TeacherQualificationDTO> qualificationDetails = new ArrayList<>();
+
+            while (rsQual.next()) {
+                TeacherQualificationDTO qualification = new TeacherQualificationDTO();
+                qualification.setTeacherId(rsQual.getLong("teacher_id"));
+                qualification.setUgDegree(rsQual.getString("ug_degree"));
+                qualification.setPgDegree(rsQual.getString("pg_degree"));
+                qualification.setPhdStatus(rsQual.getString("phd_status"));
+                qualification.setSpecialization(rsQual.getString("specialization"));
+                qualification.setUniversityName(rsQual.getString("university_name"));
+                qualification.setYearOfPassing(rsQual.getInt("year_of_passing"));
+                qualificationDetails.add(qualification);
+            }
+
+            model.addAttribute("qualificationDetails", qualificationDetails);
+
+            rsQual.close();
+            psQual.close();
             con.close();
 
         } catch (Exception e) {

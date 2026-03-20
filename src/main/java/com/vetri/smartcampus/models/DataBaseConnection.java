@@ -9,7 +9,7 @@ public class DataBaseConnection {
     public static Connection getConnection(){
         String url = "jdbc:mysql://localhost:3306/smartcampus";
         String dbUser = "root";
-        String dbPass = "";
+        String dbPass = "root";
 
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
