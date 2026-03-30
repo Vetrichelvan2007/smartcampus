@@ -162,91 +162,194 @@
         <div class="header">
             <div>
                 <h1 class="title">Assign Feedback Form</h1>
-                <p class="subtitle">Create and assign a feedback form for a selected course.</p>
+                <p class="subtitle">Create a feedback form for a course you handle. Only students who selected you for that course can submit.</p>
             </div>
             <a class="back-btn" th:href="@{/teacher-dashboard}">Back to Dashboard</a>
         </div>
 
-        <form th:action="@{/teacher-assign-feedback}" method="post">
+        <div class="section-title">Course</div>
+        <div class="grid">
+            <div class="field full">
+                <label for="courseId">Select Course</label>
+                <select id="courseId" name="courseId" required>
+                    <option value="">Select Course</option>
+                    <option th:each="c : ${courses}"
+                            th:value="${c.courseid}"
+                            th:selected="${selectedCourse != null and selectedCourse.courseid == c.courseid}"
+                            th:text="${c.coursecode + ' - ' + c.coursename + ' (Sem ' + c.sem + ', ' + c.coursedept + ')'}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div th:if="${selectedCourse != null}">
+            <div th:if="${feedbackDbMissing}" style="margin: 14px 0 18px; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(239,68,68,0.25); background: rgba(239,68,68,0.10); color: #fecaca;">
+                Feedback tables are missing in DB. Run <strong>DB/create_feedback_tables.sql</strong> on your <strong>smartcampus</strong> database, then refresh this page.
+            </div>
+
+            <div th:if="${!feedbackDbMissing}">
             <div class="section-title">Form Details</div>
-            <div class="grid">
-                <div class="field">
-                    <label for="course">Course</label>
-                    <select id="course" name="course" required>
-                        <option value="">Select Course</option>
-                        <option value="CS301">CS301 - Data Structures</option>
-                        <option value="CS402">CS402 - DBMS</option>
-                        <option value="CS501">CS501 - Computer Networks</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label for="formTitle">Form Title</label>
-                    <input id="formTitle" name="formTitle" type="text" placeholder="Course Feedback - Unit 1" required>
-                </div>
-                <div class="field">
-                    <label for="startDate">Start Date</label>
-                    <input id="startDate" name="startDate" type="date" required>
-                </div>
-                <div class="field">
-                    <label for="endDate">End Date</label>
-                    <input id="endDate" name="endDate" type="date" required>
-                </div>
-                <div class="field full">
-                    <label for="description">Description</label>
-                    <textarea id="description" name="description" placeholder="Explain what this feedback is for..."></textarea>
-                </div>
-            </div>
-
-            <div class="section-title">Questions</div>
-            <div class="grid">
-                <div class="field full">
-                    <label for="q1">Question 1</label>
-                    <input id="q1" name="q1" type="text" placeholder="How clear was the course explanation?" required>
-                </div>
-                <div class="field full">
-                    <label for="q2">Question 2</label>
-                    <input id="q2" name="q2" type="text" placeholder="Was the pace of teaching suitable?" required>
-                </div>
-                <div class="field full">
-                    <label for="q3">Question 3</label>
-                    <input id="q3" name="q3" type="text" placeholder="Any suggestions to improve this course?">
-                </div>
-            </div>
-
-            <div class="section-title">Response Settings</div>
-            <div class="grid">
-                <div class="field full">
-                    <label>Feedback Type</label>
-                    <div class="check-group">
-                        <label class="check-item"><input type="checkbox" name="feedbackType" value="RATING"> Rating (1-5)</label>
-                        <label class="check-item"><input type="checkbox" name="feedbackType" value="YESNO"> Yes / No</label>
-                        <label class="check-item"><input type="checkbox" name="feedbackType" value="TEXT"> Text Response</label>
+            <form th:action="@{/teacher-assign-feedback/create}" method="post" id="createForm">
+                <input type="hidden" name="courseId" th:value="${selectedCourse.courseid}">
+                <div class="grid">
+                    <div class="field full">
+                        <label for="title">Form Title</label>
+                        <input id="title" name="title" type="text" placeholder="Course Feedback - Mid Term" required>
+                    </div>
+                    <div class="field full">
+                        <label for="description">Description (optional)</label>
+                        <textarea id="description" name="description" placeholder="Explain what this feedback is for..."></textarea>
                     </div>
                 </div>
-                <div class="field">
-                    <label for="targetSection">Target Section</label>
-                    <select id="targetSection" name="targetSection" required>
-                        <option value="">Select Section</option>
-                        <option value="A">Section A</option>
-                        <option value="B">Section B</option>
-                        <option value="ALL">All Sections</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label for="anonymous">Anonymous Responses</label>
-                    <select id="anonymous" name="anonymous" required>
-                        <option value="YES">Yes</option>
-                        <option value="NO">No</option>
-                    </select>
-                </div>
-            </div>
 
-            <div class="actions">
-                <button type="submit" class="btn btn-primary">Assign Feedback Form</button>
-                <button type="reset" class="btn btn-secondary">Reset</button>
+                <div class="section-title">Questions</div>
+                <div id="questionList"></div>
+
+                <div class="actions">
+                    <button type="button" class="btn btn-secondary" id="addQuestionBtn">Add Question</button>
+                    <button type="submit" class="btn btn-primary">Create Feedback Form</button>
+                </div>
+            </form>
+
+            <div class="section-title">Students</div>
+            <p class="subtitle" style="margin-top: 0;">
+                Eligible students for this course: <strong th:text="${eligibleCount}">0</strong>
+            </p>
+
+            <div class="section-title">Existing Forms</div>
+            <div class="grid">
+                <div class="field full" style="gap: 10px;">
+                    <div th:if="${forms == null or #lists.isEmpty(forms)}" style="color:#94a3b8; font-size: 13px;">
+                        No feedback forms created yet for this course.
+                    </div>
+                    <div th:if="${forms != null and !#lists.isEmpty(forms)}" style="overflow-x:auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                        <table style="width:100%; border-collapse: collapse; min-width: 820px;">
+                            <thead>
+                            <tr>
+                                <th style="text-align:left; padding: 12px 14px; color:#94a3b8; font-size: 12px;">Title</th>
+                                <th style="text-align:left; padding: 12px 14px; color:#94a3b8; font-size: 12px;">Created</th>
+                                <th style="text-align:left; padding: 12px 14px; color:#94a3b8; font-size: 12px;">Questions</th>
+                                <th style="text-align:left; padding: 12px 14px; color:#94a3b8; font-size: 12px;">Submitted</th>
+                                <th style="text-align:left; padding: 12px 14px; color:#94a3b8; font-size: 12px;">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="f : ${forms}" style="border-top: 1px solid rgba(255,255,255,0.06);">
+                                <td style="padding: 12px 14px; color:#e2e8f0;" th:text="${f.title}"></td>
+                                <td style="padding: 12px 14px; color:#94a3b8;" th:text="${#dates.format(f.createdAt, 'dd-MMM-yyyy HH:mm')}"></td>
+                                <td style="padding: 12px 14px; color:#94a3b8;" th:text="${f.questionCount}"></td>
+                                <td style="padding: 12px 14px; color:#94a3b8;" th:text="${f.submittedCount + ' / ' + f.eligibleCount}"></td>
+                                <td style="padding: 12px 14px;">
+                                    <a class="back-btn" style="padding: 8px 12px; display: inline-block;"
+                                       th:href="@{/teacher-feedback/{id}(id=${f.id})}">
+                                        View Status
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </form>
+            </div>
+        </div>
     </div>
 </main>
+
+<script>
+    (function () {
+        const courseSelect = document.getElementById('courseId');
+        if (courseSelect) {
+            courseSelect.addEventListener('change', function () {
+                const val = courseSelect.value;
+                if (!val) return;
+                window.location.href = '/teacher-assign-feedback?courseId=' + encodeURIComponent(val);
+            });
+        }
+
+        const list = document.getElementById('questionList');
+        const addBtn = document.getElementById('addQuestionBtn');
+        if (!list || !addBtn) return;
+
+        function renderQuestion(idx) {
+            const wrapper = document.createElement('div');
+            wrapper.style.border = '1px solid rgba(255,255,255,0.10)';
+            wrapper.style.borderRadius = '12px';
+            wrapper.style.padding = '14px';
+            wrapper.style.marginBottom = '12px';
+            wrapper.style.background = 'rgba(2, 6, 23, 0.55)';
+
+            wrapper.innerHTML = '' +
+                '<div style="display:flex; gap:12px; align-items:center; justify-content: space-between; margin-bottom: 10px;">' +
+                '  <div style="font-family: Orbitron, sans-serif; font-size: 12px; letter-spacing: 1px; color:#94a3b8; text-transform: uppercase;">Question ' + (idx + 1) + '</div>' +
+                '  <button type="button" class="btn btn-secondary" style="padding: 8px 12px;" data-remove>Remove</button>' +
+                '</div>' +
+                '<div class="grid" style="grid-template-columns: 1fr 1fr;">' +
+                '  <div class="field full">' +
+                '    <label>Question Text</label>' +
+                '    <input name="questionText" type="text" placeholder="Enter question..." required>' +
+                '  </div>' +
+                '  <div class="field">' +
+                '    <label>Type</label>' +
+                '    <select name="questionType" data-type>' +
+                '      <option value="RATING">Rating</option>' +
+                '      <option value="MCQ">MCQ</option>' +
+                '      <option value="TEXT">Text</option>' +
+                '    </select>' +
+                '  </div>' +
+                '  <div class="field" data-rating>' +
+                '    <label>Max Rating</label>' +
+                '    <input name="ratingMax" type="number" min="3" max="10" value="5">' +
+                '  </div>' +
+                '  <div class="field full" data-mcq style="display:none;">' +
+                '    <label>Options (one per line)</label>' +
+                '    <textarea name="questionOptions" placeholder="Option 1\\nOption 2\\nOption 3"></textarea>' +
+                '  </div>' +
+                '</div>';
+
+            const typeSel = wrapper.querySelector('[data-type]');
+            const mcq = wrapper.querySelector('[data-mcq]');
+            const rating = wrapper.querySelector('[data-rating]');
+
+            function sync() {
+                const t = typeSel.value;
+                if (t === 'MCQ') {
+                    mcq.style.display = '';
+                    rating.style.display = 'none';
+                } else if (t === 'RATING') {
+                    mcq.style.display = 'none';
+                    rating.style.display = '';
+                } else {
+                    mcq.style.display = 'none';
+                    rating.style.display = 'none';
+                }
+            }
+            typeSel.addEventListener('change', sync);
+            sync();
+
+            wrapper.querySelector('[data-remove]').addEventListener('click', function () {
+                wrapper.remove();
+                renumber();
+            });
+
+            return wrapper;
+        }
+
+        function renumber() {
+            const items = Array.from(list.children);
+            items.forEach(function (el, i) {
+                const label = el.querySelector('div');
+                if (label) label.textContent = 'Question ' + (i + 1);
+            });
+        }
+
+        addBtn.addEventListener('click', function () {
+            list.appendChild(renderQuestion(list.children.length));
+        });
+
+        // Start with one question by default
+        list.appendChild(renderQuestion(0));
+    })();
+</script>
 </body>
 </html>

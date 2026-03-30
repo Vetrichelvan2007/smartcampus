@@ -149,6 +149,21 @@
             border: 1px solid rgba(148, 163, 184, 0.25);
             color: #cbd5e1;
         }
+
+        .notice {
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(239,68,68,0.25);
+            background: rgba(239,68,68,0.10);
+            color: #fecaca;
+            font-size: 13px;
+        }
+
+        .table-wrap { overflow-x:auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
+        table { width:100%; border-collapse: collapse; min-width: 820px; }
+        thead th { text-align:left; padding: 12px 14px; color:#94a3b8; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        tbody td { padding: 12px 14px; color:#e2e8f0; border-top: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
         @media (max-width: 768px) {
             body { padding: 14px; }
             .card { padding: 18px; }
@@ -171,21 +186,33 @@
             <a class="back-btn" th:href="@{/teacher-dashboard}">Back to Dashboard</a>
         </div>
 
-        <form th:action="@{/teacher-upload-material}" method="post" enctype="multipart/form-data">
+        <div class="notice" th:if="${param.uploadError}" th:text="${param.uploadError}">Upload failed.</div>
+
+        <form id="materialUploadForm" th:action="@{/teacher-upload-material}" method="post" enctype="multipart/form-data">
             <div class="section-title">Material Details</div>
             <div class="grid">
                 <div class="field">
-                    <label for="course">Course</label>
-                    <select id="course" name="course" required>
+                    <label th:if="${selectedCourse != null}">Course Name</label>
+                    <label th:if="${selectedCourse == null}" for="course">Course Name</label>
+                    <div th:if="${selectedCourse != null}">
+                        <input type="hidden" name="courseId" th:value="${selectedCourse.courseid}">
+                        <input type="text" readonly
+                               th:value="${selectedCourse.coursecode + ' - ' + selectedCourse.coursename}">
+                    </div>
+                    <select th:if="${selectedCourse == null}" id="course" name="courseId" required>
                         <option value="">Select Course</option>
-                        <option value="CS301">CS301 - Data Structures</option>
-                        <option value="CS402">CS402 - DBMS</option>
-                        <option value="CS501">CS501 - Computer Networks</option>
+                        <option th:each="c : ${courses}"
+                                th:value="${c.courseid}"
+                                th:text="${c.coursecode + ' - ' + c.coursename}">Course</option>
                     </select>
                 </div>
                 <div class="field">
                     <label for="materialTitle">Material Title</label>
                     <input id="materialTitle" name="materialTitle" type="text" placeholder="Unit 2 - Graph Algorithms" required>
+                </div>
+                <div class="field">
+                    <label for="module">Module</label>
+                    <input id="module" name="module" type="text" placeholder="Unit 2">
                 </div>
                 <div class="field">
                     <label for="materialType">Material Type</label>
@@ -198,27 +225,14 @@
                         <option value="VIDEO_LINK">Video Link</option>
                     </select>
                 </div>
-                <div class="field">
-                    <label for="section">Section</label>
-                    <select id="section" name="section" required>
-                        <option value="">Select Section</option>
-                        <option value="A">Section A</option>
-                        <option value="B">Section B</option>
-                        <option value="ALL">All Sections</option>
-                    </select>
-                </div>
                 <div class="field full">
                     <label for="materialFile">Upload File</label>
                     <input id="materialFile" name="materialFile" type="file" required>
-                    <p class="file-note">Allowed: PDF, PPT, PPTX, DOC, DOCX, ZIP. Max size based on server settings.</p>
+                    <p class="file-note">Allowed: PDF, PPT, PPTX, DOC, DOCX, ZIP. Maximum upload size: 100 MB.</p>
                 </div>
                 <div class="field">
                     <label for="publishDate">Publish Date</label>
                     <input id="publishDate" name="publishDate" type="date" required>
-                </div>
-                <div class="field">
-                    <label for="expiryDate">Expiry Date</label>
-                    <input id="expiryDate" name="expiryDate" type="date">
                 </div>
                 <div class="field full">
                     <label for="description">Description</label>
@@ -243,7 +257,65 @@
                 <button type="reset" class="btn btn-secondary">Reset</button>
             </div>
         </form>
+
+        <div th:if="${selectedCourse != null}">
+            <div class="section-title">Existing Materials</div>
+            <div class="notice" th:if="${materialDbMissing}">Materials table is missing in DB. Run DB/create_material_tables.sql</div>
+
+            <div th:if="${!materialDbMissing}">
+                <div th:if="${materials == null or #lists.isEmpty(materials)}" style="color:#94a3b8; font-size: 13px;">No materials uploaded yet for this course.</div>
+                <div th:if="${materials != null and !#lists.isEmpty(materials)}" class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Module</th>
+                            <th>Type</th>
+                            <th>File</th>
+                            <th>Uploaded</th>
+                            <th>Download</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="m : ${materials}">
+                            <td th:text="${m.title}"></td>
+                            <td th:text="${m.module != null ? m.module : '-'}"></td>
+                            <td th:text="${m.type}"></td>
+                            <td th:text="${m.originalFileName}"></td>
+                            <td th:text="${m.uploadedAtText}"></td>
+                            <td>
+                                <span th:if="${!m.downloadAllowed}" style="color:#94a3b8;">Disabled</span>
+                                <a th:if="${m.downloadAllowed}" class="back-btn" style="padding: 8px 12px; display:inline-block;"
+                                   th:href="@{/teacher/material/{id}/download(id=${m.id})}">Download</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
+
+<script>
+  (function () {
+    const sel = document.getElementById('course');
+    const form = document.getElementById('materialUploadForm');
+    if (!sel) return;
+
+    sel.addEventListener('change', function () {
+      const v = sel.value;
+      if (!v) return;
+      window.location.href = '/teacher-upload-material?courseId=' + encodeURIComponent(v);
+    });
+
+    if (form) {
+      form.addEventListener('submit', function () {
+        const v = sel.value;
+        form.action = v ? '/teacher-upload-material?courseId=' + encodeURIComponent(v) : '/teacher-upload-material';
+      });
+    }
+  })();
+</script>
 </body>
 </html>

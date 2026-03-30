@@ -320,6 +320,107 @@
 
     .toolbar input::placeholder { color: #475569; }
 
+    .viewer-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      z-index: 300;
+    }
+
+    .viewer-modal.active {
+      display: flex;
+    }
+
+    .viewer-shell {
+      width: min(1100px, 100%);
+      height: min(82vh, 860px);
+      display: flex;
+      flex-direction: column;
+      border-radius: 22px;
+      overflow: hidden;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    .viewer-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(10, 14, 27, 0.82);
+    }
+
+    .viewer-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    .viewer-note {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .viewer-close {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 9px 14px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .viewer-frame-wrap {
+      flex: 1;
+      background: #020617;
+    }
+
+    .viewer-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #020617;
+    }
+
+    .assignment-question {
+      color: #cbd5e1;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .assignment-upload {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .assignment-upload input[type="file"] {
+      max-width: 240px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(15, 23, 42, 0.85);
+      color: #cbd5e1;
+    }
+
+    .mini-note {
+      color: #94a3b8;
+      font-size: 12px;
+    }
+
     .toolbar input:focus {
       border-color: rgba(99, 102, 241, 0.5);
       box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.10);
@@ -498,6 +599,18 @@
       animation: pulse-dot 1.5s infinite;
     }
 
+    .badge--upcoming {
+      background: rgba(245, 158, 11, 0.14);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .badge--closed {
+      background: rgba(148, 163, 184, 0.12);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
     @keyframes pulse-dot {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
@@ -578,10 +691,10 @@
 
     <!-- NAV TABS -->
     <div class="tabs">
-      <button class="tab active" onclick="showTab('resources',this)"><span>Resource</span></button>
-      <button class="tab" onclick="showTab('coursework',this)"><span>Course Work</span></button>
-      <button class="tab" onclick="showTab('quizzes',this)"><span>Quizzes</span></button>
-      <button class="tab" onclick="showTab('assignment',this)"><span>Assignment</span></button>
+      <button type="button" class="tab active" onclick="showTab('resources',this)"><span>Resource</span></button>
+      <button type="button" class="tab" onclick="showTab('coursework',this)"><span>Course Work</span></button>
+      <button type="button" class="tab" onclick="showTab('quizzes',this)"><span>Quizzes</span></button>
+      <button type="button" class="tab" onclick="showTab('assignment',this)"><span>Assignment</span></button>
     </div>
   </div>
 
@@ -614,13 +727,25 @@
           <th>Title</th>
           <th>Module</th>
           <th>Type</th>
+          <th>Action</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="r : ${resources}">
           <td th:text="${r.title}"></td>
-          <td th:text="${r.module}"></td>
+          <td th:text="${r.module != null ? r.module : '-'}"></td>
           <td><span class="row-type" th:text="${r.type}"></span></td>
+          <td>
+            <button type="button"
+                    class="btn js-view-material"
+                    style="padding: 8px 12px; margin-right: 8px;"
+                    th:attr="data-view-url=@{/material/{id}/view(id=${r.id})},data-title=${r.title}">
+              View
+            </button>
+            <a th:if="${r.downloadAllowed}" class="btn btn--accent" style="text-decoration:none; padding: 8px 12px;"
+               th:href="@{/material/{id}/download(id=${r.id})}">Download</a>
+            <span th:if="${!r.downloadAllowed}" style="color:#334155; font-size: 13px;">View only</span>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -649,17 +774,34 @@
         <thead>
         <tr>
           <th>Quiz</th>
+          <th>Status</th>
           <th>Start</th>
           <th>End</th>
+          <th>Score</th>
           <th>Action</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="q : ${quizzes}">
           <td th:text="${q.title}"></td>
-          <td th:text="${q.start}"></td>
-          <td th:text="${q.end}"></td>
-          <td><button class="btn btn--accent">Open</button></td>
+          <td>
+            <span class="badge"
+                  th:classappend="${q.status == 'ACTIVE'} ? ' badge--live' : (${q.status == 'UPCOMING'} ? ' badge--upcoming' : ' badge--closed')"
+                  th:text="${q.status}">ACTIVE</span>
+          </td>
+          <td th:text="${q.startAtText != null ? q.startAtText : q.startAt}"></td>
+          <td th:text="${q.endAtText != null ? q.endAtText : q.endAt}"></td>
+          <td>
+            <span th:if="${!q.submitted}">-</span>
+            <span th:if="${q.submitted}">
+              <span th:if="${q.scorePublished}" th:text="${q.score != null ? q.score : '-'}"></span>
+              <span th:if="${!q.scorePublished}" style="color:#334155; font-size: 13px;">Quiz mark is not published</span>
+            </span>
+          </td>
+          <td>
+            <a class="btn btn--accent" style="text-decoration:none;"
+               th:href="@{/quiz/{id}(id=${q.quizId})}">Open</a>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -688,16 +830,86 @@
 
   <!-- ═══════════════════ ASSIGNMENT PANEL ═══════════════════ -->
   <div class="panel glass tab-body" id="assignment">
-    <div class="empty">
+    <div class="table-wrap" th:if="${!#lists.isEmpty(assignments)}">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Title</th>
+          <th>Question</th>
+          <th>Due</th>
+          <th>Submission</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${assignments}">
+          <td>
+            <div th:text="${a.title}"></div>
+            <div class="mini-note" th:text="${a.maxMarks != null ? 'Marks: ' + a.maxMarks : 'Marks: -'}"></div>
+          </td>
+          <td>
+            <div th:if="${a.assignmentMode == 'TEXT'}" class="assignment-question" th:text="${a.questionText}"></div>
+            <div th:if="${a.assignmentMode == 'FILE'}">
+              <button type="button"
+                      class="btn js-view-material"
+                      style="padding: 8px 12px; margin-right: 8px;"
+                      th:attr="data-view-url=@{/assignment/{id}/view(id=${a.id})},data-title=${a.title}">
+                View Question
+              </button>
+              <a th:if="${a.downloadAllowed}" class="btn btn--accent" style="text-decoration:none; padding: 8px 12px;"
+                 th:href="@{/assignment/{id}/download(id=${a.id})}">Download</a>
+              <div class="mini-note" th:text="${a.originalFileName}"></div>
+            </div>
+          </td>
+          <td>
+            <div th:text="${a.dueAtText}"></div>
+            <div class="mini-note" th:if="${a.submissionClosed}">Submission closed</div>
+            <div class="mini-note" th:if="${!a.submissionClosed}">Submission open</div>
+          </td>
+          <td>
+            <div th:if="${!a.submitted}" class="mini-note">Not submitted</div>
+            <div th:if="${a.submitted}">
+              <div th:text="${a.submissionOriginalFileName}"></div>
+              <div class="mini-note" th:text="${'Submitted: ' + a.submittedAtText}"></div>
+            </div>
+          </td>
+          <td>
+            <form th:if="${!a.submissionClosed}" class="assignment-upload" th:action="@{/assignment/{id}/submit(id=${a.id})}" method="post" enctype="multipart/form-data">
+              <input type="file" name="submissionFile" required>
+              <button type="submit" class="btn btn--accent" th:text="${a.submitted ? 'Re-upload' : 'Upload'}">Upload</button>
+            </form>
+            <span th:if="${a.submissionClosed}" class="mini-note">Upload closed after due date</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty" th:if="${#lists.isEmpty(assignments)}">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
         <rect width="8" height="4" x="8" y="2" rx="1"/>
       </svg>
-      <p>Assignments Coming Soon</p>
-      <p class="empty-sub">Assignments will appear here when available</p>
+      <p>No Assignments Available</p>
+      <p class="empty-sub">Assignments will appear here when your teacher publishes them</p>
     </div>
   </div>
 
+</div>
+
+<div id="materialViewerModal" class="viewer-modal" aria-hidden="true">
+  <div class="viewer-shell glass">
+    <div class="viewer-topbar">
+      <div>
+        <div id="materialViewerTitle" class="viewer-title">Material Preview</div>
+        <div class="viewer-note">Preview is opened inside the course page.</div>
+      </div>
+      <button type="button" id="materialViewerClose" class="viewer-close">Close</button>
+    </div>
+    <div class="viewer-frame-wrap">
+      <iframe id="materialViewerFrame" class="viewer-frame" referrerpolicy="same-origin"></iframe>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -713,6 +925,58 @@
 
     btn.classList.add('active');
   }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const firstTab = document.querySelector('.tabs .tab.active') || document.querySelector('.tabs .tab');
+    if (firstTab) {
+      const label = firstTab.textContent || '';
+      if (label.indexOf('Course Work') >= 0) showTab('coursework', firstTab);
+      else if (label.indexOf('Quizzes') >= 0) showTab('quizzes', firstTab);
+      else if (label.indexOf('Assignment') >= 0) showTab('assignment', firstTab);
+      else showTab('resources', firstTab);
+    }
+  });
+
+  (function () {
+    const modal = document.getElementById('materialViewerModal');
+    const frame = document.getElementById('materialViewerFrame');
+    const title = document.getElementById('materialViewerTitle');
+    const closeBtn = document.getElementById('materialViewerClose');
+    const triggers = document.querySelectorAll('.js-view-material');
+
+    if (!modal || !frame || !title || !closeBtn || !triggers.length) return;
+
+    function closeViewer() {
+      frame.src = 'about:blank';
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function openViewer(url, label) {
+      title.textContent = label || 'Material Preview';
+      frame.src = url;
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    triggers.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        openViewer(btn.getAttribute('data-view-url'), btn.getAttribute('data-title'));
+      });
+    });
+
+    closeBtn.addEventListener('click', closeViewer);
+    modal.addEventListener('click', function (event) {
+      if (event.target === modal) closeViewer();
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && modal.classList.contains('active')) {
+        closeViewer();
+      }
+    });
+  })();
 </script>
 
 </body>

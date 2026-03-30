@@ -1,336 +1,294 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Subject – Data Structures & Algorithms</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.5);
+            --accent: #22d3ee;
+            --accent-glow: rgba(34, 211, 238, 0.5);
+            --grad: linear-gradient(135deg, var(--primary), var(--accent));
+            --bg-main: #060918;
+            --bg-side: rgba(15, 23, 42, 0.8);
+            --bg-card: rgba(30, 41, 59, 0.5);
+            --border: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-main: #f1f5f9;
+            --text-dim: #94a3b8;
+            --text-muted: #475569;
+            --glass-sheen: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            --sidebar-width: 260px;
+            --topbar-height: 80px;
+            --radius: 24px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg-main: #f8fafc;
+            --bg-side: rgba(255, 255, 255, 0.9);
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --border: rgba(0, 0, 0, 0.08);
+            --glass-border: rgba(99, 102, 241, 0.2);
+            --text-main: #0f172a;
+            --text-dim: #475569;
+            --text-muted: #94a3b8;
+            --glass-sheen: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+            --shadow: 0 8px 32px rgba(99, 102, 241, 0.1);
+        }
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        :root {
-            --bg-base: #0a0e27;
-            --card-bg: rgba(15, 23, 42, 0.7);
-            --card-border: rgba(255,255,255,0.10);
-            --card-sheen: inset 0 1px 0 rgba(255,255,255,0.1);
-            --card-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            --accent-from: #6366f1;
-            --accent-mid: #8b5cf6;
-            --accent-to: #ec4899;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #475569;
-            --topbar-height: 64px;
-            --font-heading: 'Orbitron', sans-serif;
-            --font-body: 'Poppins', sans-serif;
-        }
-
-        html { scroll-behavior: smooth; }
-
         body {
-            font-family: var(--font-body);
-            background: var(--bg-base);
-            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
             min-height: 100vh;
-            overflow-x: hidden;
+            transition: background 0.3s ease;
         }
 
-        .orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-        .orb  { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; }
-        .orb-1 { width: 600px; height: 600px; background: #6366f1; top: -150px; right: -150px; }
-        .orb-2 { width: 500px; height: 500px; background: #ec4899; bottom: -100px; left: -100px; }
-        .orb-3 { width: 400px; height: 400px; background: #06b6d4; top: 40%; right: 5%; }
+        /* BACKGROUND ORBS */
+        .orbs { position: fixed; inset: 0; pointer-events: none; z-index: -1; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3; animation: float 20s infinite alternate ease-in-out; }
+        .orb-1 { width: 500px; height: 500px; background: var(--primary); top: -10%; left: -10%; }
+        .orb-2 { width: 400px; height: 400px; background: var(--accent); bottom: -10%; right: -10%; animation-delay: -5s; }
+        .orb-3 { width: 300px; height: 300px; background: var(--primary); top: 40%; right: 10%; animation-delay: -10s; }
+        @keyframes float { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(100px, 50px) scale(1.1); } }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-side);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            display: flex; flex-direction: column;
+            z-index: 100;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-brand { padding: 32px 24px; display: flex; align-items: center; gap: 14px; }
+        .sidebar-brand-icon {
+            width: 42px; height: 42px;
+            border-radius: 12px;
+            background: var(--grad);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            color: #fff;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+        .sidebar-brand-text {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
+        .sidebar-nav-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 20px 12px 8px;
+        }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; border-radius: 12px;
+            color: var(--text-dim); text-decoration: none;
+            font-size: 14px; font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-bottom: 4px;
+        }
+        .nav-item:hover { background: rgba(99, 102, 241, 0.08); color: var(--primary); transform: translateX(8px); }
+        .nav-item.active { background: var(--grad); color: white; box-shadow: 0 4px 15px var(--primary-glow); }
+        .nav-item.active svg { stroke: #fff; }
+        .nav-item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); }
+        .nav-item--logout { color: #ef4444; }
+        .nav-item--logout:hover { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+
+        /* CONTENT WRAPPER */
+        .content-wrapper { margin-left: var(--sidebar-width); flex: 1; min-width: 0; }
 
         .topbar {
-            position: sticky; top: 0;
             height: var(--topbar-height);
-            background: rgba(10, 14, 39, 0.88);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--card-border);
-            display: flex; align-items: center;
-            padding: 0 40px; gap: 16px;
-            z-index: 90;
+            background: transparent;
+            backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; position: sticky; top: 0; z-index: 90;
         }
-
-        .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
-        .logo-icon {
-            width: 34px; height: 34px;
-            background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
-            border-radius: 9px; display: flex; align-items: center; justify-content: center;
+        .topbar-left, .topbar-actions { display: flex; align-items: center; gap: 12px; }
+        .search-box {
+            display: flex; align-items: center; gap: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 10px 18px;
+            width: 350px;
+            transition: all 0.3s;
         }
-        .logo-text {
-            font-family: var(--font-heading); font-size: 13px; font-weight: 700; letter-spacing: 1px;
-            background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+            width: 380px;
         }
-        .topbar-divider { width: 1px; height: 24px; background: var(--card-border); }
-
-        .breadcrumb {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 13px; color: var(--text-muted); flex: 1;
+        .search-box input {
+            background: none; border: none; outline: none;
+            color: var(--text-main); font-size: 14px; width: 100%;
         }
-        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-        .breadcrumb a:hover { color: var(--text-secondary); }
-        .breadcrumb-sep { font-size: 12px; }
-        .breadcrumb-current { color: var(--text-secondary); }
-
-        .topbar-actions { display: flex; align-items: center; gap: 10px; }
         .topbar-btn {
-            width: 36px; height: 36px; border-radius: 9px;
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            color: var(--text-secondary);
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: border-color 0.2s, color 0.2s;
+            transition: all 0.3s;
+            position: relative;
         }
-        .topbar-btn:hover { border-color: rgba(99,102,241,0.4); color: var(--text-primary); }
-        .notif-wrap { position: relative; }
-        .notif-dot {
-            position: absolute; top: 5px; right: 5px;
-            width: 8px; height: 8px; background: var(--accent-to);
-            border-radius: 50%; border: 2px solid var(--bg-base);
+        .topbar-btn:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+            border-color: var(--primary);
         }
-        .topbar-avatar {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
+        .topbar-btn .badge {
+            position: absolute; top: 10px; right: 10px;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+        .theme-toggle-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; }
+        .avatar-chip {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: var(--grad);
             display: flex; align-items: center; justify-content: center;
-            font-size: 13px; font-weight: 700; cursor: pointer; flex-shrink: 0;
+            color: #fff; font-weight: 700; font-family: 'Orbitron', sans-serif;
         }
 
-        .page {
-            position: relative; z-index: 1;
-            padding: 36px 48px 72px;
-            max-width: 1600px; margin: 0 auto;
-        }
+        /* PAGE CONTENT */
+        .page-content { padding: 40px; max-width: 1500px; margin: 0 auto; }
 
         .glass-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            box-shadow: var(--card-shadow), var(--card-sheen);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
+            background: var(--bg-card);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            margin-bottom: 30px;
         }
 
-        .section-label {
-            font-family: var(--font-heading);
-            font-size: 11px; font-weight: 600;
-            letter-spacing: 2px; text-transform: uppercase;
-            color: var(--text-muted); margin-bottom: 16px;
-            display: flex; align-items: center; gap: 10px;
+        /* SUBJECT HEADER HERO */
+        .subject-hero {
+            padding: 40px;
+            display: flex; flex-direction: column; gap: 24px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(34, 211, 238, 0.1));
         }
-        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--card-border); }
-
-        /* SUBJECT HEADER */
-        .subject-header { padding: 32px 36px; margin-bottom: 28px; }
-
-        .subject-header-top { display: flex; align-items: flex-start; gap: 22px; flex-wrap: wrap; }
+        .subject-hero-top { display: flex; align-items: center; gap: 24px; }
         .subject-icon {
-            width: 64px; height: 64px;
-            background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
-            border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 18px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 25px var(--primary-glow);
         }
-        .subject-title-block { flex: 1; min-width: 0; }
-        .subject-name {
-            font-family: var(--font-heading);
-            font-size: clamp(18px, 2vw, 27px);
-            font-weight: 700; letter-spacing: 1px; line-height: 1.3;
-            color: var(--text-primary); margin-bottom: 12px;
-        }
+        .subject-name { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 700; color: var(--text-main); }
 
-        .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim); flex-wrap: wrap; }
+        .breadcrumb a { color: var(--text-dim); text-decoration: none; }
+        .breadcrumb-current { color: var(--text-main); font-weight: 600; }
+
         .badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            padding: 4px 12px; border-radius: 6px;
-            font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+            padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700;
+            background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+            color: var(--text-main); display: inline-flex; align-items: center; gap: 6px;
         }
-        .badge-code    { background: rgba(99,102,241,0.18); border: 1px solid rgba(99,102,241,0.35); color: #a5b4fc; }
-        .badge-dept    { background: rgba(6,182,212,0.15);  border: 1px solid rgba(6,182,212,0.3);  color: #67e8f9; }
-        .badge-sem     { background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3); color: #c4b5fd; }
-        .badge-credits { background: rgba(236,72,153,0.15); border: 1px solid rgba(236,72,153,0.3); color: #f9a8d4; }
-        .badge-section { background: rgba(34,197,94,0.15);  border: 1px solid rgba(34,197,94,0.3);  color: #86efac; }
 
-        .subject-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.75; max-width: 800px; }
+        /* STATS */
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .stat-card {
+            background: rgba(255,255,255,0.03); padding: 18px; border-radius: 14px;
+            border: 1px solid var(--border); display: flex; align-items: center; gap: 14px;
+        }
+        .stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .stat-val { font-size: 22px; font-weight: 700; color: var(--text-main); font-family: 'Orbitron'; }
+        .stat-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-            gap: 14px; margin-top: 26px; padding-top: 26px;
-            border-top: 1px solid var(--card-border);
+        /* FEATURE GRID (QUICK ACTIONS) */
+        .section-label {
+            font-family: 'Orbitron'; font-size: 11px; font-weight: 700;
+            color: var(--primary); text-transform: uppercase; letter-spacing: 2px;
+            margin: 40px 0 20px; display: flex; align-items: center; gap: 15px;
         }
-        .stat-pill {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--card-border);
-            border-radius: 12px; padding: 14px 16px;
-            display: flex; align-items: center; gap: 12px;
-        }
-        .stat-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .si-blue   { background: rgba(99,102,241,0.2); color: #a5b4fc; }
-        .si-cyan   { background: rgba(6,182,212,0.2);  color: #67e8f9; }
-        .si-purple { background: rgba(139,92,246,0.2); color: #c4b5fd; }
-        .si-pink   { background: rgba(236,72,153,0.2); color: #f9a8d4; }
-        .stat-val  { font-family: var(--font-heading); font-size: 22px; font-weight: 700; color: var(--text-primary); line-height: 1; margin-bottom: 3px; }
-        .stat-lbl  { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-        /* FEATURE GRID */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 16px; margin-bottom: 28px;
-        }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .feat-card {
-            padding: 24px; border-radius: 16px;
-            display: flex; flex-direction: column; gap: 14px;
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            padding: 24px; display: flex; flex-direction: column; gap: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .feat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 18px 44px rgba(0,0,0,0.4), var(--card-sheen);
-            border-color: rgba(255,255,255,0.18);
+            transform: translateY(-8px); border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2), 0 0 20px var(--primary-glow);
         }
-        .feat-icon { width: 48px; height: 48px; border-radius: 13px; display: flex; align-items: center; justify-content: center; }
-        .fi-indigo { background: rgba(99,102,241,0.2); color: #a5b4fc; }
-        .fi-purple { background: rgba(139,92,246,0.2); color: #c4b5fd; }
-        .fi-pink   { background: rgba(236,72,153,0.2); color: #f9a8d4; }
-        .fi-cyan   { background: rgba(6,182,212,0.2);  color: #67e8f9; }
-        .fi-green  { background: rgba(34,197,94,0.2);  color: #86efac; }
-        .fi-amber  { background: rgba(245,158,11,0.2); color: #fcd34d; }
-        .feat-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
-        .feat-desc  { font-size: 12px; color: var(--text-secondary); line-height: 1.65; flex: 1; }
+        .fi-box { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .feat-title { font-size: 15px; font-weight: 600; color: var(--text-main); }
+        .feat-desc { font-size: 12px; color: var(--text-muted); line-height: 1.65; flex-grow: 1; }
 
-        /* BUTTONS */
-        .btn-primary {
-            display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-            padding: 9px 18px; border-radius: 9px; border: none;
-            background: linear-gradient(135deg, var(--accent-from), var(--accent-mid), var(--accent-to));
-            color: #fff; font-family: var(--font-body); font-size: 13px; font-weight: 600;
-            cursor: pointer; transition: opacity 0.2s, transform 0.15s;
-            text-decoration: none; white-space: nowrap; width: fit-content;
+        .btn-grad {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; border: none; padding: 12px 18px; border-radius: 10px;
+            font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            transition: filter 0.2s;
         }
-        .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
-        .btn-primary:active { transform: translateY(0); }
-        .btn-ghost {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 7px 14px; border-radius: 8px;
-            border: 1px solid var(--card-border); background: rgba(255,255,255,0.04);
-            color: var(--text-secondary); font-family: var(--font-body); font-size: 12px; font-weight: 500;
-            cursor: pointer; transition: border-color 0.2s, color 0.2s; text-decoration: none;
-        }
-        .btn-ghost:hover { border-color: rgba(99,102,241,0.4); color: var(--text-primary); }
+        .btn-grad:hover { filter: brightness(1.1); }
 
         /* TABS */
-        .tabs-wrap { margin-bottom: 8px; }
-        .tabs-nav {
-            display: flex; gap: 2px; padding: 6px;
-            background: rgba(255,255,255,0.03);
-            border-bottom: 1px solid var(--card-border);
-            border-radius: 16px 16px 0 0; flex-wrap: wrap;
-        }
+        .tabs-nav { display: flex; gap: 5px; padding: 10px; border-bottom: 1px solid var(--border); }
         .tab-btn {
-            padding: 9px 24px; border-radius: 9px; border: none; background: none;
-            color: var(--text-muted); font-family: var(--font-body); font-size: 13px; font-weight: 500;
-            cursor: pointer; transition: background 0.2s, color 0.2s; white-space: nowrap;
+            padding: 10px 20px; border-radius: 10px; border: none; background: transparent;
+            color: var(--text-muted); font-weight: 600; cursor: pointer; font-size: 13px;
         }
-        .tab-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-secondary); }
-        .tab-btn.active { background: rgba(99,102,241,0.2); color: #a5b4fc; font-weight: 600; }
-        .tab-pane { display: none; padding: 30px 34px; }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px var(--primary-glow); }
+        .tab-pane { display: none; padding: 30px; animation: slideUp 0.4s ease; }
         .tab-pane.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* SHARED TABLE */
-        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .data-table thead tr { border-bottom: 1px solid var(--card-border); }
-        .data-table th {
-            text-align: left; padding: 10px 14px;
-            font-size: 11px; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 0.8px; color: var(--text-muted);
-        }
-        .data-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
-        .data-table tbody tr:hover { background: rgba(255,255,255,0.03); }
-        .data-table tbody tr:last-child { border-bottom: none; }
-        .data-table td { padding: 13px 14px; color: var(--text-secondary); vertical-align: middle; }
-        .data-table td:first-child { color: var(--text-primary); }
+        /* TABLES & LISTS */
+        .data-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        .data-table td { padding: 14px; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 13px; }
+        .data-table tr td:first-child { border-left: 1px solid var(--border); border-radius: 12px 0 0 12px; color: var(--text-main); font-weight: 500; }
+        .data-table tr td:last-child { border-right: 1px solid var(--border); border-radius: 0 12px 12px 0; }
 
-        .status-dot { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
-        .status-dot::before { content: ''; width: 7px; height: 7px; border-radius: 50%; }
-        .sd-active::before  { background: #86efac; }
-        .sd-pending::before { background: #fcd34d; }
-        .sd-closed::before  { background: var(--text-muted); }
+        .list-row {
+            background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+            padding: 16px 20px; border-radius: 14px; display: flex; align-items: center;
+            justify-content: space-between; margin-bottom: 12px;
+        }
 
-        /* STUDENTS */
-        .students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
-        .student-card {
-            background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
-            border-radius: 12px; padding: 14px 16px;
-            display: flex; align-items: center; gap: 12px; transition: border-color 0.2s;
+        .sidebar-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            display: none; z-index: 99; backdrop-filter: blur(4px);
         }
-        .student-card:hover { border-color: rgba(99,102,241,0.3); }
-        .s-avatar {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
-            display: flex; align-items: center; justify-content: center;
-            font-size: 13px; font-weight: 700; flex-shrink: 0;
-        }
-        .s-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
-        .s-id   { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .sidebar-overlay.active { display: block; }
+        .hamburger { display: none; background: none; border: none; color: var(--text-main); cursor: pointer; }
 
-        /* ASSIGNMENTS */
-        .assignment-list { display: flex; flex-direction: column; gap: 12px; }
-        .assignment-item {
-            background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
-            border-radius: 12px; padding: 16px 20px;
-            display: flex; align-items: center; gap: 16px; flex-wrap: wrap; transition: border-color 0.2s;
-        }
-        .assignment-item:hover { border-color: rgba(99,102,241,0.3); }
-        .asgn-icon {
-            width: 40px; height: 40px; border-radius: 10px;
-            background: rgba(99,102,241,0.15); color: #a5b4fc;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .asgn-info { flex: 1; min-width: 160px; }
-        .asgn-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
-        .asgn-meta  { font-size: 12px; color: var(--text-muted); }
-        .asgn-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-
-        /* ATTENDANCE */
-        .att-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; margin-bottom: 22px; }
-        .att-stat { background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px; text-align: center; }
-        .att-val  { font-family: var(--font-heading); font-size: 26px; font-weight: 700; margin-bottom: 5px; }
-        .att-lbl  { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .c-green  { color: #86efac; }
-        .c-red    { color: #fca5a5; }
-        .c-cyan   { color: #67e8f9; }
-        .c-amber  { color: #fcd34d; }
-
-        /* MATERIALS */
-        .material-list { display: flex; flex-direction: column; gap: 12px; }
-        .material-item {
-            background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
-            border-radius: 12px; padding: 14px 18px;
-            display: flex; align-items: center; gap: 14px; flex-wrap: wrap; transition: border-color 0.2s;
-        }
-        .material-item:hover { border-color: rgba(34,197,94,0.3); }
-        .mat-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(34,197,94,0.15); color: #86efac; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .mat-info { flex: 1; min-width: 140px; }
-        .mat-name { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
-        .mat-meta { font-size: 11px; color: var(--text-muted); }
-
-        .tab-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
-        .tab-header-info { font-size: 13px; color: var(--text-muted); }
-
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .page { padding: 24px 20px 60px; }
-            .subject-header { padding: 22px; }
-            .tab-pane { padding: 22px; }
-            .topbar { padding: 0 20px; }
-            .feature-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-        }
-        @media (max-width: 600px) {
-            .page { padding: 16px 12px 48px; }
-            .feature-grid { grid-template-columns: 1fr 1fr; }
-            .stats-row { grid-template-columns: 1fr 1fr; }
-            .tab-pane { padding: 16px; }
-        }
-        @media (max-width: 400px) {
-            .feature-grid { grid-template-columns: 1fr; }
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .content-wrapper { margin-left: 0; }
+            .hamburger { display: block; }
         }
     </style>
 </head>
@@ -342,340 +300,309 @@
     <div class="orb orb-3"></div>
 </div>
 
-<!-- TOPBAR -->
-<header class="topbar">
-    <a class="logo-wrap" href="#">
-        <div class="logo-icon">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-            </svg>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">EP</div>
+        <div>
+            <div class="sidebar-brand-text">SmartCampus</div>
         </div>
-        <span class="logo-text">Smart Campus</span>
-    </a>
-    <div class="topbar-divider"></div>
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="/teacher-dashboard">Dashboard</a>
-        <span class="breadcrumb-sep">›</span>
-        <a href="teacher-mysubjects">My Subjects</a>
-        <span class="breadcrumb-sep">›</span>
-        <span class="breadcrumb-current" th:text="${course.coursename}"></span>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="sidebar-nav-label">Main</div>
+        <a class="nav-item" href="/teacher-dashboard">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            Dashboard
+        </a>
+        <a class="nav-item active" th:href="@{/teacher-mysubjects}">
+            <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            My Subjects
+        </a>
+        <a class="nav-item" href="#">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Attendance
+        </a>
+        <a class="nav-item" th:href="@{/teacher-view-student}">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            View Student
+        </a>
+
+        <div class="sidebar-nav-label">Academics</div>
+        <a class="nav-item" href="#">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Internal Marks
+        </a>
+        <a class="nav-item" th:href="@{/teacher-create-quiz}">
+            <svg viewBox="0 0 24 24"><path d="M12 4v16"/><path d="M4 12h16"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+            Create Quiz
+        </a>
+        <a class="nav-item" th:href="@{/teacher-assign-feedback}">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Assign Feedback
+        </a>
+        <a class="nav-item" th:href="@{/teacher-upload-material}">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/></svg>
+            Materials
+        </a>
+
+        <div class="sidebar-nav-label">Personal</div>
+        <a class="nav-item" href="/profile">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Profile
+        </a>
     </nav>
-    <div class="topbar-actions">
-        <div class="notif-wrap">
-            <button class="topbar-btn" aria-label="Notifications">
-                <div class="notif-dot"></div>
-                <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-            </button>
-        </div>
-        <!-- <button class="topbar-btn" aria-label="Settings">
-          <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button> -->
-        <div class="topbar-avatar">JD</div>
+
+    <div class="sidebar-footer">
+        <a class="nav-item nav-item--logout" href="/logout">
+            <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Logout
+        </a>
     </div>
-</header>
+</aside>
 
-<!-- PAGE -->
-<main class="page">
-
-    <!-- 1. SUBJECT HEADER -->
-    <section class="glass-card subject-header" aria-label="Subject information">
-        <div class="subject-header-top">
-            <div class="subject-icon">
-                <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
-                    <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                </svg>
-            </div>
-            <div class="subject-title-block">
-                <h1 class="subject-name" th:text="${course.coursename}">Data Structures &amp; Algorithms</h1>
-                <div class="badge-row">
-          <span class="badge badge-code" th:text="${course.coursecode}">
-            <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
-
-          </span>
-                    <span class="badge badge-dept" th:text="${course.coursedept}">
-            <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-            Dept
-          </span>
-
-                    <span class="badge badge-credits" th:text="${course.credits} + ' Credit'">
-            <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            Credits
-          </span>
-                    <span class="badge badge-section" th:text="${course.sem}+ ' Sem'">
-            <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            Section
-          </span>
-        </div>
-        <div class="stats-row">
-            <div class="stat-pill">
-                <div class="stat-icon si-blue">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-                </div>
-                <div><div class="stat-val">62</div><div class="stat-lbl">Total Students</div></div>
-            </div>
-            <div class="stat-pill">
-                <div class="stat-icon si-cyan">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-                </div>
-                <div><div class="stat-val">8</div><div class="stat-lbl">Assignments</div></div>
-            </div>
-            <div class="stat-pill">
-                <div class="stat-icon si-purple">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                </div>
-                <div><div class="stat-val">87%</div><div class="stat-lbl">Attendance</div></div>
-            </div>
-            <div class="stat-pill">
-                <div class="stat-icon si-pink">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </div>
-                <div><div class="stat-val">3</div><div class="stat-lbl">Active Quizzes</div></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 2. FEATURE GRID -->
-    <div class="section-label">Quick Actions</div>
-    <div class="feature-grid" role="list">
-
-        <article class="glass-card feat-card" role="listitem">
-            <div class="feat-icon fi-indigo">
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-            </div>
-            <div><div class="feat-title">View Students</div><div class="feat-desc">Browse enrolled students, check profiles, and monitor individual academic progress for this subject.</div></div>
-            <a class="btn-primary"
-               href="/teacher-view-student"
-               th:href="@{/teacher-view-student/{teacherId}/{courseId}(teacherId=${teacherId}, courseId=${course.courseid})}">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
-                View Students
-            </a>
-        </article>
-
-        <article class="glass-card feat-card" role="listitem">
-            <div class="feat-icon fi-purple">
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <div><div class="feat-title">Assign Quiz</div><div class="feat-desc">Create and schedule a new quiz with custom questions, time limits, and automated grading criteria.</div></div>
-            <a href="/teacher-create-quiz" class="btn-primary">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path d="M12 4v16m8-8H4"/>
-                </svg>
-                Create Quiz
-            </a>
-        </article>
-
-        <article class="glass-card feat-card" role="listitem">
-            <div class="feat-icon fi-pink">
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-            </div>
-            <div><div class="feat-title">Assign Feedback Form</div><div class="feat-desc">Send structured feedback forms to collect course evaluations and student improvement suggestions.</div></div>
-            <a class="btn-primary" href="/teacher-assign-feedback">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
-                Create Feedback Form
-            </a>
-        </article>
-
-        <article class="glass-card feat-card" role="listitem">
-            <div class="feat-icon fi-cyan">
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-            </div>
-            <div><div class="feat-title">Manage Attendance</div><div class="feat-desc">Record today's attendance, view historical logs, and export attendance reports for this subject.</div></div>
-            <button class="btn-primary">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
-                Take Attendance
+<div class="content-wrapper">
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
-        </article>
-
-        <article class="glass-card feat-card" role="listitem">
-            <div class="feat-icon fi-green">
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10M12 21V3M3 9l9-6 9 6"/></svg>
+            <div class="search-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Search activities, students, or resources...">
             </div>
-            <div><div class="feat-title">Upload Study Material</div><div class="feat-desc">Share lecture slides, notes, reference PDFs, and supplementary resources with enrolled students.</div></div>
-            <a class="btn-primary" href="/teacher-upload-material">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                Upload Material
-            </a>
-        </article>
-
-        <article class="glass-card feat-card" role="listitem">
-            <div class="feat-icon fi-amber">
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-            </div>
-            <div><div class="feat-title">Upload Assignment</div><div class="feat-desc">Create a new assignment with instructions, rubric, file attachments, and submission deadlines.</div></div>
-            <button class="btn-primary">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                Upload Assignment
+        </div>
+        <div class="topbar-actions">
+            <button class="topbar-btn theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme">
+                <svg class="sun-icon" viewBox="0 0 24 24" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             </button>
-        </article>
+            <div class="topbar-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <span class="badge"></span>
+            </div>
+            <div class="avatar-chip">DR</div>
+        </div>
+    </header>
 
-    </div>
+    <main class="page-content">
+        <nav class="breadcrumb" style="margin-bottom: 18px;">
+            <a href="/teacher-dashboard">Dashboard</a>
+            <span>/</span>
+            <a th:href="@{/teacher-mysubjects}">My Subjects</a>
+            <span>/</span>
+            <span class="breadcrumb-current" th:text="${course.coursename}">Data Structures &amp; Algorithms</span>
+        </nav>
 
-    <!-- 3. SUBJECT DETAILS TABS (no Overview) -->
-    <div class="section-label">Subject Details</div>
-    <div class="glass-card tabs-wrap">
+        <!-- 1. SUBJECT HEADER -->
+        <section class="glass-card subject-hero">
+            <div class="subject-hero-top">
+                <div class="subject-icon">
+                    <svg width="34" height="34" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                </div>
+                <div>
+                    <h1 class="subject-name" th:text="${course.coursename}">Data Structures &amp; Algorithms</h1>
+                    <div style="display:flex; gap:8px; margin-top:8px;">
+                        <span class="badge" th:text="${course.coursecode}">CS301</span>
+                        <span class="badge" th:text="${course.coursedept}">CSE Dept</span>
+                        <span class="badge" th:text="${course.credits} + ' Credit'">4 Credits</span>
+                        <span class="badge" th:text="${course.sem}+ ' Sem'">6 Sem</span>
+                    </div>
+                </div>
+            </div>
 
-        <div class="tabs-nav" role="tablist" aria-label="Subject detail tabs">
-            <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="students">Students</button>
-            <button class="tab-btn"        role="tab" aria-selected="false" data-tab="assignments">Assignments</button>
-            <button class="tab-btn"        role="tab" aria-selected="false" data-tab="attendance">Attendance</button>
-            <button class="tab-btn"        role="tab" aria-selected="false" data-tab="materials">Materials</button>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(99,102,241,0.1); color:var(--primary);">👥</div>
+                    <div><div class="stat-val">62</div><div class="stat-lbl">Students</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(6,182,212,0.1); color:var(--accent);">📑</div>
+                    <div><div class="stat-val">8</div><div class="stat-lbl">Assignments</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(139,92,246,0.1); color:#8b5cf6;">📈</div>
+                    <div><div class="stat-val">87%</div><div class="stat-lbl">Attendance</div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(236,72,153,0.1); color:#ec4899;">⚡</div>
+                    <div><div class="stat-val">3</div><div class="stat-lbl">Active Quizzes</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. QUICK ACTIONS (ALL 6 FEATURES RESTORED) -->
+        <div class="section-label">Quick Actions</div>
+        <div class="feature-grid">
+
+            <article class="glass-card feat-card">
+                <div class="fi-box" style="background:rgba(99,102,241,0.15); color:var(--primary);">
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                </div>
+                <div><h3 class="feat-title">View Students</h3><p class="feat-desc">Browse enrolled students, check profiles, and monitor individual academic progress for this subject.</p></div>
+                <a class="btn-grad" th:href="@{/teacher-view-student/{teacherId}/{courseId}(teacherId=${teacherId}, courseId=${course.courseid})}">View Students</a>
+            </article>
+
+            <article class="glass-card feat-card">
+                <div class="fi-box" style="background:rgba(139,92,246,0.15); color:#8b5cf6;">
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div><h3 class="feat-title">Assign Quiz</h3><p class="feat-desc">Create and schedule a new quiz with custom questions, time limits, and automated grading criteria.</p></div>
+                <a class="btn-grad" th:href="@{/teacher-assign-quiz(courseId=${course.courseid})}">Create Quiz</a>
+            </article>
+
+            <article class="glass-card feat-card">
+                <div class="fi-box" style="background:rgba(236,72,153,0.15); color:#ec4899;">
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                </div>
+                <div><h3 class="feat-title">Assign Feedback Form</h3><p class="feat-desc">Send structured feedback forms to collect course evaluations and student improvement suggestions.</p></div>
+                <a class="btn-grad" th:href="@{/teacher-assign-feedback(courseId=${course.courseid})}">Create Feedback</a>
+            </article>
+
+            <article class="glass-card feat-card">
+                <div class="fi-box" style="background:rgba(6,182,212,0.15); color:var(--accent);">
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                </div>
+                <div><h3 class="feat-title">Manage Attendance</h3><p class="feat-desc">Record today's attendance, view historical logs, and export attendance reports for this subject.</p></div>
+                <button class="btn-grad">Take Attendance</button>
+            </article>
+
+            <article class="glass-card feat-card">
+                <div class="fi-box" style="background:rgba(34,197,94,0.15); color:#22c55e;">
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                </div>
+                <div><h3 class="feat-title">Upload Material</h3><p class="feat-desc">Share lecture slides, notes, reference PDFs, and supplementary resources with enrolled students.</p></div>
+                <a class="btn-grad" th:href="@{/teacher-upload-material(courseId=${course.courseid})}">Upload Material</a>
+            </article>
+
+            <article class="glass-card feat-card">
+                <div class="fi-box" style="background:rgba(245,158,11,0.15); color:#f59e0b;">
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                </div>
+                <div><h3 class="feat-title">Upload Assignment</h3><p class="feat-desc">Create a new assignment with instructions, rubric, file attachments, and submission deadlines.</p></div>
+                <a class="btn-grad" th:href="@{/teacher-upload-assignment(courseId=${course.courseid})}">Upload Assignment</a>
+            </article>
+
         </div>
 
-        <!-- STUDENTS TAB -->
-        <div class="tab-pane active" id="tab-students" role="tabpanel">
-            <div class="tab-header">
-                <span class="tab-header-info">62 students enrolled in Section A</span>
-                <button class="btn-primary" style="font-size:12px;padding:8px 16px;">
-                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                    Export List
-                </button>
+        <!-- 3. TABS SECTION -->
+        <div class="section-label">Detailed View</div>
+        <div class="glass-card" style="padding:0; overflow:hidden;">
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="students">Students</button>
+                <button class="tab-btn" data-tab="assignments">Assignments</button>
+                <button class="tab-btn" data-tab="attendance">Attendance</button>
+                <button class="tab-btn" data-tab="materials">Materials</button>
             </div>
-            <div class="students-grid">
-                <div class="student-card"><div class="s-avatar">AR</div><div><div class="s-name">Aditya Rao</div><div class="s-id">CS21B001</div></div></div>
-                <div class="student-card"><div class="s-avatar">PK</div><div><div class="s-name">Priya Kumar</div><div class="s-id">CS21B002</div></div></div>
-                <div class="student-card"><div class="s-avatar">RS</div><div><div class="s-name">Rahul Sharma</div><div class="s-id">CS21B003</div></div></div>
-                <div class="student-card"><div class="s-avatar">AM</div><div><div class="s-name">Ananya Menon</div><div class="s-id">CS21B004</div></div></div>
-                <div class="student-card"><div class="s-avatar">VN</div><div><div class="s-name">Vikram Nair</div><div class="s-id">CS21B005</div></div></div>
-                <div class="student-card"><div class="s-avatar">SJ</div><div><div class="s-name">Sneha Joshi</div><div class="s-id">CS21B006</div></div></div>
-                <div class="student-card"><div class="s-avatar">KP</div><div><div class="s-name">Karan Patel</div><div class="s-id">CS21B007</div></div></div>
-                <div class="student-card"><div class="s-avatar">DG</div><div><div class="s-name">Divya Gupta</div><div class="s-id">CS21B008</div></div></div>
-                <div class="student-card"><div class="s-avatar">MR</div><div><div class="s-name">Meera Reddy</div><div class="s-id">CS21B009</div></div></div>
-                <div class="student-card"><div class="s-avatar">SB</div><div><div class="s-name">Sahil Bansal</div><div class="s-id">CS21B010</div></div></div>
-                <div class="student-card"><div class="s-avatar">TS</div><div><div class="s-name">Tanya Singh</div><div class="s-id">CS21B011</div></div></div>
-                <div class="student-card"><div class="s-avatar">NI</div><div><div class="s-name">Nikhil Iyer</div><div class="s-id">CS21B012</div></div></div>
-            </div>
-            <p style="font-size:12px;color:var(--text-muted);margin-top:18px;text-align:center;">
-                Showing 12 of 62 students · <a href="#" style="color:#a5b4fc;text-decoration:none;">View all students</a>
-            </p>
-        </div>
 
-        <!-- ASSIGNMENTS TAB -->
-        <div class="tab-pane" id="tab-assignments" role="tabpanel">
-            <div class="tab-header">
-                <span class="tab-header-info">8 assignments · 3 active</span>
-                <button class="btn-primary" style="font-size:12px;padding:8px 16px;">
-                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
-                    New Assignment
-                </button>
-            </div>
-            <div class="assignment-list">
-                <div class="assignment-item">
-                    <div class="asgn-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
-                    <div class="asgn-info"><div class="asgn-title">Graph Traversal – DFS &amp; BFS</div><div class="asgn-meta">Due: Feb 25, 2026 · 62 submissions pending</div></div>
-                    <div class="asgn-right"><span class="status-dot sd-active">Active</span><button class="btn-ghost">View</button></div>
-                </div>
-                <div class="assignment-item">
-                    <div class="asgn-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
-                    <div class="asgn-info"><div class="asgn-title">Balanced BST Implementation</div><div class="asgn-meta">Due: Feb 21, 2026 · 58 / 62 submitted</div></div>
-                    <div class="asgn-right"><span class="status-dot sd-pending">Grading</span><button class="btn-ghost">Grade</button></div>
-                </div>
-                <div class="assignment-item">
-                    <div class="asgn-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
-                    <div class="asgn-info"><div class="asgn-title">Hash Table Implementation</div><div class="asgn-meta">Due: Feb 12, 2026 · 61 / 62 submitted</div></div>
-                    <div class="asgn-right"><span class="status-dot sd-closed">Closed</span><button class="btn-ghost">Results</button></div>
-                </div>
-                <div class="assignment-item">
-                    <div class="asgn-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
-                    <div class="asgn-info"><div class="asgn-title">Linked List Operations</div><div class="asgn-meta">Due: Jan 28, 2026 · 62 / 62 submitted</div></div>
-                    <div class="asgn-right"><span class="status-dot sd-closed">Graded</span><button class="btn-ghost">Results</button></div>
-                </div>
-                <div class="assignment-item">
-                    <div class="asgn-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
-                    <div class="asgn-info"><div class="asgn-title">Stack &amp; Queue Problems</div><div class="asgn-meta">Due: Jan 14, 2026 · 60 / 62 submitted</div></div>
-                    <div class="asgn-right"><span class="status-dot sd-closed">Graded</span><button class="btn-ghost">Results</button></div>
+            <!-- STUDENTS -->
+            <div class="tab-pane active" id="tab-students">
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:15px;">
+                    <div class="list-row" style="flex-direction:column; align-items:flex-start; margin-bottom:0;">
+                        <span style="font-weight:600;">Aditya Rao</span>
+                        <span style="font-size:12px; color:var(--text-muted);">CS21B001</span>
+                    </div>
+                    <div class="list-row" style="flex-direction:column; align-items:flex-start; margin-bottom:0;">
+                        <span style="font-weight:600;">Priya Kumar</span>
+                        <span style="font-size:12px; color:var(--text-muted);">CS21B002</span>
+                    </div>
+                    <div class="list-row" style="flex-direction:column; align-items:flex-start; margin-bottom:0;">
+                        <span style="font-weight:600;">Rahul Sharma</span>
+                        <span style="font-size:12px; color:var(--text-muted);">CS21B003</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ATTENDANCE TAB -->
-        <div class="tab-pane" id="tab-attendance" role="tabpanel">
-            <div class="tab-header">
-                <span class="tab-header-info">28 lectures recorded this semester</span>
-                <button class="btn-primary" style="font-size:12px;padding:8px 16px;">
-                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
-                    Take Attendance
-                </button>
+            <!-- ASSIGNMENTS -->
+            <div class="tab-pane" id="tab-assignments">
+                <div class="list-row">
+                    <div>
+                        <div style="font-weight:600;">Graph Traversal – DFS &amp; BFS</div>
+                        <div style="font-size:12px; color:var(--text-muted);">Feb 25, 2026 • 62 pending</div>
+                    </div>
+                    <button class="btn-secondary" type="button">View</button>
+                </div>
             </div>
-            <div class="att-summary">
-                <div class="att-stat"><div class="att-val c-green">87%</div><div class="att-lbl">Avg. Attendance</div></div>
-                <div class="att-stat"><div class="att-val c-cyan">28</div><div class="att-lbl">Classes Held</div></div>
-                <div class="att-stat"><div class="att-val c-amber">54</div><div class="att-lbl">Above 75%</div></div>
-                <div class="att-stat"><div class="att-val c-red">8</div><div class="att-lbl">Below 75%</div></div>
-            </div>
-            <div style="overflow-x:auto;">
-                <table class="data-table" aria-label="Attendance records">
-                    <thead>
-                    <tr><th>Date</th><th>Lecture</th><th>Present</th><th>Absent</th><th>Percentage</th><th>Action</th></tr>
-                    </thead>
+
+            <!-- ATTENDANCE -->
+            <div class="tab-pane" id="tab-attendance">
+                <table class="data-table">
+                    <thead><tr><th>Date</th><th>Lecture Topic</th><th>Present</th><th>%</th></tr></thead>
                     <tbody>
-                    <tr><td>Feb 18, 2026</td><td>Lecture 14 – Graph Traversal</td><td style="color:#86efac;font-weight:600;">58</td><td style="color:#fca5a5;font-weight:600;">4</td><td>93.5%</td><td><button class="btn-ghost">Edit</button></td></tr>
-                    <tr><td>Feb 15, 2026</td><td>Lecture 13 – Dijkstra's Algorithm</td><td style="color:#86efac;font-weight:600;">55</td><td style="color:#fca5a5;font-weight:600;">7</td><td>88.7%</td><td><button class="btn-ghost">Edit</button></td></tr>
-                    <tr><td>Feb 11, 2026</td><td>Lecture 12 – Heap &amp; Priority Queue</td><td style="color:#86efac;font-weight:600;">60</td><td style="color:#fca5a5;font-weight:600;">2</td><td>96.7%</td><td><button class="btn-ghost">Edit</button></td></tr>
-                    <tr><td>Feb 08, 2026</td><td>Lecture 11 – AVL Trees</td><td style="color:#86efac;font-weight:600;">51</td><td style="color:#fca5a5;font-weight:600;">11</td><td>82.2%</td><td><button class="btn-ghost">Edit</button></td></tr>
-                    <tr><td>Feb 04, 2026</td><td>Lecture 10 – Hash Tables</td><td style="color:#86efac;font-weight:600;">57</td><td style="color:#fca5a5;font-weight:600;">5</td><td>91.9%</td><td><button class="btn-ghost">Edit</button></td></tr>
-                    <tr><td>Jan 31, 2026</td><td>Lecture 9 – Binary Search Trees</td><td style="color:#86efac;font-weight:600;">53</td><td style="color:#fca5a5;font-weight:600;">9</td><td>85.5%</td><td><button class="btn-ghost">Edit</button></td></tr>
+                    <tr><td>Feb 18, 2026</td><td>Lecture 14 – Graph Traversal</td><td>58/62</td><td>93.5%</td></tr>
+                    <tr><td>Feb 15, 2026</td><td>Lecture 13 – Dijkstra's Algorithm</td><td>55/62</td><td>88.7%</td></tr>
                     </tbody>
                 </table>
             </div>
-        </div>
 
-        <!-- MATERIALS TAB -->
-        <div class="tab-pane" id="tab-materials" role="tabpanel">
-            <div class="tab-header">
-                <span class="tab-header-info">14 files uploaded across 3 folders</span>
-                <button class="btn-primary" style="font-size:12px;padding:8px 16px;">
-                    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                    Upload File
-                </button>
-            </div>
-            <div class="material-list">
-                <div class="material-item">
-                    <div class="mat-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
-                    <div class="mat-info"><div class="mat-name">Week 7 – Graph Algorithms Slides.pdf</div><div class="mat-meta">3.2 MB · Uploaded Feb 15, 2026</div></div>
-                    <button class="btn-ghost"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download</button>
-                </div>
-                <div class="material-item">
-                    <div class="mat-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
-                    <div class="mat-info"><div class="mat-name">Dynamic Programming Reference Notes.pdf</div><div class="mat-meta">1.8 MB · Uploaded Feb 10, 2026</div></div>
-                    <button class="btn-ghost"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download</button>
-                </div>
-                <div class="material-item">
-                    <div class="mat-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
-                    <div class="mat-info"><div class="mat-name">Week 6 – Binary Trees &amp; BST.pdf</div><div class="mat-meta">2.5 MB · Uploaded Feb 05, 2026</div></div>
-                    <button class="btn-ghost"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download</button>
-                </div>
-                <div class="material-item">
-                    <div class="mat-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
-                    <div class="mat-info"><div class="mat-name">Complexity Analysis Cheat Sheet.pdf</div><div class="mat-meta">0.6 MB · Uploaded Jan 28, 2026</div></div>
-                    <button class="btn-ghost"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download</button>
-                </div>
-                <div class="material-item">
-                    <div class="mat-icon"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
-                    <div class="mat-info"><div class="mat-name">Sorting Algorithms Visualized.pptx</div><div class="mat-meta">5.1 MB · Uploaded Jan 20, 2026</div></div>
-                    <button class="btn-ghost"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download</button>
+            <!-- MATERIALS -->
+            <div class="tab-pane" id="tab-materials">
+                <div class="list-row">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span>📄</span>
+                        <div>
+                            <div style="font-weight:600;">Week 7 – Graph Algorithms.pdf</div>
+                            <div style="font-size:11px; color:var(--text-muted);">3.2 MB • Feb 15</div>
+                        </div>
+                    </div>
+                    <button class="btn-secondary" type="button">↓</button>
                 </div>
             </div>
         </div>
-
-    </div>
-</main>
+    </main>
+</div>
 
 <script>
-    (function () {
-        document.querySelectorAll('.tab-btn').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                document.querySelectorAll('.tab-btn').forEach(function (b) {
-                    b.classList.remove('active');
-                    b.setAttribute('aria-selected', 'false');
-                });
-                document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.remove('active'); });
-                btn.classList.add('active');
-                btn.setAttribute('aria-selected', 'true');
-                var pane = document.getElementById('tab-' + btn.getAttribute('data-tab'));
-                if (pane) pane.classList.add('active');
-            });
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
+        document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+
+    const sunIcon = document.querySelector('.sun-icon');
+    const moonIcon = document.querySelector('.moon-icon');
+    const html = document.documentElement;
+
+    const savedTheme = localStorage.getItem('smart-campus-theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeIcons(savedTheme);
+
+    function toggleTheme() {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('smart-campus-theme', newTheme);
+        updateThemeIcons(newTheme);
+    }
+
+    function updateThemeIcons(theme) {
+        if (theme === 'light') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        }
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+            document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.remove('active'); });
+            btn.classList.add('active');
+            document.getElementById('tab-' + btn.getAttribute('data-tab')).classList.add('active');
         });
-    })();
+    });
 </script>
 </body>
 </html>
+
+
+
+

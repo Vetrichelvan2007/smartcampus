@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Students</title>
+    <title>Quiz Submission</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -186,114 +186,80 @@
         .page-subtitle {
             color: var(--text-dim);
             font-size: 14px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .filters {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 16px;
-            margin: 24px 0;
+        .section-title {
+            font-family: 'Orbitron'; 
+            font-size: 12px; 
+            font-weight: 700;
+            color: var(--primary); 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            margin: 32px 0 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px;
         }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-        input, select {
-            border: 1px solid var(--border);
-            background: rgba(2, 6, 23, 0.75);
-            border-radius: 12px;
-            color: var(--text-main);
-            font-size: 14px;
-            padding: 12px 16px;
-            font-family: 'Poppins', sans-serif;
-            outline: none;
-            width: 100%;
-            transition: all 0.3s;
-        }
-
-        [data-theme="light"] input,
-        [data-theme="light"] select {
-            background: rgba(255, 255, 255, 0.7);
-            color: var(--text-main);
-        }
-
-        input:focus, select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px var(--primary-glow);
-        }
-
-        .table-wrap {
-            overflow-x: auto;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin-top: 24px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead th {
-            text-align: left;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            padding: 16px;
+        .answers-container { border: 1px solid var(--border); background: transparent; border-radius: 12px; overflow: hidden; }
+        .answer-item { padding: 24px; border-bottom: 1px solid var(--border); }
+        .answer-item:last-child { border-bottom: none; }
+        .answer-item:hover { background: rgba(99, 102, 241, 0.02); }
+        
+        .question-text { font-weight: 600; color: var(--text-main); font-size: 15px; margin-bottom: 8px; }
+        .answer-meta { color: var(--text-muted); font-size: 12px; margin-bottom: 12px; display: flex; gap: 16px; }
+        .answer-content { 
             background: rgba(2, 6, 23, 0.5);
-            border-bottom: 1px solid var(--border);
-        }
-
-        tbody td {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
+            padding: 16px; 
+            border-radius: 10px; 
+            border: 1px solid var(--border);
             color: var(--text-dim);
-            font-size: 13px;
+            font-size: 14px;
+            line-height: 1.6;
         }
+        .answer-content > div { margin-bottom: 8px; }
+        .answer-content > div:last-child { margin-bottom: 0; }
 
-        tbody tr:hover {
-            background: rgba(99, 102, 241, 0.05);
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .badge-active {
-            background: rgba(34, 197, 94, 0.15);
-            color: #86efac;
-            border: 1px solid rgba(34, 197, 94, 0.35);
-        }
-
-        .badge-warning {
-            background: rgba(245, 158, 11, 0.15);
-            color: #fcd34d;
-            border: 1px solid rgba(245, 158, 11, 0.35);
-        }
-
-        .btn-view {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 14px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-            color: #fff;
+        .btn-grad {
             background: var(--grad);
+            color: white; 
+            border: none; 
+            padding: 10px 16px; 
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
             transition: all 0.3s;
+            display: inline-block;
         }
-
-        .btn-view:hover {
+        .btn-grad:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px var(--primary-glow);
         }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .action-buttons { display: flex; gap: 12px; flex-wrap: wrap; margin: 24px 0; }
 
         .sidebar-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.5);
@@ -311,8 +277,7 @@
             .topbar { padding: 0 16px; }
             .page-content { padding: 20px; }
             .page-title { font-size: 24px; }
-            .filters { grid-template-columns: 1fr; }
-            .table-wrap { overflow-x: auto; }
+            .action-buttons { flex-direction: column; }
         }
     </style>
 </head>
@@ -340,7 +305,7 @@
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
             Dashboard
         </a>
-        <a class="nav-item active" th:href="@{/teacher-mysubjects}">
+        <a class="nav-item" th:href="@{/teacher-mysubjects}">
             <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
             My Subjects
         </a>
@@ -358,7 +323,7 @@
             <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             Internal Marks
         </a>
-        <a class="nav-item" th:href="@{/teacher-create-quiz}">
+        <a class="nav-item active" th:href="@{/teacher-create-quiz}">
             <svg viewBox="0 0 24 24"><path d="M12 4v16"/><path d="M4 12h16"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
             Create Quiz
         </a>
@@ -394,7 +359,7 @@
             </button>
             <div class="search-box">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" placeholder="Search students...">
+                <input type="text" placeholder="Search submissions...">
             </div>
         </div>
         <div class="topbar-actions">
@@ -412,57 +377,45 @@
 
     <main class="page-content">
         <div class="page-header">
-            <h1 class="page-title">View Students</h1>
+            <h1 class="page-title" th:text="${quizTitle}">Quiz Submission</h1>
             <p class="page-subtitle">
-                <span th:if="${courseName != null}" th:text="${courseName}"></span>
+                <span th:text="${courseName}"></span>
                 <span th:if="${courseCode != null}" th:text="| (${courseCode})|"></span>
-                <span th:if="${courseName == null}">Search and review student details, attendance and academic status.</span>
-                <span th:if="${courseName != null}"> · Current batch only · Under your allocation</span>
+                <span th:text="| Student: ${studentName} (${rollNumber})|"></span>
+            </p>
+            <p class="page-subtitle" th:if="${submittedAt != null}">
+                <span th:text="${'Submitted: ' + #dates.format(submittedAt, 'dd-MMM-yyyy HH:mm')}"></span>
+                <span th:if="${score != null}" th:text="${' · Score: ' + score}"></span>
             </p>
         </div>
 
         <div class="glass-card">
-            <div class="filters">
-                <input id="studentSearch" type="text" placeholder="Search by name, register number, or email" autocomplete="off">
+            <div class="action-buttons">
+                <a class="btn-grad" th:href="@{/teacher-quiz/{id}(id=${quizId})}">Back to Quiz</a>
+                <a class="btn-secondary" th:href="@{/teacher-dashboard}">Dashboard</a>
             </div>
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Register No</th>
-                        <th>Email</th>
-                        <th>Department</th>
-                        <th>Semester</th>
-                        <th>Attendance</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:if="${students == null or #lists.isEmpty(students)}">
-                        <td colspan="8" style="text-align: center; padding: 40px 16px; color: var(--text-muted);">No students found for this course.</td>
-                    </tr>
-                    <tr class="student-row" th:each="student : ${students}">
-                        <td th:text="${student.studentName}"></td>
-                        <td th:text="${student.studentRegisterNumber}"></td>
-                        <td th:text="${student.studentEmail}"></td>
-                        <td th:text="${student.department}"></td>
-                        <td th:text="${student.semester}"></td>
-                        <td>-</td>
-                        <td>
-                            <span class="badge"
-                                  th:classappend="${student.status != null and student.status.equalsIgnoreCase('ACTIVE')} ? ' badge-active' : ' badge-warning'"
-                                  th:text="${student.status != null ? student.status : 'ACTIVE'}"></span>
-                        </td>
-                        <td><a href="#" class="btn-view">View</a></td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="section-title">Student Responses</div>
+            <div class="answers-container">
+                <div class="answer-item" th:each="r : ${answers}">
+                    <div class="question-text" th:text="${r.get('order') + '. ' + r.get('text')}"></div>
+                    <div class="answer-meta">
+                        <span th:text="${r.get('type')}"></span>
+                        <span th:text="${r.get('marks') + ' marks'}"></span>
+                    </div>
+                    <div class="answer-content">
+                        <div th:if="${r.get('type') != null and r.get('type').toString().equalsIgnoreCase('MCQ')}">
+                            <div th:text="${'Selected: ' + (r.get('selected') != null ? r.get('selected') : 'Not answered') }"></div>
+                            <div th:text="${'Correct: ' + (r.get('correct') != null ? r.get('correct') : '-') }"></div>
+                            <div th:text="${'Points Awarded: ' + (r.get('awarded') != null ? r.get('awarded') : '-') }"></div>
+                        </div>
+                        <div th:if="${r.get('type') == null or r.get('type').toString().equalsIgnoreCase('DESCRIPTIVE')}">
+                            <div th:text="${r.get('answerText') != null ? r.get('answerText') : 'No answer provided'}"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </main>
 </div>
 
@@ -511,21 +464,7 @@
         document.documentElement.setAttribute('data-theme', savedTheme);
         updateThemeIcons();
     });
-
-    // Student Search
-    (function () {
-        const input = document.getElementById('studentSearch');
-        if (!input) return;
-
-        const rows = Array.from(document.querySelectorAll('tbody tr.student-row'));
-        input.addEventListener('input', function () {
-            const q = (input.value || '').trim().toLowerCase();
-            rows.forEach(function (row) {
-                const text = (row.innerText || '').toLowerCase();
-                row.style.display = text.includes(q) ? '' : 'none';
-            });
-        });
-    })();
 </script>
 </body>
 </html>
+

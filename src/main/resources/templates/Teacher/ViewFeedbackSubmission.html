@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Submission</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: #0a0e27; color: #f1f5f9; min-height: 100vh; padding: 24px; }
+        .orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.35; pointer-events: none; z-index: 0; }
+        .orb.one { width: 420px; height: 420px; background: #6366f1; top: -110px; right: -110px; }
+        .orb.two { width: 360px; height: 360px; background: #ec4899; bottom: -120px; left: -90px; }
+        .page { max-width: 980px; margin: 0 auto; position: relative; z-index: 1; }
+        .card {
+            background: rgba(15, 23, 42, 0.78);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 40px rgba(0,0,0,0.35);
+            padding: 24px;
+        }
+        .topbar { display:flex; align-items:flex-start; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+        .title { font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 700; }
+        .subtitle { font-size: 13px; color: #94a3b8; margin-top: 6px; }
+        .btn {
+            color: #c4b5fd;
+            text-decoration: none;
+            font-size: 13px;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 10px;
+            padding: 9px 14px;
+            background: rgba(139, 92, 246, 0.12);
+            white-space: nowrap;
+            display: inline-block;
+        }
+        .qa {
+            margin-top: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .row {
+            padding: 14px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            background: rgba(2, 6, 23, 0.55);
+        }
+        .row:first-child { border-top: none; }
+        .q { font-weight: 600; color: #e2e8f0; }
+        .meta { margin-top: 4px; font-size: 12px; color: #94a3b8; }
+        .a { margin-top: 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(10, 14, 39, 0.55); color: #cbd5e1; }
+    </style>
+</head>
+<body>
+<div class="orb one"></div>
+<div class="orb two"></div>
+
+<main class="page">
+    <section class="card">
+        <div class="topbar">
+            <div>
+                <div class="title" th:text="${formTitle}">Feedback Submission</div>
+                <div class="subtitle">
+                    <span th:text="${courseName}"></span>
+                    <span th:if="${courseCode != null}" th:text="| (${courseCode})|"></span>
+                    <span th:text="| · ${studentName} (${rollNumber})|"></span>
+                </div>
+                <div class="subtitle" th:text="${submittedAt != null ? 'Submitted at: ' + #dates.format(submittedAt, 'dd-MMM-yyyy HH:mm') : ''}"></div>
+            </div>
+            <a class="btn" th:href="@{/teacher-feedback/{id}(id=${formId})}">Back</a>
+        </div>
+
+        <div class="qa">
+            <div class="row" th:each="r : ${answers}">
+                <div class="q" th:text="${r.get('order') + '. ' + r.get('text')}"></div>
+                <div class="meta" th:text="${r.get('type')}"></div>
+                <div class="a">
+                    <span th:if="${r.get('answerNumber') != null}" th:text="${r.get('answerNumber')}"></span>
+                    <span th:if="${r.get('answerNumber') == null}" th:text="${r.get('answerText') != null ? r.get('answerText') : '-'}"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+

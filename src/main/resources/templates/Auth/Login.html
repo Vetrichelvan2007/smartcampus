@@ -753,21 +753,6 @@
                     <div class="input-border"></div>
                 </div>
 
-                <div class="form-group" id="roleGroup">
-                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                    <select id="role" name="role" required>
-                        <option value="" disabled selected></option>
-                        <option value="student">Student</option>
-                        <option value="teacher">Teacher</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                    <label class="form-label">Role</label>
-                    <div class="input-border"></div>
-                </div>
-
                 <button type="submit" class="submit-btn">Login</button>
 
             </form>
@@ -781,11 +766,8 @@
 
     const emailInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
-    const roleSelect = document.getElementById('role');
-
     const emailGroup = document.getElementById('emailGroup');
     const passwordGroup = document.getElementById('passwordGroup');
-    const roleGroup = document.getElementById('roleGroup');
 
     function updateGroupState(input, group) {
         if (input.value.trim()) {
@@ -807,14 +789,9 @@
     passwordInput.addEventListener('blur', () => passwordGroup.classList.remove('focused'));
     passwordInput.addEventListener('input', () => updateGroupState(passwordInput, passwordGroup));
 
-    roleSelect.addEventListener('focus', () => roleGroup.classList.add('focused'));
-    roleSelect.addEventListener('blur', () => roleGroup.classList.remove('focused'));
-    roleSelect.addEventListener('change', () => updateGroupState(roleSelect, roleGroup));
-
     document.addEventListener('DOMContentLoaded', () => {
         updateGroupState(emailInput, emailGroup);
         updateGroupState(passwordInput, passwordGroup);
-        updateGroupState(roleSelect, roleGroup);
     });
 </script>
 </body>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Status</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0e27;
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb.one { width: 420px; height: 420px; background: #6366f1; top: -110px; right: -110px; }
+        .orb.two { width: 360px; height: 360px; background: #ec4899; bottom: -120px; left: -90px; }
+        .page { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+        .card {
+            background: rgba(15, 23, 42, 0.78);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 40px rgba(0,0,0,0.35);
+            padding: 24px;
+        }
+        .topbar { display:flex; align-items:flex-start; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+        .title { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 700; }
+        .subtitle { font-size: 13px; color: #94a3b8; margin-top: 6px; }
+        .btn {
+            color: #c4b5fd;
+            text-decoration: none;
+            font-size: 13px;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 10px;
+            padding: 9px 14px;
+            background: rgba(139, 92, 246, 0.12);
+            white-space: nowrap;
+            display: inline-block;
+        }
+        .stats { display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+        .stat {
+            background: rgba(2, 6, 23, 0.65);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 14px;
+        }
+        .stat-k { color:#94a3b8; font-size: 12px; }
+        .stat-v { margin-top: 6px; font-family: 'Orbitron', sans-serif; font-size: 18px; }
+        .section-title {
+            margin: 18px 0 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+        .table-wrap { overflow-x:auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.07); }
+        table { width:100%; border-collapse: collapse; min-width: 900px; }
+        thead th {
+            text-align:left;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: #64748b;
+            text-transform: uppercase;
+            padding: 13px 14px;
+            background: rgba(2, 6, 23, 0.7);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        tbody td { padding: 13px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); color:#cbd5e1; font-size: 13px; }
+        tbody tr:hover { background: rgba(255,255,255,0.03); }
+        .badge {
+            display: inline-block;
+            padding: 4px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+        .badge-ok { background: rgba(34, 197, 94, 0.15); color: #86efac; border-color: rgba(34, 197, 94, 0.35); }
+        .badge-no { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239, 68, 68, 0.35); }
+        .q-preview {
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(2, 6, 23, 0.55);
+            border-radius: 12px;
+            padding: 14px;
+        }
+        .q-item { padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.06); }
+        .q-item:first-child { border-top: none; padding-top: 0; }
+        .q-meta { color:#94a3b8; font-size: 12px; margin-top: 5px; }
+        @media (max-width: 900px) {
+            .stats { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="orb one"></div>
+<div class="orb two"></div>
+
+<main class="page">
+    <section class="card">
+        <div class="topbar">
+            <div>
+                <div class="title" th:text="${form.title}">Feedback Form</div>
+                <div class="subtitle">
+                    <span th:text="${form.courseName}"></span>
+                    <span th:if="${form.courseCode != null}" th:text="| (${form.courseCode})|"></span>
+                </div>
+                <div class="subtitle" th:if="${form.description != null and !#strings.isEmpty(form.description)}" th:text="${form.description}"></div>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap: wrap; justify-content: flex-end;">
+                <a class="btn" th:href="@{/teacher-assign-feedback(courseId=${form.courseId})}">Back</a>
+                <a class="btn" th:href="@{/teacher-dashboard}">Dashboard</a>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-k">Eligible Students</div>
+                <div class="stat-v" th:text="${form.eligibleCount}">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-k">Submitted</div>
+                <div class="stat-v" th:text="${form.submittedCount}">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-k">Questions</div>
+                <div class="stat-v" th:text="${form.questionCount}">0</div>
+            </div>
+        </div>
+
+        <div class="section-title">Questions Preview</div>
+        <div class="q-preview">
+            <div class="q-item" th:each="q : ${questions}">
+                <div>
+                    <strong th:text="${q.order + '. ' + q.text}"></strong>
+                </div>
+                <div class="q-meta">
+                    <span th:text="${q.type}"></span>
+                    <span th:if="${q.type != null and q.type.equalsIgnoreCase('RATING') and q.ratingMax != null}"
+                          th:text="| · Max ${q.ratingMax}|"></span>
+                    <span th:if="${q.type != null and q.type.equalsIgnoreCase('MCQ') and q.options != null and !#lists.isEmpty(q.options)}"
+                          th:text="| · Options: ${#lists.size(q.options)}|"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Submission Status</div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Roll No</th>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th>Status</th>
+                    <th>Submitted At</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${studentStatuses == null or #lists.isEmpty(studentStatuses)}">
+                    <td colspan="7">No eligible students found for this feedback.</td>
+                </tr>
+                <tr th:each="s : ${studentStatuses}">
+                    <td th:text="${s.name}"></td>
+                    <td th:text="${s.rollNumber}"></td>
+                    <td th:text="${s.department}"></td>
+                    <td th:text="${s.semester}"></td>
+                    <td>
+                        <span class="badge" th:classappend="${s.submitted} ? ' badge-ok' : ' badge-no'"
+                              th:text="${s.submitted} ? 'SUBMITTED' : 'NOT SUBMITTED'"></span>
+                    </td>
+                    <td th:text="${s.submittedAt != null ? #dates.format(s.submittedAt, 'dd-MMM-yyyy HH:mm') : '-'}"></td>
+                    <td>
+                        <a class="btn" style="padding: 7px 12px;"
+                           th:if="${s.submitted}"
+                           th:href="@{/teacher-feedback/{formId}/student/{studentId}(formId=${form.id}, studentId=${s.studentId})}">
+                            View
+                        </a>
+                        <span th:if="${!s.submitted}" style="color:#64748b; font-size: 12px;">-</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+

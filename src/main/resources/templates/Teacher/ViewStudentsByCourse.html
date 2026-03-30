@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Students</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0e27;
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb.one { width: 420px; height: 420px; background: #6366f1; top: -110px; right: -110px; }
+        .orb.two { width: 360px; height: 360px; background: #ec4899; bottom: -120px; left: -90px; }
+        .page { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+        .card {
+            background: rgba(15, 23, 42, 0.78);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 40px rgba(0,0,0,0.35);
+            padding: 24px;
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .title { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 700; }
+        .subtitle { font-size: 14px; color: #94a3b8; margin-top: 6px; }
+        .btn-back {
+            color: #c4b5fd;
+            text-decoration: none;
+            font-size: 13px;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 10px;
+            padding: 9px 14px;
+            background: rgba(139, 92, 246, 0.12);
+            white-space: nowrap;
+        }
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.07);
+        }
+        table { width: 100%; border-collapse: collapse; min-width: 860px; }
+        thead th {
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: #64748b;
+            text-transform: uppercase;
+            padding: 13px 14px;
+            background: rgba(2, 6, 23, 0.7);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        tbody td {
+            padding: 13px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+        tbody tr:hover { background: rgba(255,255,255,0.03); }
+        .dept-badge {
+            display: inline-block;
+            padding: 4px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(6, 182, 212, 0.12);
+            color: #67e8f9;
+            border: 1px solid rgba(6, 182, 212, 0.35);
+        }
+        .btn-view {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+        }
+        @media (max-width: 768px) {
+            body { padding: 14px; }
+            .card { padding: 16px; }
+            .topbar { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+<div class="orb one"></div>
+<div class="orb two"></div>
+
+<main class="page">
+    <section class="card">
+        <div class="topbar">
+            <div>
+                <h1 class="title">View Students</h1>
+                <p class="subtitle">Pick a course to view the current-batch students under your allocation.</p>
+            </div>
+            <a class="btn-back" th:href="@{/teacher-dashboard}">Back to Dashboard</a>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Code</th>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${courses == null or #lists.isEmpty(courses)}">
+                    <td colspan="5">No courses found for this teacher.</td>
+                </tr>
+                <tr th:each="c : ${courses}">
+                    <td th:text="${c.coursename}"></td>
+                    <td th:text="${c.coursecode}"></td>
+                    <td><span class="dept-badge" th:text="${c.coursedept}"></span></td>
+                    <td th:text="${c.sem}"></td>
+                    <td>
+                        <a class="btn-view"
+                           th:href="@{/teacher-view-student/{teacherId}/{courseId}(teacherId=${teacherId}, courseId=${c.courseid})}">
+                            View Students
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+

@@ -4,6 +4,7 @@ public class ViewStudentDTO {
 
     private String studentName;
     private String studentRegisterNumber;
+    private String studentEmail;
     private String department;
     private int semester;
     private String status;
@@ -24,6 +25,14 @@ public class ViewStudentDTO {
 
     public void setStudentRegisterNumber(String studentRegisterNumber) {
         this.studentRegisterNumber = studentRegisterNumber;
+    }
+
+    public String getStudentEmail() {
+        return studentEmail;
+    }
+
+    public void setStudentEmail(String studentEmail) {
+        this.studentEmail = studentEmail;
     }
 
     public String getDepartment() {

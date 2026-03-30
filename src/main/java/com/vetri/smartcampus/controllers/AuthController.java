@@ -15,14 +15,48 @@ import java.sql.ResultSet;
 @Controller
 public class AuthController {
 
-    @GetMapping("/login")
-    public String login(HttpSession session) {
-
-        Object sid = session.getAttribute("studentId");
-        if (sid != null) {
+    private String resolveDashboardRedirect(HttpSession session) {
+        Object studentId = session.getAttribute("studentId");
+        if (studentId != null) {
             return "redirect:/student-dashboard";
         }
-        return "Auth/Login";
+
+        Object teacherId = session.getAttribute("teacherId");
+        if (teacherId != null) {
+            return "redirect:/teacher-dashboard";
+        }
+
+        Object role = session.getAttribute("role");
+        if (role != null) {
+            if ("student".equalsIgnoreCase(role.toString())) {
+                return "redirect:/student-dashboard";
+            }
+            if ("teacher".equalsIgnoreCase(role.toString())) {
+                return "redirect:/teacher-dashboard";
+            }
+        }
+
+        return null;
+    }
+
+    private void clearRoleSpecificSession(HttpSession session) {
+        session.removeAttribute("studentId");
+        session.removeAttribute("studentRollNumber");
+        session.removeAttribute("studentName");
+        session.removeAttribute("teacherId");
+        session.removeAttribute("teacherName");
+        session.removeAttribute("teacherEmail");
+        session.removeAttribute("teacherClgId");
+        session.removeAttribute("designation");
+        session.removeAttribute("staffType");
+        session.removeAttribute("accountStatus");
+        session.removeAttribute("department_id");
+    }
+
+    @GetMapping("/login")
+    public String login(HttpSession session) {
+        String dashboardRedirect = resolveDashboardRedirect(session);
+        return dashboardRedirect != null ? dashboardRedirect : "Auth/Login";
     }
 
     @GetMapping("/")
@@ -31,29 +65,30 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String handleLogin(@RequestParam String username, @RequestParam String password, @RequestParam String role, HttpSession session) {
+    public String handleLogin(@RequestParam String username, @RequestParam String password, HttpSession session) {
 
         try {
 
             Connection con = DataBaseConnection.getConnection();
-            PreparedStatement userPs = DataBaseConnection.getPreparedStatement(con,"SELECT * FROM users WHERE email=? AND password=? AND role=?");
+            PreparedStatement userPs = DataBaseConnection.getPreparedStatement(con,"SELECT * FROM users WHERE email=? AND password=?");
 
             userPs.setString(1, username);
             userPs.setString(2, password);
-            userPs.setString(3, role);
 
             ResultSet userRs = userPs.executeQuery();
 
             if (userRs.next()) {
+                clearRoleSpecificSession(session);
 
                 int userId = userRs.getInt("id");
+                String role = userRs.getString("role");
 
                 session.setAttribute("userId", userId);
                 session.setAttribute("email", userRs.getString("email"));
-                session.setAttribute("role", userRs.getString("role"));
+                session.setAttribute("role", role);
 
 
-                if ("student".equals(role)) {
+                if ("student".equalsIgnoreCase(role)) {
 
                     PreparedStatement studentPs = DataBaseConnection.getPreparedStatement(con,"SELECT * FROM student WHERE email=?");
                     studentPs.setString(1, username);
@@ -71,7 +106,7 @@ public class AuthController {
 
                     return "redirect:/student-dashboard";
                 }
-                if ("teacher".equals(role)) {
+                if ("teacher".equalsIgnoreCase(role)) {
 
                     PreparedStatement teacherPs =
                             DataBaseConnection.getPreparedStatement(con,
@@ -103,6 +138,8 @@ public class AuthController {
 
                     return "redirect:/teacher-dashboard";
                 }
+
+                session.invalidate();
             }
             userPs.close();
             userRs.close();

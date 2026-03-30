@@ -1,78 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Dashboard</title>
+    <title>Teacher Dashboard | Smart Campus</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== RESET ===== */
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ===== MODERN CSS VARIABLES (Theme System) ===== */
+        :root {
+            --primary: #6366f1; /* Indigo */
+            --primary-glow: rgba(99, 102, 241, 0.5);
+            --accent: #22d3ee; /* Cyan */
+            --accent-glow: rgba(34, 211, 238, 0.5);
+            --grad: linear-gradient(135deg, var(--primary), var(--accent));
 
-        /* ===== BASE ===== */
+            /* Dark Mode (Default) */
+            --bg-body: #060918;
+            --bg-sidebar: rgba(15, 23, 42, 0.8);
+            --bg-card: rgba(30, 41, 59, 0.5);
+            --text-main: #f1f5f9;
+            --text-dim: #94a3b8;
+            --text-muted: #475569;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f8fafc;
+            --bg-sidebar: rgba(255, 255, 255, 0.9);
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --text-main: #0f172a;
+            --text-dim: #475569;
+            --text-muted: #94a3b8;
+            --border: rgba(0, 0, 0, 0.08);
+            --glass-border: rgba(99, 102, 241, 0.2);
+            --shadow: 0 8px 32px rgba(99, 102, 241, 0.1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Poppins', sans-serif;
-            background: #0a0e27;
-            color: #f1f5f9;
+            background: var(--bg-body);
+            color: var(--text-main);
             min-height: 100vh;
             overflow-x: hidden;
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
-        /* ===== BACKGROUND ORBS ===== */
-        .orb {
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-mesh {
             position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            background: var(--bg-body);
+        }
+        .orb {
+            position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
-            pointer-events: none;
-            z-index: 0;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: move 20s infinite alternate ease-in-out;
         }
-        .orb--indigo {
-            width: 420px; height: 420px;
-            background: #6366f1;
-            top: -80px; right: -60px;
-        }
-        .orb--pink {
-            width: 380px; height: 380px;
-            background: #ec4899;
-            bottom: -100px; left: -80px;
-        }
-        .orb--cyan {
-            width: 300px; height: 300px;
-            background: #06b6d4;
-            top: 45%; right: -40px;
+        .orb-1 { width: 500px; height: 500px; background: var(--primary); top: -10%; left: -10%; }
+        .orb-2 { width: 400px; height: 400px; background: var(--accent); bottom: -10%; right: -10%; animation-delay: -5s; }
+        .orb-3 { width: 300px; height: 300px; background: var(--primary); top: 40%; right: 10%; animation-delay: -10s; }
+
+        @keyframes move {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.1); }
         }
 
         /* ===== LAYOUT ===== */
-        .layout {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-            z-index: 1;
-        }
+        .layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
 
         /* ===== SIDEBAR ===== */
         .sidebar {
             width: 260px;
             min-height: 100vh;
-            background: rgba(15, 23, 42, 0.7);
+            background: var(--bg-sidebar);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255,255,255,0.10);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 4px 0 24px rgba(0,0,0,0.2);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            padding: 0;
             position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 100;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            top: 0; left: 0; z-index: 100;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar-brand {
-            padding: 28px 24px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 32px 24px;
             display: flex;
             align-items: center;
             gap: 14px;
@@ -80,47 +100,31 @@
         .sidebar-brand-icon {
             width: 42px; height: 42px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            background: var(--grad);
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Orbitron', sans-serif;
             font-weight: 800;
-            font-size: 16px;
             color: #fff;
-            flex-shrink: 0;
+            box-shadow: 0 0 20px var(--primary-glow);
         }
         .sidebar-brand-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
-            color: #f1f5f9;
             letter-spacing: 0.5px;
         }
-        .sidebar-brand-sub {
-            font-family: 'Poppins', sans-serif;
-            font-size: 11px;
-            color: #475569;
-            font-weight: 400;
-            margin-top: 2px;
-        }
 
-        .sidebar-nav {
-            flex: 1;
-            padding: 16px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            overflow-y: auto;
-        }
+        .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
         .sidebar-nav-label {
             font-family: 'Orbitron', sans-serif;
             font-size: 10px;
             font-weight: 600;
-            color: #475569;
-            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
             text-transform: uppercase;
-            padding: 12px 12px 6px;
+            padding: 20px 12px 8px;
         }
 
         .nav-item {
@@ -128,545 +132,221 @@
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
-            border-radius: 10px;
-            color: #94a3b8;
+            border-radius: 12px;
+            color: var(--text-dim);
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 4px;
         }
         .nav-item:hover {
-            color: #f1f5f9;
-            background: rgba(255,255,255,0.05);
-            transform: translateX(4px);
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.08);
+            transform: translateX(8px);
         }
         .nav-item.active {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            background: var(--grad);
             color: #ffffff;
-            font-weight: 600;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 15px var(--primary-glow);
         }
-        .nav-item.active:hover {
-            transform: translateX(0);
-        }
-        .nav-item svg {
-            width: 20px; height: 20px;
-            flex-shrink: 0;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 1.8;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
+        .nav-item.active svg { stroke: #fff; }
+        .nav-item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; transition: all 0.3s; }
 
-        .sidebar-footer {
-            padding: 16px 12px;
-            border-top: 1px solid rgba(255,255,255,0.06);
-        }
-        .nav-item--logout {
-            color: #f87171;
-        }
-        .nav-item--logout:hover {
-            background: rgba(248, 113, 113, 0.1);
-            color: #fca5a5;
-        }
+        .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); }
+        .nav-item--logout { color: #ef4444; }
+        .nav-item--logout:hover { background: rgba(239, 68, 68, 0.1); color: #f87171; }
 
         /* ===== MAIN AREA ===== */
-        .main {
-            flex: 1;
-            margin-left: 260px;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+        .main { flex: 1; margin-left: 260px; transition: margin 0.4s ease; }
 
-        /* ===== TOP NAVBAR ===== */
+        /* ===== TOPBAR ===== */
         .topbar {
-            height: 72px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 32px;
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+            background: transparent;
+            backdrop-filter: blur(10px);
             position: sticky;
-            top: 0;
-            z-index: 50;
+            top: 0; z-index: 50;
         }
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .hamburger {
-            display: none;
-            background: none;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        .hamburger:hover { color: #f1f5f9; background: rgba(255,255,255,0.05); }
-        .hamburger svg { width: 24px; height: 24px; }
-
         .search-box {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            padding: 10px 16px;
-            width: 320px;
-            transition: all 0.3s ease;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 10px 18px;
+            width: 350px;
+            transition: all 0.3s;
         }
         .search-box:focus-within {
-            border-color: rgba(99, 102, 241, 0.5);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+            width: 380px;
         }
-        .search-box svg { width: 18px; height: 18px; color: #475569; flex-shrink: 0; }
         .search-box input {
-            background: none;
-            border: none;
-            outline: none;
-            color: #f1f5f9;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            width: 100%;
-        }
-        .search-box input::placeholder { color: #94a3b8; }
-
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .topbar-icon {
-            width: 40px; height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255,255,255,0.06);
-            color: #94a3b8;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .topbar-icon:hover {
-            color: #f1f5f9;
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.12);
-        }
-        .topbar-icon svg { width: 20px; height: 20px; }
-        .topbar-icon .badge {
-            position: absolute;
-            top: 6px; right: 6px;
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: #ec4899;
-            border: 2px solid rgba(15, 23, 42, 0.7);
+            background: none; border: none; outline: none;
+            color: var(--text-main); font-size: 14px; width: 100%;
         }
 
-        .topbar-avatar {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            color: #fff;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        .topbar-avatar:hover { transform: scale(1.08); }
-
-        /* ===== CONTENT ===== */
-        .content {
-            flex: 1;
-            padding: 32px;
-            display: flex;
-            flex-direction: column;
-            gap: 28px;
-        }
-
-        /* ===== GLASS CARD ===== */
-        .glass-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.10);
-            border-radius: 16px;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 32px rgba(0,0,0,0.3);
-            padding: 28px;
-        }
-
-        /* ===== WELCOME CARD ===== */
-        .welcome-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-            position: relative;
-            overflow: hidden;
-        }
-        .welcome-card::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0;
-            width: 260px; height: 100%;
-            background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.06), rgba(236,72,153,0.04));
-            border-radius: 0 16px 16px 0;
-            pointer-events: none;
-        }
-        .welcome-info { position: relative; z-index: 1; }
-        .welcome-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 26px;
-            font-weight: 700;
-            color: #f1f5f9;
-            margin-bottom: 8px;
-        }
-        .welcome-title span {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .welcome-sub {
-            font-size: 14px;
-            color: #94a3b8;
-            line-height: 1.6;
-            max-width: 460px;
-        }
-        .welcome-date {
-            margin-top: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #475569;
-            background: rgba(10, 14, 27, 0.5);
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .welcome-date svg { width: 14px; height: 14px; }
-
-        .welcome-graphic {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .welcome-stat-pill {
-            background: rgba(10, 14, 27, 0.5);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 12px;
-            padding: 14px 18px;
-            text-align: center;
-        }
-        .welcome-stat-pill-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .welcome-stat-pill-label {
-            font-size: 11px;
-            color: #475569;
-            margin-top: 4px;
-        }
-
-        /* ===== SUMMARY CARDS ===== */
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-        .summary-card {
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: default;
-        }
-        .summary-card:hover {
-            transform: translateY(-4px);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 40px rgba(0,0,0,0.35);
-        }
-        .summary-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .summary-card-icon {
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .topbar-btn {
             width: 44px; height: 44px;
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            cursor: pointer; transition: all 0.3s;
+            position: relative;
         }
-        .summary-card-icon svg { width: 22px; height: 22px; }
-        .summary-card-icon--indigo { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
-        .summary-card-icon--cyan { background: rgba(6, 182, 212, 0.15); color: #22d3ee; }
-        .summary-card-icon--pink { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
-        .summary-card-icon--amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
-
-        .summary-card-badge {
-            font-size: 11px;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-weight: 500;
+        .topbar-btn:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+            border-color: var(--primary);
         }
-        .badge-up { background: rgba(34, 197, 94, 0.12); color: #4ade80; }
-        .badge-neutral { background: rgba(99, 102, 241, 0.12); color: #818cf8; }
-
-        .summary-card-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: #f1f5f9;
-        }
-        .summary-card-label {
-            font-size: 13px;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-
-        /* ===== BOTTOM GRID ===== */
-        .bottom-grid {
-            display: grid;
-            grid-template-columns: 1fr 360px;
-            gap: 24px;
-        }
-
-        /* ===== TABLE ===== */
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            color: #f1f5f9;
-        }
-        .section-action {
-            font-size: 12px;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: color 0.3s ease;
-            text-decoration: none;
-        }
-        .section-action:hover { color: #f1f5f9; }
-
-        .table-wrap {
-            width: 100%;
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        thead th {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            font-weight: 600;
-            color: #475569;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            text-align: left;
-            padding: 12px 16px;
-            background: rgba(10, 14, 27, 0.5);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        thead th:first-child { border-radius: 10px 0 0 10px; }
-        thead th:last-child { border-radius: 0 10px 10px 0; }
-
-        tbody tr {
-            transition: background 0.3s ease;
-        }
-        tbody tr:hover {
-            background: rgba(255,255,255,0.02);
-        }
-        tbody td {
-            padding: 14px 16px;
-            font-size: 13px;
-            color: #94a3b8;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-        }
-        tbody td:first-child {
-            color: #f1f5f9;
-            font-weight: 500;
-        }
-        .dept-badge {
-            display: inline-block;
-            font-size: 11px;
-            padding: 3px 10px;
-            border-radius: 6px;
-            background: rgba(99, 102, 241, 0.12);
-            color: #818cf8;
-            font-weight: 500;
-        }
-        .btn-view {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 7px 16px;
-            border-radius: 8px;
-            border: none;
-            font-family: 'Poppins', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            color: #fff;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-view:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
-        }
-        .btn-view svg { width: 14px; height: 14px; }
-
-        /* ===== UPCOMING CLASSES ===== */
-        .upcoming-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .upcoming-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px;
-            background: rgba(10, 14, 27, 0.5);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            cursor: default;
-        }
-        .upcoming-item:hover {
-            background: rgba(10, 14, 27, 0.7);
-            border-color: rgba(255,255,255,0.08);
-            transform: translateX(4px);
-        }
-        .upcoming-time {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 56px;
-            padding: 8px;
-            border-radius: 10px;
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.15);
-        }
-        .upcoming-time-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
-            color: #818cf8;
-        }
-        .upcoming-time-period {
-            font-size: 10px;
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .upcoming-details { flex: 1; }
-        .upcoming-subject {
-            font-size: 14px;
-            font-weight: 600;
-            color: #f1f5f9;
-            margin-bottom: 4px;
-        }
-        .upcoming-room {
-            font-size: 12px;
-            color: #475569;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .upcoming-room svg { width: 12px; height: 12px; }
-        .upcoming-status {
+        .topbar-btn .badge {
+            position: absolute; top: 10px; right: 10px;
             width: 8px; height: 8px;
+            background: var(--accent);
             border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .status-live { background: #4ade80; box-shadow: 0 0 8px rgba(74, 222, 128, 0.4); animation: pulse-dot 2s ease-in-out infinite; }
-        .status-upcoming { background: #475569; }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+            box-shadow: 0 0 10px var(--accent-glow);
         }
 
-        /* ===== SIDEBAR OVERLAY (mobile) ===== */
+        .theme-toggle-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; }
+
+        /* ===== CONTENT & CARDS ===== */
+        .content { padding: 32px; display: flex; flex-direction: column; gap: 32px; animation: fadeInUp 0.8s ease; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .glass-card:hover { border-color: var(--primary-glow); }
+
+        /* WELCOME CARD */
+        .welcome-card {
+            display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(34, 211, 238, 0.1));
+            position: relative; overflow: hidden;
+        }
+        .welcome-title { font-family: 'Orbitron', sans-serif; font-size: 32px; margin-bottom: 12px; }
+        .welcome-title span { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .welcome-sub { color: var(--text-dim); font-size: 15px; max-width: 500px; line-height: 1.6; }
+
+        /* SUMMARY GRID */
+        .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .summary-card { text-align: left; position: relative; }
+        .summary-card:hover { transform: translateY(-5px); }
+        .summary-icon {
+            width: 48px; height: 48px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 16px; font-weight: bold;
+        }
+        .summary-icon.primary { background: rgba(99, 102, 241, 0.15); color: var(--primary); }
+        .summary-icon.accent { background: rgba(34, 211, 238, 0.15); color: var(--accent); }
+
+        .summary-val { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+        .summary-label { color: var(--text-muted); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* TABLE STYLING */
+        .table-wrap { width: 100%; overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        th {
+            text-align: left; padding: 16px;
+            font-family: 'Orbitron', sans-serif; font-size: 11px;
+            color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;
+        }
+        td { padding: 16px; background: rgba(255,255,255, 0.03); font-size: 14px; transition: all 0.3s; }
+        [data-theme="light"] td { background: rgba(0,0,0, 0.02); }
+
+        tr:hover td { background: rgba(99, 102, 241, 0.08); color: var(--primary); }
+        td:first-child { border-radius: 12px 0 0 12px; font-weight: 600; }
+        td:last-child { border-radius: 0 12px 12px 0; }
+
+        .dept-badge {
+            padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 600;
+            background: rgba(34, 211, 238, 0.1); color: var(--accent); border: 1px solid rgba(34, 211, 238, 0.2);
+        }
+
+        .btn-view {
+            text-decoration: none; padding: 8px 20px; border-radius: 10px;
+            background: var(--grad); color: #fff; font-size: 12px; font-weight: 600;
+            display: inline-block; transition: all 0.3s;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+        .btn-view:hover { transform: scale(1.05); box-shadow: 0 6px 18px var(--primary-glow); }
+
+        /* UPCOMING CLASSES */
+        .bottom-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; }
+        .upcoming-item {
+            display: flex; align-items: center; gap: 16px; padding: 16px;
+            background: rgba(255,255,255,0.03); border-radius: 16px;
+            margin-bottom: 12px; transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        .upcoming-item:hover { transform: scale(1.02); border-color: var(--accent-glow); }
+        .time-box {
+            background: var(--grad); color: #fff; padding: 10px;
+            border-radius: 12px; text-align: center; min-width: 65px;
+        }
+        .time-box span { display: block; font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 700; }
+        .live-pulse {
+            width: 10px; height: 10px; background: #22c55e; border-radius: 50%;
+            box-shadow: 0 0 0 rgba(34, 197, 94, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+
+        /* MOBILE OVERLAY & HAMBURGER */
         .sidebar-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 99;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            display: none; z-index: 99; backdrop-filter: blur(4px);
         }
         .sidebar-overlay.active { display: block; }
+        .hamburger { display: none; background: none; border: none; color: var(--text-main); cursor: pointer; }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .summary-grid { grid-template-columns: repeat(2, 1fr); }
             .bottom-grid { grid-template-columns: 1fr; }
-            .search-box { width: 220px; }
         }
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .sidebar-overlay.active { display: block; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
             .main { margin-left: 0; }
-            .hamburger { display: flex; }
-            .content { padding: 20px 16px; }
-            .search-box { width: 160px; }
-            .welcome-graphic { display: none; }
-            .welcome-title { font-size: 20px; }
-            .topbar { padding: 0 16px; }
-        }
-        @media (max-width: 480px) {
-            .summary-grid { grid-template-columns: 1fr; }
+            .hamburger { display: block; }
             .search-box { display: none; }
         }
     </style>
 </head>
 <body>
 
-<!-- Background Orbs -->
-<div class="orb orb--indigo"></div>
-<div class="orb orb--pink"></div>
-<div class="orb orb--cyan"></div>
+<div class="bg-mesh">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
 
-<!-- Sidebar Overlay -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
 <div class="layout">
@@ -676,8 +356,7 @@
         <div class="sidebar-brand">
             <div class="sidebar-brand-icon">EP</div>
             <div>
-                <div class="sidebar-brand-text">EduPortal</div>
-                <div class="sidebar-brand-sub">Faculty Panel</div>
+                <div class="sidebar-brand-text">SmartCampus</div>
             </div>
         </div>
 
@@ -702,7 +381,7 @@
 
             <div class="sidebar-nav-label">Academics</div>
             <a class="nav-item" href="#">
-                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 Internal Marks
             </a>
             <a class="nav-item" th:href="@{/teacher-create-quiz}">
@@ -710,23 +389,15 @@
                 Create Quiz
             </a>
             <a class="nav-item" th:href="@{/teacher-assign-feedback}">
-                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 Assign Feedback
             </a>
             <a class="nav-item" th:href="@{/teacher-upload-material}">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/></svg>
                 Materials
-            </a>
-            <a class="nav-item" href="#">
-                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                Timetable
             </a>
 
             <div class="sidebar-nav-label">Personal</div>
-            <a class="nav-item" href="#">
-                <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                Leave
-            </a>
             <a class="nav-item" href="/profile">
                 <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 Profile
@@ -741,173 +412,163 @@
         </div>
     </aside>
 
-    <!-- ===== MAIN ===== -->
-    <div class="main">
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main">
 
         <!-- Top Navbar -->
         <header class="topbar">
             <div class="topbar-left">
                 <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                 </button>
                 <div class="search-box">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" placeholder="Search subjects, students...">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" placeholder="Search insights...">
                 </div>
             </div>
             <div class="topbar-right">
-                <div class="topbar-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <button class="topbar-btn theme-toggle-btn" onclick="toggleTheme()" title="Toggle Theme">
+                    <svg class="sun-icon" viewBox="0 0 24 24" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <div class="topbar-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                     <span class="badge"></span>
                 </div>
-                <div class="topbar-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                </div>
-                <div class="topbar-avatar">DR</div>
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: var(--grad); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-family: 'Orbitron'; cursor: pointer;">DR</div>
             </div>
         </header>
 
-        <!-- Content -->
         <div class="content">
 
-            <!-- Welcome Card -->
+            <!-- Welcome -->
             <div class="glass-card welcome-card">
-                <div class="welcome-info">
+                <div>
                     <h1 class="welcome-title">Welcome, <span>Professor</span></h1>
-                    <p class="welcome-sub">Your academic command center. Track subjects, manage attendance, review internal marks, and stay ahead of your schedule.</p>
-                    <div class="welcome-date">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <p class="welcome-sub">The Smart Campus is live. You have 2 classes today and 12 pending tasks requiring attention.</p>
+                    <div style="margin-top: 20px; color: var(--text-muted); font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                         <span id="currentDate"></span>
                     </div>
                 </div>
-                <div class="welcome-graphic">
-                    <div class="welcome-stat-pill">
-                        <div class="welcome-stat-pill-value">92%</div>
-                        <div class="welcome-stat-pill-label">Avg Attendance</div>
+                <div style="display: flex; gap: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-family: Orbitron; font-size: 24px; color: var(--accent);">92%</div>
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Attendance</div>
                     </div>
-                    <div class="welcome-stat-pill">
-                        <div class="welcome-stat-pill-value">4.8</div>
-                        <div class="welcome-stat-pill-label">Rating</div>
+                    <div style="text-align: center;">
+                        <div style="font-family: Orbitron; font-size: 24px; color: var(--primary);">4.8</div>
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">Rating</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Summary Cards -->
+            <!-- Stats -->
             <div class="summary-grid">
                 <div class="glass-card summary-card">
-                    <div class="summary-card-header">
-                        <div class="summary-card-icon summary-card-icon--indigo">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                        </div>
-                        <span class="summary-card-badge badge-up">+2 new</span>
+                    <div class="summary-icon primary">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                     </div>
-                    <div class="summary-card-value">06</div>
-                    <div class="summary-card-label">Total Subjects</div>
+                    <div class="summary-val">06</div>
+                    <div class="summary-label">Subjects</div>
                 </div>
                 <div class="glass-card summary-card">
-                    <div class="summary-card-header">
-                        <div class="summary-card-icon summary-card-icon--cyan">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        </div>
-                        <span class="summary-card-badge badge-neutral">Active</span>
+                    <div class="summary-icon accent">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                     </div>
-                    <div class="summary-card-value">248</div>
-                    <div class="summary-card-label">Total Students</div>
+                    <div class="summary-val">248</div>
+                    <div class="summary-label">Students</div>
                 </div>
                 <div class="glass-card summary-card">
-                    <div class="summary-card-header">
-                        <div class="summary-card-icon summary-card-icon--pink">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        </div>
-                        <span class="summary-card-badge badge-up">2 left</span>
+                    <div class="summary-icon primary">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     </div>
-                    <div class="summary-card-value">04</div>
-                    <div class="summary-card-label">Today's Classes</div>
+                    <div class="summary-val">04</div>
+                    <div class="summary-label">Today's Sessions</div>
                 </div>
                 <div class="glass-card summary-card">
-                    <div class="summary-card-header">
-                        <div class="summary-card-icon summary-card-icon--amber">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                        </div>
-                        <span class="summary-card-badge badge-neutral">Review</span>
+                    <div class="summary-icon accent">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                     </div>
-                    <div class="summary-card-value">12</div>
-                    <div class="summary-card-label">Pending Tasks</div>
+                    <div class="summary-val">12</div>
+                    <div class="summary-label">Pending Reviews</div>
                 </div>
             </div>
 
-            <!-- Bottom Grid: Table + Upcoming Classes -->
+            <!-- Bottom Table & Schedule -->
             <div class="bottom-grid">
 
-                <!-- Subjects Table -->
                 <div class="glass-card">
-                    <div class="section-header">
-                        <h2 class="section-title">My Subjects</h2>
-                        <a class="section-action" href="#">View All</a>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="font-family: 'Orbitron'; font-size: 18px;">Academic Portfolio</h2>
+                        <a href="#" style="color: var(--accent); font-size: 12px; text-decoration: none;">View All</a>
                     </div>
-
                     <div class="table-wrap">
                         <table>
                             <thead>
                             <tr>
-                                <th>Subject Name</th>
+                                <th>Subject</th>
                                 <th>Code</th>
                                 <th>Department</th>
                                 <th>Semester</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
-
                             <tbody>
+                            <!-- Preserved Thymeleaf structure -->
                             <tr th:each="c : ${courses}">
-                                <td th:text="${c.coursename}"></td>
-                                <td th:text="${c.coursecode}"></td>
-
+                                <td th:text="${c.coursename}">coursename</td>
+                                <td th:text="${c.coursecode}">coursecode</td>
+                                <td><span class="dept-badge" th:text="${c.coursedept}">coursedept</span></td>
+                                <td th:text="${c.sem}">sem</td>
                                 <td>
-                        <span class="dept-badge"
-                              th:text="${c.coursedept}">
-                        </span>
-                                </td>
-
-                                <td th:text="${c.sem}"></td>
-
-                                <td>
-                                    <a class="btn-view" style="text-decoration: none;"
-                                       th:href="@{/view-subject/{id}(id=${c.courseid})}">
-                                        View
-                                    </a>
+                                    <a class="btn-view" th:href="@{/view-subject/{courseid}(courseid=${c.courseid})}">View</a>
                                 </td>
                             </tr>
+
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Upcoming Classes -->
                 <div class="glass-card">
-                    <div class="section-header">
-                        <h2 class="section-title">Upcoming Classes</h2>
-                        <a class="section-action" href="#">Full Schedule</a>
+                    <h2 style="font-family: 'Orbitron'; font-size: 18px; margin-bottom: 20px;">Live Schedule</h2>
+                    <div class="upcoming-item">
+                        <div class="time-box">
+                            <span>09:30</span>
+                            <small style="font-size: 8px;">AM</small>
+                        </div>
+                        <div style="flex:1;">
+                            <div style="font-size: 14px; font-weight: 600;">Theory of Computation</div>
+                            <div style="font-size: 11px; color: var(--text-dim);">Room 402 • Hall B</div>
+                        </div>
+                        <div class="live-pulse"></div>
                     </div>
-
-                    <div class="upcoming-list">
-                        <!-- your upcoming items -->
+                    <div class="upcoming-item" style="opacity: 0.7;">
+                        <div class="time-box" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--text-dim);">
+                            <span>11:45</span>
+                            <small style="font-size: 8px;">AM</small>
+                        </div>
+                        <div style="flex:1;">
+                            <div style="font-size: 14px; font-weight: 600;">Neural Networks</div>
+                            <div style="font-size: 11px; color: var(--text-dim);">Lab 02 • South Wing</div>
+                        </div>
+                        <div style="width: 10px; height: 10px; background: var(--text-muted); border-radius: 50%;"></div>
                     </div>
                 </div>
 
             </div>
         </div>
-    </div>
+    </main>
 </div>
 
 <script>
-    // Set current date
+    // Set Current Date (Preserved ID)
     const dateEl = document.getElementById('currentDate');
     const now = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    dateEl.textContent = now.toLocaleDateString('en-US', options);
+    dateEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-    // Sidebar toggle for mobile
+    // Sidebar Logic (Preserved IDs)
     function toggleSidebar() {
         document.getElementById('sidebar').classList.toggle('open');
         document.getElementById('sidebarOverlay').classList.toggle('active');
@@ -917,6 +578,41 @@
         document.getElementById('sidebarOverlay').classList.remove('active');
     }
 
+    // Theme Toggle Logic (Added as safe new functionality)
+    const themeToggleBtn = document.querySelector('.theme-toggle-btn');
+    const sunIcon = document.querySelector('.sun-icon');
+    const moonIcon = document.querySelector('.moon-icon');
+    const htmlElement = document.documentElement;
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('smart-campus-theme') || 'dark';
+    htmlElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcons(savedTheme);
+
+    function toggleTheme() {
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('smart-campus-theme', newTheme);
+        updateThemeIcons(newTheme);
+    }
+
+    function updateThemeIcons(theme) {
+        if (theme === 'light') {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        } else {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        }
+    }
+
+    // Page Entrance Animation Delay for staggered effect
+    document.querySelectorAll('.summary-card').forEach((card, index) => {
+        card.style.animation = `fadeInUp 0.6s ease backwards ${index * 0.1 + 0.2}s`;
+    });
 </script>
+
 </body>
 </html>

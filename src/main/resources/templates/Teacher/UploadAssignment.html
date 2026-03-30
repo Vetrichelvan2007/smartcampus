@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Assignment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: #0a0e27; color: #f1f5f9; min-height: 100vh; padding: 24px; }
+        .bg-orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.35; z-index: 0; pointer-events: none; }
+        .bg-orb.one { width: 340px; height: 340px; background: #6366f1; top: -80px; right: -80px; }
+        .bg-orb.two { width: 300px; height: 300px; background: #ec4899; bottom: -100px; left: -60px; }
+        .page { max-width: 1040px; margin: 0 auto; position: relative; z-index: 1; }
+        .card { background: rgba(15, 23, 42, 0.78); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; backdrop-filter: blur(16px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 40px rgba(0,0,0,0.35); padding: 26px; }
+        .header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 24px; }
+        .title { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 700; }
+        .subtitle { color: #94a3b8; margin-top: 6px; font-size: 14px; }
+        .back-btn { color: #c4b5fd; text-decoration: none; font-size: 13px; border: 1px solid rgba(139, 92, 246, 0.35); border-radius: 10px; padding: 10px 14px; background: rgba(139, 92, 246, 0.12); }
+        .section-title { margin: 22px 0 12px; font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 1px; color: #94a3b8; text-transform: uppercase; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .field { display: flex; flex-direction: column; gap: 8px; }
+        .field.full { grid-column: 1 / -1; }
+        label { font-size: 12px; letter-spacing: 0.3px; color: #cbd5e1; font-weight: 500; }
+        input, select, textarea { border: 1px solid rgba(255,255,255,0.12); background: rgba(2, 6, 23, 0.75); border-radius: 10px; color: #f8fafc; font-size: 14px; padding: 12px 14px; font-family: 'Poppins', sans-serif; outline: none; }
+        input:focus, select:focus, textarea:focus { border-color: #818cf8; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
+        textarea { min-height: 120px; resize: vertical; }
+        .file-note { font-size: 12px; color: #94a3b8; }
+        .check-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 2px; }
+        .check-item { display: inline-flex; align-items: center; gap: 8px; background: rgba(148, 163, 184, 0.08); border: 1px solid rgba(148, 163, 184, 0.2); padding: 8px 10px; border-radius: 9px; font-size: 13px; color: #e2e8f0; }
+        .actions { margin-top: 22px; display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn { border: none; border-radius: 10px; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; padding: 11px 18px; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899); color: #fff; }
+        .btn-secondary { background: rgba(148, 163, 184, 0.15); border: 1px solid rgba(148, 163, 184, 0.25); color: #cbd5e1; }
+        .notice { margin-top: 14px; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(239,68,68,0.25); background: rgba(239,68,68,0.10); color: #fecaca; font-size: 13px; }
+        .word-limit { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: #94a3b8; }
+        .word-limit.over { color: #fca5a5; }
+        .table-wrap { overflow-x:auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
+        table { width:100%; border-collapse: collapse; min-width: 860px; }
+        thead th { text-align:left; padding: 12px 14px; color:#94a3b8; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        tbody td { padding: 12px 14px; color:#e2e8f0; border-top: 1px solid rgba(255,255,255,0.06); font-size: 13px; vertical-align: top; }
+        .mode-pill { display: inline-flex; padding: 5px 10px; border-radius: 999px; background: rgba(99, 102, 241, 0.16); color: #c7d2fe; font-size: 11px; font-weight: 600; letter-spacing: 0.4px; }
+        .hidden { display: none; }
+        @media (max-width: 768px) { body { padding: 14px; } .card { padding: 18px; } .grid { grid-template-columns: 1fr; } .header { flex-direction: column; align-items: flex-start; } }
+    </style>
+</head>
+<body>
+<div class="bg-orb one"></div>
+<div class="bg-orb two"></div>
+<main class="page">
+    <div class="card">
+        <div class="header">
+            <div>
+                <h1 class="title">Upload Assignment</h1>
+                <p class="subtitle">Create assignments using direct questions or upload a PDF/Word question sheet.</p>
+            </div>
+            <a class="back-btn" th:href="@{/teacher-dashboard}">Back to Dashboard</a>
+        </div>
+
+        <div class="notice" th:if="${param.uploadError}" th:text="${param.uploadError}">Upload failed.</div>
+
+        <form id="assignmentUploadForm" th:action="@{/teacher-upload-assignment}" method="post" enctype="multipart/form-data">
+            <div class="section-title">Assignment Details</div>
+            <div class="grid">
+                <div class="field">
+                    <label th:if="${selectedCourse != null}">Course Name</label>
+                    <label th:if="${selectedCourse == null}" for="course">Course Name</label>
+                    <div th:if="${selectedCourse != null}">
+                        <input type="hidden" name="courseId" th:value="${selectedCourse.courseid}">
+                        <input type="text" readonly th:value="${selectedCourse.coursecode + ' - ' + selectedCourse.coursename}">
+                    </div>
+                    <select th:if="${selectedCourse == null}" id="course" name="courseId" required>
+                        <option value="">Select Course</option>
+                        <option th:each="c : ${courses}" th:value="${c.courseid}" th:text="${c.coursecode + ' - ' + c.coursename}">Course</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="assignmentTitle">Assignment Title</label>
+                    <input id="assignmentTitle" name="assignmentTitle" type="text" placeholder="Assignment 1 - Graph Theory" required>
+                </div>
+                <div class="field">
+                    <label for="questionMode">Question Input Type</label>
+                    <select id="questionMode" name="questionMode" required>
+                        <option value="TEXT">Direct Question</option>
+                        <option value="FILE">PDF / Word Upload</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="maxMarks">Max Marks</label>
+                    <input id="maxMarks" name="maxMarks" type="number" min="1" placeholder="25">
+                </div>
+                <div class="field">
+                    <label for="dueDate">Due Date</label>
+                    <input id="dueDate" name="dueDate" type="date">
+                </div>
+                <div class="field">
+                    <label for="dueTime">Due Time</label>
+                    <input id="dueTime" name="dueTime" type="time">
+                </div>
+                <div class="field full" id="questionTextField">
+                    <label for="questionText">Question / Problem Statement</label>
+                    <textarea id="questionText" name="questionText" placeholder="Enter the assignment question directly here..."></textarea>
+                    <div id="wordLimitInfo" class="word-limit">
+                        <span>Direct question is stored in DB</span>
+                        <span id="wordCountText">0 / 500 words</span>
+                    </div>
+                </div>
+                <div class="field full hidden" id="assignmentFileField">
+                    <label for="assignmentFile">Question File</label>
+                    <input id="assignmentFile" name="assignmentFile" type="file" accept=".pdf,.doc,.docx">
+                    <p class="file-note">Allowed: PDF, DOC, DOCX. Maximum upload size: 100 MB. Files are stored in <code>Assignment/Questions</code>.</p>
+                </div>
+                <div class="field full">
+                    <label for="instructions">Instructions</label>
+                    <textarea id="instructions" name="instructions" placeholder="Submission instructions, rubric, or notes..."></textarea>
+                </div>
+            </div>
+            <div class="section-title">Access Settings</div>
+            <div class="grid">
+                <div class="field full">
+                    <label>Question File Access</label>
+                    <div class="check-row">
+                        <label class="check-item"><input type="checkbox" name="access" value="DOWNLOAD" checked> Download Allowed</label>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">Create Assignment</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+        </form>
+
+        <div th:if="${selectedCourse != null}">
+            <div class="section-title">Existing Assignments</div>
+            <div class="notice" th:if="${assignmentDbMissing}">Assignments table is missing in DB. Run DB/create_assignment_tables.sql</div>
+            <div th:if="${!assignmentDbMissing}">
+                <div th:if="${assignments == null or #lists.isEmpty(assignments)}" style="color:#94a3b8; font-size: 13px;">No assignments created yet for this course.</div>
+                <div th:if="${assignments != null and !#lists.isEmpty(assignments)}" class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Mode</th>
+                            <th>Question</th>
+                            <th>Due</th>
+                            <th>Marks</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="a : ${assignments}">
+                            <td th:text="${a.title}"></td>
+                            <td><span class="mode-pill" th:text="${a.assignmentMode}"></span></td>
+                            <td>
+                                <span th:if="${a.assignmentMode == 'TEXT'}" th:text="${a.questionText}"></span>
+                                <span th:if="${a.assignmentMode == 'FILE'}" th:text="${a.originalFileName}"></span>
+                            </td>
+                            <td th:text="${a.dueAtText}"></td>
+                            <td th:text="${a.maxMarks != null ? a.maxMarks : '-'}"></td>
+                            <td>
+                                <a class="back-btn" style="padding: 8px 12px; display:inline-block; margin-right: 8px;" th:href="@{/teacher-assignment/{id}(id=${a.id})}">View Status</a>
+                                <span th:if="${a.assignmentMode == 'TEXT'}" style="color:#94a3b8;">Direct question</span>
+                                <a th:if="${a.assignmentMode == 'FILE'}" class="back-btn" style="padding: 8px 12px; display:inline-block;" th:href="@{/teacher/assignment/{id}/download(id=${a.id})}">Question File</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+  (function () {
+    const courseSel = document.getElementById('course');
+    const form = document.getElementById('assignmentUploadForm');
+    const modeSel = document.getElementById('questionMode');
+    const questionTextField = document.getElementById('questionTextField');
+    const assignmentFileField = document.getElementById('assignmentFileField');
+    const questionText = document.getElementById('questionText');
+    const assignmentFile = document.getElementById('assignmentFile');
+    const wordCountText = document.getElementById('wordCountText');
+    const wordLimitInfo = document.getElementById('wordLimitInfo');
+    const WORD_LIMIT = 500;
+
+    function countWords(text) {
+      const value = (text || '').trim();
+      return value ? value.split(/\s+/).length : 0;
+    }
+
+    function syncWordCount() {
+      if (!questionText || !wordCountText || !wordLimitInfo) return;
+      const count = countWords(questionText.value);
+      wordCountText.textContent = count + ' / ' + WORD_LIMIT + ' words';
+      wordLimitInfo.classList.toggle('over', count > WORD_LIMIT);
+    }
+
+    function syncMode() {
+      const fileMode = modeSel && modeSel.value === 'FILE';
+      if (questionTextField) questionTextField.classList.toggle('hidden', fileMode);
+      if (assignmentFileField) assignmentFileField.classList.toggle('hidden', !fileMode);
+      if (questionText) questionText.required = !fileMode;
+      if (assignmentFile) assignmentFile.required = fileMode;
+    }
+
+    if (courseSel) {
+      courseSel.addEventListener('change', function () {
+        const v = courseSel.value;
+        if (!v) return;
+        window.location.href = '/teacher-upload-assignment?courseId=' + encodeURIComponent(v);
+      });
+    }
+    if (form && courseSel) {
+      form.addEventListener('submit', function () {
+        const v = courseSel.value;
+        form.action = v ? '/teacher-upload-assignment?courseId=' + encodeURIComponent(v) : '/teacher-upload-assignment';
+      });
+    }
+    if (form) {
+      form.addEventListener('submit', function (event) {
+        if (modeSel && modeSel.value === 'TEXT' && countWords(questionText.value) > WORD_LIMIT) {
+          event.preventDefault();
+          alert('Direct question must be within ' + WORD_LIMIT + ' words.');
+        }
+      });
+    }
+    if (modeSel) {
+      modeSel.addEventListener('change', syncMode);
+      syncMode();
+    }
+    if (questionText) {
+      questionText.addEventListener('input', syncWordCount);
+      syncWordCount();
+    }
+  })();
+</script>
+</body>
+</html>

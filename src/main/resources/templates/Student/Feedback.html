@@ -400,32 +400,65 @@
   </div>
 
   <div class="table-wrapper">
+    <div th:if="${feedbackDbMissing}" style="padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); color:#fecaca; background: rgba(239,68,68,0.10);">
+      Feedback tables are missing in DB. Ask admin to run <strong>DB/create_feedback_tables.sql</strong> on the <strong>smartcampus</strong> database.
+    </div>
     <table>
       <thead>
       <tr>
-        <th>Feedback Name</th>
-        <th>Term</th>
+        <th>Course</th>
+        <th>Teacher</th>
+        <th>Feedback</th>
+        <th>Created</th>
         <th>Status</th>
+        <th>Action</th>
       </tr>
       </thead>
 
       <tbody>
-      <tr>
-        <td>B.E/B.Tech_25-26_Mid Term Feedback_2024 Batch_3rd Sem</td>
-        <td>B.E/B.Tech ACY 2025-26 ODD_3rd Sem</td>
-        <td><span class="status submitted">SUBMITTED</span></td>
+      <tr th:if="${forms == null or #lists.isEmpty(forms)}">
+        <td colspan="6" style="color:#94a3b8;">No feedback forms available for your registered courses.</td>
       </tr>
 
-      <tr>
-        <td>B.E/B.Tech_25-26_End Term Course Feedback_2024 Batch_3rd Sem</td>
-        <td>B.E/B.Tech ACY 2025-26 ODD_3rd Sem</td>
-        <td><span class="status not-submitted">NOT SUBMITTED</span></td>
+      <tr th:each="f : ${forms}" class="feedback-row">
+        <td th:text="${f.courseName + (f.courseCode != null ? ' (' + f.courseCode + ')' : '')}"></td>
+        <td th:text="${f.teacherName}"></td>
+        <td>
+          <div style="color:#f1f5f9; font-weight: 600;" th:text="${f.title}"></div>
+          <div style="color:#94a3b8; font-size: 12px; margin-top: 4px;" th:if="${f.description != null and !#strings.isEmpty(f.description)}" th:text="${f.description}"></div>
+        </td>
+        <td th:text="${f.createdAt != null ? #dates.format(f.createdAt, 'dd-MMM-yyyy') : '-'}"></td>
+        <td>
+          <span class="status" th:classappend="${f.submitted} ? ' submitted' : ' not-submitted'"
+                th:text="${f.submitted} ? 'SUBMITTED' : 'NOT SUBMITTED'"></span>
+        </td>
+        <td>
+          <a th:href="@{/feedback/{id}(id=${f.formId})}"
+             style="text-decoration:none; padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: rgba(99,102,241,0.12); color:#f1f5f9; font-weight: 600; font-size: 12px;">
+            Open
+          </a>
+        </td>
       </tr>
       </tbody>
     </table>
   </div>
 
 </div>
+
+<script>
+  (function () {
+    const input = document.querySelector('.search-box input');
+    if (!input) return;
+    const rows = Array.from(document.querySelectorAll('tbody tr.feedback-row'));
+    input.addEventListener('input', function () {
+      const q = (input.value || '').trim().toLowerCase();
+      rows.forEach(function (r) {
+        const t = (r.innerText || '').toLowerCase();
+        r.style.display = t.includes(q) ? '' : 'none';
+      });
+    });
+  })();
+</script>
 
 </body>
 </html>
