@@ -1,4 +1,4 @@
-package com.vetri.smartcampus.models;
+package com.vetri.smartcampus.models.student;
 
 import java.sql.Timestamp;
 
@@ -76,4 +76,3 @@ public class StudentFeedbackFormListDTO {
         this.createdAt = createdAt;
     }
 }
-

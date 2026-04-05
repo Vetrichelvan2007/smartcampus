@@ -1,4 +1,4 @@
-package com.vetri.smartcampus.models;
+package com.vetri.smartcampus.models.student;
 
 import java.util.List;
 

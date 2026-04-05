@@ -1,8 +1,8 @@
-package com.vetri.smartcampus.models;
+package com.vetri.smartcampus.models.teacher;
 
 import java.sql.Timestamp;
 
-public class FeedbackStudentStatusDTO {
+public class QuizStudentStatusDTO {
     private long studentId;
     private String name;
     private String rollNumber;
@@ -10,6 +10,7 @@ public class FeedbackStudentStatusDTO {
     private int semester;
     private boolean submitted;
     private Timestamp submittedAt;
+    private Integer score;
 
     public long getStudentId() {
         return studentId;
@@ -66,5 +67,12 @@ public class FeedbackStudentStatusDTO {
     public void setSubmittedAt(Timestamp submittedAt) {
         this.submittedAt = submittedAt;
     }
-}
 
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+}

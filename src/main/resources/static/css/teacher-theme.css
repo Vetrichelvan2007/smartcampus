@@ -1,0 +1,728 @@
+:root {
+    --teacher-primary: #6366f1;
+    --teacher-primary-glow: rgba(99, 102, 241, 0.35);
+    --teacher-accent: #22d3ee;
+    --teacher-accent-glow: rgba(34, 211, 238, 0.28);
+    --teacher-gradient: linear-gradient(135deg, var(--teacher-primary), var(--teacher-accent));
+    --teacher-bg: #060918;
+    --teacher-panel: rgba(15, 23, 42, 0.78);
+    --teacher-panel-strong: rgba(15, 23, 42, 0.9);
+    --teacher-card: rgba(30, 41, 59, 0.52);
+    --teacher-border: rgba(255, 255, 255, 0.1);
+    --teacher-border-soft: rgba(255, 255, 255, 0.06);
+    --teacher-text: #f1f5f9;
+    --teacher-text-dim: #94a3b8;
+    --teacher-text-muted: #64748b;
+    --teacher-shadow: 0 18px 48px rgba(0, 0, 0, 0.36);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, rgba(99, 102, 241, 0.2), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(34, 211, 238, 0.14), transparent 28%),
+        var(--teacher-bg) !important;
+    color: var(--teacher-text) !important;
+    padding: 0 !important;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    width: 28rem;
+    height: 28rem;
+    border-radius: 999px;
+    filter: blur(120px);
+    opacity: 0.24;
+    pointer-events: none;
+    z-index: 0;
+}
+
+body::before {
+    top: -10rem;
+    left: -8rem;
+    background: var(--teacher-primary);
+}
+
+body::after {
+    right: -8rem;
+    bottom: -10rem;
+    background: var(--teacher-accent);
+}
+
+.bg-orb,
+.orb {
+    opacity: 0.22 !important;
+    filter: blur(110px) !important;
+}
+
+.page,
+.content,
+.content-wrapper,
+.main,
+main.page {
+    position: relative;
+    z-index: 1;
+}
+
+.page {
+    width: min(1200px, calc(100vw - 32px));
+    margin: 0 auto !important;
+    padding: 32px 16px 48px !important;
+}
+
+.main .content,
+.content-wrapper .content {
+    padding: 24px 0 40px;
+}
+
+.card,
+.glass-card,
+.stat,
+.summary-card,
+.question-card,
+.question-box,
+.upload-card,
+.list-card,
+.upcoming-item,
+.topbar-btn,
+.search-box,
+.check-item,
+.chip,
+.metric-card,
+.profile-card {
+    background: var(--teacher-card) !important;
+    border: 1px solid var(--teacher-border) !important;
+    box-shadow: var(--teacher-shadow);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.card,
+.glass-card,
+.upload-card,
+.list-card,
+.profile-card {
+    border-radius: 24px !important;
+}
+
+.stat,
+.question-card,
+.question-box,
+.upcoming-item {
+    border-radius: 18px !important;
+}
+
+.header,
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.title,
+.welcome-title,
+.section-title,
+.card-header-title,
+h1,
+h2,
+h3,
+.sidebar-brand-text,
+.sidebar-nav-label,
+.summary-val {
+    font-family: "Orbitron", sans-serif !important;
+}
+
+.title,
+.welcome-title,
+h1.title {
+    font-size: clamp(1.8rem, 2vw + 1rem, 2.5rem) !important;
+    letter-spacing: 0.02em;
+}
+
+.subtitle,
+.section-title,
+.stat-label,
+.summary-label,
+.file-note,
+label,
+thead th,
+.sidebar-nav-label,
+.welcome-sub {
+    color: var(--teacher-text-dim) !important;
+}
+
+.section-title,
+.sidebar-nav-label,
+.stat-label,
+.summary-label {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+}
+
+.sidebar {
+    background: var(--teacher-panel-strong) !important;
+    border-right: 1px solid var(--teacher-border) !important;
+    box-shadow: 18px 0 42px rgba(0, 0, 0, 0.22);
+}
+
+.sidebar-footer {
+    border-top: 1px solid var(--teacher-border) !important;
+}
+
+.nav-item {
+    border-radius: 14px !important;
+}
+
+.nav-item:hover {
+    background: rgba(99, 102, 241, 0.1) !important;
+}
+
+.nav-item.active,
+.btn-view,
+.btn-primary,
+button[type="submit"],
+input[type="submit"],
+.submit-btn,
+.create-btn,
+.action-btn.primary {
+    background: var(--teacher-gradient) !important;
+    color: #fff !important;
+    border: none !important;
+    box-shadow: 0 10px 24px var(--teacher-primary-glow);
+}
+
+.back-btn,
+.btn-secondary,
+.btn,
+.action-btn,
+.topbar-btn,
+.toggle-btn {
+    border-radius: 12px !important;
+}
+
+.back-btn,
+.btn-secondary,
+.action-btn.secondary,
+.outline-btn {
+    color: var(--teacher-text) !important;
+    background: rgba(148, 163, 184, 0.08) !important;
+    border: 1px solid rgba(148, 163, 184, 0.22) !important;
+}
+
+button,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-view,
+.back-btn,
+input[type="submit"] {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+button:hover,
+.btn:hover,
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-view:hover,
+.back-btn:hover,
+input[type="submit"]:hover {
+    transform: translateY(-2px);
+}
+
+input,
+select,
+textarea {
+    background: rgba(2, 6, 23, 0.72) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: var(--teacher-text) !important;
+    border-radius: 14px !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--teacher-text-muted);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--teacher-primary) !important;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.16) !important;
+    outline: none;
+}
+
+table {
+    width: 100%;
+}
+
+thead th {
+    font-size: 0.72rem !important;
+    font-weight: 700;
+}
+
+tbody td {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--teacher-text) !important;
+    border-color: var(--teacher-border-soft) !important;
+}
+
+tbody tr:hover td {
+    background: rgba(99, 102, 241, 0.08) !important;
+}
+
+.table-wrap {
+    border-radius: 18px !important;
+    border: 1px solid var(--teacher-border) !important;
+    overflow: hidden;
+}
+
+.pill.ok,
+.status-success,
+.badge-success {
+    background: rgba(34, 197, 94, 0.16) !important;
+    color: #9ae6b4 !important;
+}
+
+.pill.no,
+.status-danger,
+.badge-danger {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #fca5a5 !important;
+}
+
+.dept-badge,
+.chip,
+.badge,
+.tag {
+    background: rgba(34, 211, 238, 0.12) !important;
+    border: 1px solid rgba(34, 211, 238, 0.2) !important;
+    color: var(--teacher-accent) !important;
+}
+
+.topbar {
+    background: rgba(6, 9, 24, 0.7) !important;
+    border-bottom: 1px solid var(--teacher-border);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.search-box,
+.topbar-btn {
+    background: rgba(15, 23, 42, 0.72) !important;
+}
+
+.topbar-avatar,
+.sidebar-brand-icon {
+    background: var(--teacher-gradient) !important;
+    box-shadow: 0 0 22px var(--teacher-primary-glow);
+}
+
+.summary-icon.primary,
+.card-header-icon.chi-indigo {
+    background: rgba(99, 102, 241, 0.16) !important;
+    color: #c7d2fe !important;
+}
+
+.summary-icon.accent,
+.card-header-icon.chi-cyan {
+    background: rgba(34, 211, 238, 0.14) !important;
+    color: #a5f3fc !important;
+}
+
+.card-header-icon.chi-purple {
+    background: rgba(168, 85, 247, 0.16) !important;
+    color: #ddd6fe !important;
+}
+
+.card-header-icon.chi-pink {
+    background: rgba(236, 72, 153, 0.16) !important;
+    color: #fbcfe8 !important;
+}
+
+.card-header-icon.chi-green {
+    background: rgba(34, 197, 94, 0.16) !important;
+    color: #bbf7d0 !important;
+}
+
+.card-header-icon.chi-amber {
+    background: rgba(245, 158, 11, 0.16) !important;
+    color: #fde68a !important;
+}
+
+@media (max-width: 900px) {
+    .page {
+        width: min(100vw - 20px, 1200px);
+        padding: 20px 10px 28px !important;
+    }
+
+    .header,
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Shared student/auth alignment with the teacher dashboard theme */
+.container,
+.wrapper,
+.layout,
+.feed,
+.right,
+.demo-wrap,
+.welcome-container,
+.viewer-modal,
+.modal,
+.profile-menu {
+    position: relative;
+    z-index: 1;
+}
+
+.glass,
+.welcome-box,
+.course-header,
+.panel,
+.viewer-shell,
+.viewer-topbar,
+.small-card,
+.class,
+.q,
+.empty-state,
+.modal-box,
+.right-section,
+.left-section,
+.feed > .card,
+.feed .card,
+.course-header.glass,
+.table-wrap,
+.loading-track {
+    background: var(--teacher-card) !important;
+    border: 1px solid var(--teacher-border) !important;
+    box-shadow: var(--teacher-shadow);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.welcome-box,
+.course-header,
+.panel,
+.viewer-shell,
+.small-card,
+.modal-box,
+.left-section,
+.right-section,
+.feed > .card,
+.feed .card {
+    border-radius: 24px !important;
+}
+
+.class,
+.q,
+.toolbar input,
+.search,
+.viewer-close,
+.tab,
+.row-type,
+.btn,
+.btn--accent,
+.submit-btn,
+.comment-btn,
+.password-toggle,
+.avatar,
+.topbar-avatar,
+.logo-circle,
+.profile-menu,
+.profile-head,
+.class,
+.notice {
+    border-radius: 14px !important;
+}
+
+.topbar,
+.topbar-brand,
+.topbar-brand .icon,
+.topbar-right,
+.toolbar,
+.toolbar-search,
+.search-wrap,
+.card.add-post,
+.header-actions {
+    position: relative;
+    z-index: 1;
+}
+
+.topbar-brand h2,
+.topbar h2,
+.title,
+.course-title,
+.section-title,
+.viewer-title,
+.loading-label,
+.subtitle,
+.welcome-box .title,
+.welcome-box .subtitle,
+.left-section h1,
+.right-section h2 {
+    color: var(--teacher-text) !important;
+}
+
+.topbar-brand h2,
+.topbar h2,
+.course-title,
+.section-title,
+.viewer-title,
+.loading-label,
+.welcome-box .title,
+.left-section h1,
+.right-section h2 {
+    font-family: "Orbitron", sans-serif !important;
+}
+
+.subtitle,
+.course-meta,
+.mini-note,
+.viewer-note,
+.loading-percent,
+.loading-label,
+.empty,
+.empty-sub,
+.notice,
+.form-footer,
+.copyright,
+.topbar small,
+.profile-menu a,
+.topbar-brand p,
+.topbar-brand span,
+.toolbar-search svg,
+.search-wrap svg {
+    color: var(--teacher-text-dim) !important;
+}
+
+.topbar-brand .icon,
+.topbar-brand svg,
+.logo-ring .ring-core,
+.logo-circle,
+.avatar,
+.topbar-avatar,
+.profile .avatar {
+    background: var(--teacher-gradient) !important;
+    box-shadow: 0 0 22px var(--teacher-primary-glow);
+    color: #fff !important;
+}
+
+.logo-ring .ring-core {
+    border: 1px solid var(--teacher-border) !important;
+}
+
+.left-section {
+    background:
+        linear-gradient(160deg, rgba(99, 102, 241, 0.24), rgba(34, 211, 238, 0.12)),
+        rgba(15, 23, 42, 0.84) !important;
+}
+
+.right-section {
+    background: rgba(6, 9, 24, 0.62) !important;
+}
+
+.search,
+.toolbar input,
+.search-box,
+.viewer-close,
+.profile-menu,
+.profile-head,
+.password-toggle {
+    background: rgba(15, 23, 42, 0.72) !important;
+    border: 1px solid var(--teacher-border) !important;
+    color: var(--teacher-text) !important;
+}
+
+.search::placeholder,
+.toolbar input::placeholder {
+    color: var(--teacher-text-muted) !important;
+}
+
+.topbar,
+.viewer-topbar,
+.modal {
+    background: rgba(6, 9, 24, 0.7) !important;
+}
+
+.sidebar a,
+.tab,
+.btn,
+.viewer-close,
+.forgot-link,
+.profile-menu a {
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin-bottom: 4px;
+    color: var(--teacher-text-dim) !important;
+    text-decoration: none;
+    border-radius: 14px;
+}
+
+.sidebar a:hover {
+    background: rgba(99, 102, 241, 0.1) !important;
+    color: var(--teacher-text) !important;
+    transform: translateX(6px);
+}
+
+.sidebar a.active {
+    background: var(--teacher-gradient) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 24px var(--teacher-primary-glow);
+}
+
+.tab {
+    background: rgba(148, 163, 184, 0.08) !important;
+    border: 1px solid rgba(148, 163, 184, 0.18) !important;
+    color: var(--teacher-text-dim) !important;
+}
+
+.tab.active,
+.tab:hover {
+    border-color: rgba(99, 102, 241, 0.4) !important;
+    color: var(--teacher-text) !important;
+    box-shadow: 0 10px 24px rgba(99, 102, 241, 0.12);
+}
+
+.tab.active::before {
+    opacity: 1 !important;
+    background: var(--teacher-gradient) !important;
+}
+
+.btn,
+.btn--accent,
+.submit-btn,
+.comment-btn,
+.viewer-close {
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    background: rgba(148, 163, 184, 0.08) !important;
+    color: var(--teacher-text) !important;
+}
+
+.btn--accent,
+.submit-btn,
+.comment-btn,
+.btn-primary,
+.empty-state button {
+    background: var(--teacher-gradient) !important;
+    border: none !important;
+    color: #fff !important;
+    box-shadow: 0 10px 24px var(--teacher-primary-glow);
+}
+
+.btn:hover,
+.btn--accent:hover,
+.submit-btn:hover,
+.comment-btn:hover,
+.viewer-close:hover,
+.empty-state button:hover {
+    transform: translateY(-2px);
+}
+
+.row-type,
+.loading-fill,
+.divider {
+    background: var(--teacher-gradient) !important;
+    color: #fff !important;
+}
+
+.notice.ok,
+.notice.ok span,
+.badge--live {
+    background: rgba(34, 197, 94, 0.14) !important;
+    color: #9ae6b4 !important;
+    border: 1px solid rgba(34, 197, 94, 0.2) !important;
+}
+
+.badge--upcoming {
+    background: rgba(245, 158, 11, 0.16) !important;
+    color: #fde68a !important;
+    border: 1px solid rgba(245, 158, 11, 0.2) !important;
+}
+
+.badge--closed,
+.notice,
+.empty {
+    background: rgba(148, 163, 184, 0.08);
+    color: var(--teacher-text-dim) !important;
+    border-color: rgba(148, 163, 184, 0.2) !important;
+}
+
+.empty-sub {
+    color: var(--teacher-text-dim) !important;
+}
+
+.table,
+.table-wrap table {
+    width: 100%;
+}
+
+.table th,
+.table-wrap table th {
+    color: var(--teacher-text-dim) !important;
+}
+
+.table td,
+.table-wrap table td,
+tbody td {
+    color: var(--teacher-text) !important;
+}
+
+.empty,
+.empty-state {
+    background: rgba(15, 23, 42, 0.4) !important;
+}
+
+.loading-track {
+    overflow: hidden;
+}
+
+.loading-fill {
+    box-shadow: 0 0 18px var(--teacher-primary-glow);
+}
+
+.left-section::before,
+.left-section::after,
+.welcome-box::before,
+.card::before {
+    opacity: 0.4;
+}
+
+.particle,
+.scan-line,
+.grid-bg,
+.corner-deco {
+    opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+    .topbar {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    .wrapper,
+    .container,
+    .page {
+        width: min(100vw - 20px, 1200px);
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}

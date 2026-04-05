@@ -288,6 +288,7 @@
             .action-buttons { flex-direction: column; }
         }
     </style>
+    <link rel="stylesheet" th:href="@{/css/teacher-theme.css}" href="/css/teacher-theme.css">
 </head>
 <body>
 
@@ -421,7 +422,7 @@
             <div class="q-preview">
                 <div class="q-item" th:each="q : ${questions}">
                     <div class="q-text" th:text="${q.order + '. ' + q.text}"></div>
-                    <div class="q-meta" th:text="${q.type + ' · ' + q.marks + ' marks'}"></div>
+                    <div class="q-meta" th:text="${q.type + ' Ãƒâ€šÃ‚Â· ' + q.marks + ' marks'}"></div>
                 </div>
             </div>
         </div>

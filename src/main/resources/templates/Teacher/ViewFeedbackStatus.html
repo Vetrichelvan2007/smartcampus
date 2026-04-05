@@ -102,6 +102,7 @@
             .stats { grid-template-columns: 1fr; }
         }
     </style>
+    <link rel="stylesheet" th:href="@{/css/teacher-theme.css}" href="/css/teacher-theme.css">
 </head>
 <body>
 <div class="orb one"></div>
@@ -148,9 +149,9 @@
                 <div class="q-meta">
                     <span th:text="${q.type}"></span>
                     <span th:if="${q.type != null and q.type.equalsIgnoreCase('RATING') and q.ratingMax != null}"
-                          th:text="| · Max ${q.ratingMax}|"></span>
+                          th:text="| Ãƒâ€šÃ‚Â· Max ${q.ratingMax}|"></span>
                     <span th:if="${q.type != null and q.type.equalsIgnoreCase('MCQ') and q.options != null and !#lists.isEmpty(q.options)}"
-                          th:text="| · Options: ${#lists.size(q.options)}|"></span>
+                          th:text="| Ãƒâ€šÃ‚Â· Options: ${#lists.size(q.options)}|"></span>
                 </div>
             </div>
         </div>

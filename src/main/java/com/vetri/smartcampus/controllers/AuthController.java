@@ -1,6 +1,6 @@
 package com.vetri.smartcampus.controllers;
 
-import com.vetri.smartcampus.models.DataBaseConnection;
+import com.vetri.smartcampus.models.common.DataBaseConnection;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;

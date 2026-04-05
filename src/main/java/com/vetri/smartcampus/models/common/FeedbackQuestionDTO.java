@@ -1,15 +1,18 @@
-package com.vetri.smartcampus.models;
+package com.vetri.smartcampus.models.common;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuizQuestionDTO {
+public class FeedbackQuestionDTO {
     private long id;
     private int order;
     private String text;
-    private String type; // MCQ | DESCRIPTIVE
-    private int marks;
-    private Integer correctOptionIndex; // 1..4 for MCQ
+    private String type; // RATING | MCQ | TEXT
+    private String optionsText;
+    private Integer ratingMax;
+    private boolean required;
+
+    // Convenience for Thymeleaf rendering.
     private List<String> options = new ArrayList<>();
 
     public long getId() {
@@ -44,20 +47,28 @@ public class QuizQuestionDTO {
         this.type = type;
     }
 
-    public int getMarks() {
-        return marks;
+    public String getOptionsText() {
+        return optionsText;
     }
 
-    public void setMarks(int marks) {
-        this.marks = marks;
+    public void setOptionsText(String optionsText) {
+        this.optionsText = optionsText;
     }
 
-    public Integer getCorrectOptionIndex() {
-        return correctOptionIndex;
+    public Integer getRatingMax() {
+        return ratingMax;
     }
 
-    public void setCorrectOptionIndex(Integer correctOptionIndex) {
-        this.correctOptionIndex = correctOptionIndex;
+    public void setRatingMax(Integer ratingMax) {
+        this.ratingMax = ratingMax;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 
     public List<String> getOptions() {
@@ -68,4 +79,3 @@ public class QuizQuestionDTO {
         this.options = options;
     }
 }
-

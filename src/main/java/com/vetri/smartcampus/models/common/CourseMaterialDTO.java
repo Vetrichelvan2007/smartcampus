@@ -1,4 +1,4 @@
-package com.vetri.smartcampus.models;
+package com.vetri.smartcampus.models.common;
 
 import java.sql.Timestamp;
 

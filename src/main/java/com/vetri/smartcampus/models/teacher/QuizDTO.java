@@ -1,4 +1,4 @@
-package com.vetri.smartcampus.models;
+package com.vetri.smartcampus.models.teacher;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

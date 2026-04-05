@@ -315,6 +315,7 @@
             .table-wrap { overflow-x: auto; }
         }
     </style>
+    <link rel="stylesheet" th:href="@{/css/teacher-theme.css}" href="/css/teacher-theme.css">
 </head>
 <body>
 
@@ -417,7 +418,7 @@
                 <span th:if="${courseName != null}" th:text="${courseName}"></span>
                 <span th:if="${courseCode != null}" th:text="| (${courseCode})|"></span>
                 <span th:if="${courseName == null}">Search and review student details, attendance and academic status.</span>
-                <span th:if="${courseName != null}"> · Current batch only · Under your allocation</span>
+                <span th:if="${courseName != null}"> Ãƒâ€šÃ‚Â· Current batch only Ãƒâ€šÃ‚Â· Under your allocation</span>
             </p>
         </div>
 

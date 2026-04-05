@@ -280,6 +280,7 @@
             .action-buttons { flex-direction: column; }
         }
     </style>
+    <link rel="stylesheet" th:href="@{/css/teacher-theme.css}" href="/css/teacher-theme.css">
 </head>
 <body>
 
@@ -385,7 +386,7 @@
             </p>
             <p class="page-subtitle" th:if="${submittedAt != null}">
                 <span th:text="${'Submitted: ' + #dates.format(submittedAt, 'dd-MMM-yyyy HH:mm')}"></span>
-                <span th:if="${score != null}" th:text="${' · Score: ' + score}"></span>
+                <span th:if="${score != null}" th:text="${' Ãƒâ€šÃ‚Â· Score: ' + score}"></span>
             </p>
         </div>
 

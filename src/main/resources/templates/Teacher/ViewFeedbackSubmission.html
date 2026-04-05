@@ -50,6 +50,7 @@
         .meta { margin-top: 4px; font-size: 12px; color: #94a3b8; }
         .a { margin-top: 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(10, 14, 39, 0.55); color: #cbd5e1; }
     </style>
+    <link rel="stylesheet" th:href="@{/css/teacher-theme.css}" href="/css/teacher-theme.css">
 </head>
 <body>
 <div class="orb one"></div>
@@ -63,7 +64,7 @@
                 <div class="subtitle">
                     <span th:text="${courseName}"></span>
                     <span th:if="${courseCode != null}" th:text="| (${courseCode})|"></span>
-                    <span th:text="| · ${studentName} (${rollNumber})|"></span>
+                    <span th:text="| Ãƒâ€šÃ‚Â· ${studentName} (${rollNumber})|"></span>
                 </div>
                 <div class="subtitle" th:text="${submittedAt != null ? 'Submitted at: ' + #dates.format(submittedAt, 'dd-MMM-yyyy HH:mm') : ''}"></div>
             </div>

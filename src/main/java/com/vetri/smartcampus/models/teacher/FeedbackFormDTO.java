@@ -1,4 +1,4 @@
-package com.vetri.smartcampus.models;
+package com.vetri.smartcampus.models.teacher;
 
 import java.sql.Timestamp;
 
@@ -114,4 +114,3 @@ public class FeedbackFormDTO {
         this.submittedCount = submittedCount;
     }
 }
-
