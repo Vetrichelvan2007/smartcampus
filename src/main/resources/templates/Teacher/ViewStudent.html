@@ -295,6 +295,119 @@
             box-shadow: 0 8px 20px var(--primary-glow);
         }
 
+        .student-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.72);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 250;
+        }
+
+        .student-modal-overlay.active {
+            display: flex;
+        }
+
+        .student-modal {
+            width: min(100%, 720px);
+            background: linear-gradient(160deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.92));
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+        }
+
+        [data-theme="light"] .student-modal {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.98), rgba(241, 245, 249, 0.96));
+        }
+
+        .student-modal-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 28px 28px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .student-modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .student-modal-subtitle {
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        .student-modal-close {
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 22px;
+            line-height: 1;
+            transition: all 0.3s ease;
+        }
+
+        .student-modal-close:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .student-modal-body {
+            padding: 28px;
+        }
+
+        .student-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .student-detail-card {
+            padding: 18px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            background: rgba(2, 6, 23, 0.45);
+        }
+
+        [data-theme="light"] .student-detail-card {
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .student-detail-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .student-detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            word-break: break-word;
+        }
+
+        .student-modal-footer {
+            padding: 0 28px 28px;
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+
         .sidebar-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.5);
             display: none; z-index: 99; backdrop-filter: blur(4px);
@@ -313,6 +426,8 @@
             .page-title { font-size: 24px; }
             .filters { grid-template-columns: 1fr; }
             .table-wrap { overflow-x: auto; }
+            .student-detail-grid { grid-template-columns: 1fr; }
+            .student-modal-header, .student-modal-body, .student-modal-footer { padding-left: 20px; padding-right: 20px; }
         }
     </style>
     <link rel="stylesheet" th:href="@{/css/teacher-theme.css}" href="/css/teacher-theme.css">
@@ -457,7 +572,19 @@
                                   th:classappend="${student.status != null and student.status.equalsIgnoreCase('ACTIVE')} ? ' badge-active' : ' badge-warning'"
                                   th:text="${student.status != null ? student.status : 'ACTIVE'}"></span>
                         </td>
-                        <td><a href="#" class="btn-view">View</a></td>
+                        <td>
+                            <a href="#"
+                               class="btn-view open-student-modal"
+                               th:attr="data-name=${student.studentName},
+                                        data-register=${student.studentRegisterNumber},
+                                        data-email=${student.studentEmail},
+                                        data-department=${student.department},
+                                        data-semester=${student.semester},
+                                        data-status=${student.status != null ? student.status : 'ACTIVE'},
+                                        data-attendance='N/A'">
+                                View
+                            </a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -465,6 +592,53 @@
         </div>
 
     </main>
+</div>
+
+<div class="student-modal-overlay" id="studentModalOverlay" onclick="handleStudentModalOverlay(event)">
+    <div class="student-modal" role="dialog" aria-modal="true" aria-labelledby="studentModalTitle">
+        <div class="student-modal-header">
+            <div>
+                <h2 class="student-modal-title" id="studentModalTitle">Student Details</h2>
+                <p class="student-modal-subtitle" id="studentModalSubtitle">Selected student information</p>
+            </div>
+            <button type="button" class="student-modal-close" aria-label="Close student details" onclick="closeStudentModal()">&times;</button>
+        </div>
+        <div class="student-modal-body">
+            <div class="student-detail-grid">
+                <div class="student-detail-card">
+                    <span class="student-detail-label">Student Name</span>
+                    <div class="student-detail-value" id="modalStudentName">-</div>
+                </div>
+                <div class="student-detail-card">
+                    <span class="student-detail-label">Register Number</span>
+                    <div class="student-detail-value" id="modalStudentRegister">-</div>
+                </div>
+                <div class="student-detail-card">
+                    <span class="student-detail-label">Email</span>
+                    <div class="student-detail-value" id="modalStudentEmail">-</div>
+                </div>
+                <div class="student-detail-card">
+                    <span class="student-detail-label">Department</span>
+                    <div class="student-detail-value" id="modalStudentDepartment">-</div>
+                </div>
+                <div class="student-detail-card">
+                    <span class="student-detail-label">Semester</span>
+                    <div class="student-detail-value" id="modalStudentSemester">-</div>
+                </div>
+                <div class="student-detail-card">
+                    <span class="student-detail-label">Attendance</span>
+                    <div class="student-detail-value" id="modalStudentAttendance">-</div>
+                </div>
+                <div class="student-detail-card">
+                    <span class="student-detail-label">Status</span>
+                    <div class="student-detail-value" id="modalStudentStatus">-</div>
+                </div>
+            </div>
+        </div>
+        <div class="student-modal-footer">
+            Review the selected student's current academic allocation details for this course.
+        </div>
+    </div>
 </div>
 
 <script>
@@ -527,6 +701,66 @@
             });
         });
     })();
+
+    // Student details popup
+    const studentModalOverlay = document.getElementById('studentModalOverlay');
+    const modalFields = {
+        title: document.getElementById('studentModalTitle'),
+        subtitle: document.getElementById('studentModalSubtitle'),
+        name: document.getElementById('modalStudentName'),
+        register: document.getElementById('modalStudentRegister'),
+        email: document.getElementById('modalStudentEmail'),
+        department: document.getElementById('modalStudentDepartment'),
+        semester: document.getElementById('modalStudentSemester'),
+        attendance: document.getElementById('modalStudentAttendance'),
+        status: document.getElementById('modalStudentStatus')
+    };
+
+    function openStudentModal(student) {
+        modalFields.title.textContent = student.name || 'Student Details';
+        modalFields.subtitle.textContent = (student.register || 'Register number unavailable') + ' | ' + (student.department || 'Department unavailable');
+        modalFields.name.textContent = student.name || '-';
+        modalFields.register.textContent = student.register || '-';
+        modalFields.email.textContent = student.email || '-';
+        modalFields.department.textContent = student.department || '-';
+        modalFields.semester.textContent = student.semester || '-';
+        modalFields.attendance.textContent = student.attendance || 'N/A';
+        modalFields.status.textContent = student.status || 'ACTIVE';
+        studentModalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeStudentModal() {
+        studentModalOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function handleStudentModalOverlay(event) {
+        if (event.target === studentModalOverlay) {
+            closeStudentModal();
+        }
+    }
+
+    document.querySelectorAll('.open-student-modal').forEach(function (button) {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            openStudentModal({
+                name: button.dataset.name,
+                register: button.dataset.register,
+                email: button.dataset.email,
+                department: button.dataset.department,
+                semester: button.dataset.semester,
+                attendance: button.dataset.attendance,
+                status: button.dataset.status
+            });
+        });
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && studentModalOverlay.classList.contains('active')) {
+            closeStudentModal();
+        }
+    });
 </script>
 </body>
 </html>
