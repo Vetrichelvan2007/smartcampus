@@ -611,6 +611,431 @@
       border: 1px solid rgba(148, 163, 184, 0.22);
     }
 
+    /* Comic learning */
+    .comic-shell {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .comic-card {
+      position: relative;
+      background:
+              radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 35%),
+              rgba(15, 23, 42, 0.76);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 18px 42px rgba(2, 6, 23, 0.34);
+      overflow: hidden;
+    }
+
+    .comic-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.08) 0.8px, transparent 0.8px);
+      background-size: 16px 16px;
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    .comic-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .comic-form-card {
+      padding: 24px;
+    }
+
+    .comic-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: #111827;
+      background: linear-gradient(135deg, #fde047, #fb7185);
+      border: 2px solid #111827;
+      box-shadow: 4px 4px 0 rgba(15, 23, 42, 0.9);
+    }
+
+    .comic-form-title {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 10px;
+      color: #f8fafc;
+    }
+
+    .comic-form-copy {
+      color: #cbd5e1;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .comic-form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .comic-field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .comic-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #a5b4fc;
+    }
+
+    .comic-label span:last-child {
+      color: #64748b;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: none;
+    }
+
+    .comic-input,
+    .comic-select,
+    .comic-textarea {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.26);
+      background: rgba(2, 6, 23, 0.72);
+      color: #f8fafc;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .comic-input,
+    .comic-select {
+      min-height: 48px;
+      padding: 0 16px;
+    }
+
+    .comic-textarea {
+      min-height: 190px;
+      padding: 14px 16px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .comic-input:focus,
+    .comic-select:focus,
+    .comic-textarea:focus {
+      border-color: rgba(251, 191, 36, 0.8);
+      box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .comic-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .comic-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn--comic {
+      background: linear-gradient(135deg, #facc15, #f97316, #fb7185);
+      border: 2px solid #111827;
+      color: #111827;
+      font-weight: 700;
+      box-shadow: 4px 4px 0 rgba(15, 23, 42, 0.92);
+    }
+
+    .btn--comic:hover {
+      color: #111827;
+      background: linear-gradient(135deg, #fde047, #fb923c, #f472b6);
+      box-shadow: 6px 6px 0 rgba(15, 23, 42, 0.92);
+    }
+
+    .btn[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .resource-prompt-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .comic-selected-resource {
+      min-height: 48px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px dashed rgba(250, 204, 21, 0.45);
+      background: rgba(250, 204, 21, 0.08);
+      color: #fde68a;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .resource-prompt {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px dashed rgba(251, 191, 36, 0.5);
+      background: rgba(250, 204, 21, 0.08);
+      color: #fde68a;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.25s ease, transform 0.25s ease;
+    }
+
+    .resource-prompt:hover {
+      background: rgba(250, 204, 21, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .comic-stage {
+      padding: 24px;
+      min-height: 100%;
+    }
+
+    .comic-stage-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .comic-stage-copy h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 15px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: #f8fafc;
+      margin-bottom: 6px;
+    }
+
+    .comic-stage-copy p {
+      color: #94a3b8;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .comic-status {
+      min-height: 54px;
+      padding: 12px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(2, 6, 23, 0.65);
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .comic-status::before {
+      content: '';
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.14);
+      flex-shrink: 0;
+    }
+
+    .comic-status.success::before {
+      background: #4ade80;
+      box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.14);
+    }
+
+    .comic-status.error::before {
+      background: #fb7185;
+      box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.16);
+    }
+
+    .comic-status.streaming::before {
+      animation: pulse-dot 1.2s infinite;
+    }
+
+    .comic-empty {
+      display: grid;
+      place-items: center;
+      min-height: 360px;
+      border-radius: 22px;
+      border: 2px dashed rgba(148, 163, 184, 0.16);
+      background:
+              linear-gradient(135deg, rgba(250, 204, 21, 0.08), rgba(236, 72, 153, 0.08)),
+              rgba(2, 6, 23, 0.45);
+      text-align: center;
+      padding: 32px;
+    }
+
+    .comic-empty h4 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #f8fafc;
+    }
+
+    .comic-empty p {
+      max-width: 420px;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    .comic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .comic-panel-card {
+      position: relative;
+      padding: 14px;
+      border-radius: 24px;
+      background: #fef3c7;
+      color: #111827;
+      border: 3px solid #0f172a;
+      box-shadow: 7px 7px 0 rgba(15, 23, 42, 0.92);
+      transform: rotate(-1deg);
+      overflow: hidden;
+    }
+
+    .comic-panel-card:nth-child(even) {
+      transform: rotate(1deg);
+      background: #e0f2fe;
+    }
+
+    .comic-panel-card:nth-child(3n) {
+      background: #fae8ff;
+    }
+
+    .comic-panel-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #111827;
+      color: #f8fafc;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      box-shadow: 3px 3px 0 rgba(251, 191, 36, 0.9);
+    }
+
+    .comic-panel-frame {
+      min-height: 180px;
+      border-radius: 18px;
+      border: 3px solid #111827;
+      background:
+              linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0.05)),
+              repeating-linear-gradient(
+                      -45deg,
+                      rgba(15, 23, 42, 0.08),
+                      rgba(15, 23, 42, 0.08) 10px,
+                      rgba(255, 255, 255, 0.08) 10px,
+                      rgba(255, 255, 255, 0.08) 20px
+              );
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .comic-panel-frame img {
+      width: 100%;
+      height: 100%;
+      min-height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .comic-panel-placeholder {
+      padding: 24px;
+      text-align: center;
+      color: rgba(17, 24, 39, 0.72);
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .comic-panel-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .comic-bubble {
+      position: relative;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 3px solid #111827;
+      font-size: 14px;
+      line-height: 1.65;
+      box-shadow: 4px 4px 0 rgba(15, 23, 42, 0.18);
+    }
+
+    .comic-bubble::after {
+      content: '';
+      position: absolute;
+      left: 22px;
+      bottom: -13px;
+      width: 18px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.92);
+      border-right: 3px solid #111827;
+      border-bottom: 3px solid #111827;
+      transform: rotate(35deg);
+    }
+
+    .comic-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+      color: rgba(17, 24, 39, 0.72);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .resource-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
     @keyframes pulse-dot {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
@@ -648,6 +1073,12 @@
       .toolbar-actions { width: 100%; }
       .toolbar-actions .btn { flex: 1; justify-content: center; }
       .course-title { font-size: 20px; }
+      .comic-shell { grid-template-columns: 1fr; }
+      .comic-grid-2 { grid-template-columns: 1fr; }
+      .comic-stage,
+      .comic-form-card { padding: 20px; }
+      .resource-actions .btn,
+      .resource-actions a { width: 100%; justify-content: center; }
     }
   </style>
 </head>
@@ -691,10 +1122,11 @@
 
     <!-- NAV TABS -->
     <div class="tabs">
-      <button type="button" class="tab active" onclick="showTab('resources',this)"><span>Resource</span></button>
-      <button type="button" class="tab" onclick="showTab('coursework',this)"><span>Course Work</span></button>
-      <button type="button" class="tab" onclick="showTab('quizzes',this)"><span>Quizzes</span></button>
-      <button type="button" class="tab" onclick="showTab('assignment',this)"><span>Assignment</span></button>
+      <button type="button" class="tab active" data-tab="resources" onclick="showTab('resources',this)"><span>Resource</span></button>
+      <button type="button" class="tab" data-tab="comic-learning" onclick="showTab('comic-learning',this)"><span>Comic Lab</span></button>
+      <button type="button" class="tab" data-tab="coursework" onclick="showTab('coursework',this)"><span>Course Work</span></button>
+      <button type="button" class="tab" data-tab="quizzes" onclick="showTab('quizzes',this)"><span>Quizzes</span></button>
+      <button type="button" class="tab" data-tab="assignment" onclick="showTab('assignment',this)"><span>Assignment</span></button>
     </div>
   </div>
 
@@ -709,11 +1141,15 @@
         <input placeholder="Search resources...">
       </div>
       <div class="toolbar-actions">
-        <button class="btn">
+        <button type="button" class="btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download ZIP
         </button>
-        <button class="btn btn--accent">
+        <button type="button" class="btn btn--accent" onclick="showTab('comic-learning')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8"/><path d="M9 2v2.5"/><path d="M15 2v2.5"/><rect width="18" height="14" x="3" y="6" rx="2"/><path d="M7 10h4"/><path d="M7 14h3"/><path d="M15.5 11.5a2.5 2.5 0 1 0-3.5 2.3V16l2-1 2 1v-2.2a2.5 2.5 0 0 0-.5-2.3Z"/></svg>
+          Comic Lab
+        </button>
+        <button type="button" class="btn btn--accent">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download
         </button>
@@ -736,15 +1172,24 @@
           <td th:text="${r.module != null ? r.module : '-'}"></td>
           <td><span class="row-type" th:text="${r.type}"></span></td>
           <td>
-            <button type="button"
-                    class="btn js-view-material"
-                    style="padding: 8px 12px; margin-right: 8px;"
-                    th:attr="data-view-url=@{/material/{id}/view(id=${r.id})},data-title=${r.title}">
-              View
-            </button>
-            <a th:if="${r.downloadAllowed}" class="btn btn--accent" style="text-decoration:none; padding: 8px 12px;"
-               th:href="@{/material/{id}/download(id=${r.id})}">Download</a>
-            <span th:if="${!r.downloadAllowed}" style="color:#334155; font-size: 13px;">View only</span>
+            <div class="resource-actions">
+              <button type="button"
+                      class="btn js-view-material"
+                      style="padding: 8px 12px;"
+                      th:attr="data-view-url=@{/material/{id}/view(id=${r.id})},data-title=${r.title}">
+                View
+              </button>
+              <button type="button"
+                      class="btn"
+                      style="padding: 8px 12px;"
+                      onclick="selectComicResource(this)"
+                      th:attr="data-resource-id=${r.id},data-resource-title=${r.title},data-resource-module=${r.module != null ? r.module : ''},data-resource-type=${r.type != null ? r.type : ''}">
+                Comic Draft
+              </button>
+              <a th:if="${r.downloadAllowed}" class="btn btn--accent" style="text-decoration:none; padding: 8px 12px;"
+                 th:href="@{/material/{id}/download(id=${r.id})}">Download</a>
+              <span th:if="${!r.downloadAllowed}" style="color:#334155; font-size: 13px;">View only</span>
+            </div>
           </td>
         </tr>
         </tbody>
@@ -760,6 +1205,126 @@
       <p class="empty-sub">Resources will appear here once added</p>
     </div>
 
+  </div>
+
+  <div class="panel glass tab-body" id="comic-learning">
+    <div class="comic-shell">
+      <section class="comic-card comic-form-card">
+        <div class="comic-kicker">Streaming Comic Tutor</div>
+        <h3 class="comic-form-title">Turn dense notes into comic panels.</h3>
+        <p class="comic-form-copy">
+          Pick one of your uploaded course materials and the server will extract its text directly from the stored file
+          before calling <code>http://localhost:8000</code>. You can still add extra notes if needed.
+        </p>
+
+        <form id="comicLearningForm" class="comic-form">
+          <div class="comic-field">
+            <label class="comic-label" for="comicMaterialId">
+              <span>Study Material</span>
+              <span>Use a real course resource</span>
+            </label>
+            <select id="comicMaterialId" class="comic-select">
+              <option value="">Select a course material</option>
+              <option th:each="r : ${resources}"
+                      th:value="${r.id}"
+                      th:text="${r.title + ' • Module ' + (r.module != null ? r.module : '-') + ' • ' + (r.type != null ? r.type : 'MATERIAL')}">
+                Material
+              </option>
+            </select>
+            <div id="comicSelectedMaterial" class="comic-selected-resource">
+              No study material selected yet.
+            </div>
+          </div>
+
+          <div class="comic-grid-2">
+            <div class="comic-field">
+              <label class="comic-label" for="comicStudentLevel">
+                <span>Audience Level</span>
+                <span>Controls explanation depth</span>
+              </label>
+              <select id="comicStudentLevel" class="comic-select">
+                <option value="5th Grader">5th Grader</option>
+                <option value="High School Student">High School Student</option>
+                <option value="College Freshman" selected>College Freshman</option>
+                <option value="Exam Revision">Exam Revision</option>
+              </select>
+            </div>
+
+            <div class="comic-field">
+              <label class="comic-label" for="comicPanelCount">
+                <span>Panel Count</span>
+                <span>From 1 to 8 panels</span>
+              </label>
+              <input id="comicPanelCount" class="comic-input" type="number" min="1" max="8" value="4">
+            </div>
+          </div>
+
+          <div class="comic-field">
+            <label class="comic-label" for="comicUserQuery">
+              <span>Learning Goal</span>
+              <span>Describe what the comic should explain</span>
+            </label>
+            <input id="comicUserQuery" class="comic-input" type="text" value="Explain the topic step by step with memorable examples." placeholder="Explain recursion like a comic adventure.">
+          </div>
+
+          <div class="comic-field">
+            <label class="comic-label" for="comicMaterialContent">
+              <span>Additional Notes</span>
+              <span>Optional text appended to the extracted file content</span>
+            </label>
+            <textarea id="comicMaterialContent" class="comic-textarea" placeholder="Optional: add class notes, exam hints, or the exact topic you want emphasized."></textarea>
+          </div>
+
+          <div class="comic-field">
+            <div class="comic-label">
+              <span>Quick Select</span>
+              <span>Jump from a course resource</span>
+            </div>
+            <div class="resource-prompt-list">
+              <button type="button" class="resource-prompt"
+                      th:each="r : ${resources}"
+                      onclick="selectComicResource(this)"
+                      th:text="${r.title}"
+                      th:attr="data-resource-id=${r.id},data-resource-title=${r.title},data-resource-module=${r.module != null ? r.module : ''},data-resource-type=${r.type != null ? r.type : ''}">
+                Resource
+              </button>
+              <span th:if="${#lists.isEmpty(resources)}" class="mini-note">No course resources yet. Add notes manually in the field above.</span>
+            </div>
+          </div>
+
+          <div class="comic-actions">
+            <button type="submit" id="comicGenerateBtn" class="btn btn--comic">Generate Comic</button>
+            <button type="button" id="comicStopBtn" class="btn" disabled>Stop Stream</button>
+            <button type="button" id="comicResetBtn" class="btn">Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="comic-card comic-stage">
+        <div class="comic-stage-topbar">
+          <div class="comic-stage-copy">
+            <h3>Live Panel Stream</h3>
+            <p>Panels appear here as the local Python engine produces each frame.</p>
+          </div>
+        </div>
+
+        <div id="comicStatus" class="comic-status">
+          Ready. Choose a stored study material or add notes, then start the stream.
+        </div>
+
+        <div id="comicEmptyState" class="comic-empty">
+          <div>
+            <h4>Bam. Pow. Learn faster.</h4>
+            <p>
+              This workspace converts the actual text extracted from your selected study material into a comic strip with
+              streamed captions and artwork.
+            </p>
+          </div>
+        </div>
+
+        <div id="comicPanelGrid" class="comic-grid" hidden></div>
+      </section>
+    </div>
   </div>
 
   <!-- ═══════════════════ QUIZ PANEL ═══════════════════ -->
@@ -912,28 +1477,478 @@
   </div>
 </div>
 
-<script>
+<script th:inline="javascript">
+  const comicStreamUrl = /*[[@{/course/{code}/comic-learning/stream(code=${courseId})}]]*/ '';
+  const comicImageProxyUrl = /*[[@{/comic-learning/generated-image}]]*/ '';
+  const currentCourseTitle = /*[[${courseName}]]*/ 'Course';
+  const currentCourseCode = /*[[${courseId}]]*/ 'COURSE';
+  const initialTab = /*[[${activeTab != null ? activeTab : 'resources'}]]*/ 'resources';
+
+  let comicAbortController = null;
+  let comicAutoPanelIndex = 1;
+
   function showTab(id, btn) {
     document.querySelectorAll('.tab-body')
             .forEach(function(x) { x.classList.remove('active'); });
 
-    document.getElementById(id)
-            .classList.add('active');
+    const tabBody = document.getElementById(id);
+    if (tabBody) {
+      tabBody.classList.add('active');
+    }
 
     document.querySelectorAll('.tab')
             .forEach(function(x) { x.classList.remove('active'); });
 
-    btn.classList.add('active');
+    const targetButton = btn || document.querySelector('.tab[data-tab="' + id + '"]');
+    if (targetButton) {
+      targetButton.classList.add('active');
+    }
+  }
+
+  function updateSelectedMaterialBadge() {
+    const materialSelect = document.getElementById('comicMaterialId');
+    const selectedMaterial = document.getElementById('comicSelectedMaterial');
+    if (!materialSelect || !selectedMaterial) {
+      return;
+    }
+
+    const selectedOption = materialSelect.options[materialSelect.selectedIndex];
+    if (!selectedOption || !selectedOption.value) {
+      selectedMaterial.textContent = 'No study material selected yet.';
+      return;
+    }
+
+    selectedMaterial.textContent = 'Using stored course material: ' + selectedOption.textContent;
+  }
+
+  function selectComicResource(trigger) {
+    const materialSelect = document.getElementById('comicMaterialId');
+    const queryInput = document.getElementById('comicUserQuery');
+    if (!materialSelect || !queryInput || !trigger) {
+      return;
+    }
+
+    const materialId = trigger.getAttribute('data-resource-id') || '';
+    const resourceTitle = trigger.getAttribute('data-resource-title') || 'Course resource';
+    const resourceModule = trigger.getAttribute('data-resource-module') || '-';
+    const resourceType = trigger.getAttribute('data-resource-type') || 'MATERIAL';
+
+    materialSelect.value = materialId;
+    updateSelectedMaterialBadge();
+
+    queryInput.value = 'Explain "' + resourceTitle + '" from module ' + resourceModule + ' as a comic story with step-by-step logic and memorable examples for this ' + resourceType + ' material.';
+    showTab('comic-learning');
+    queryInput.focus();
+  }
+
+  function setComicStatus(message, tone) {
+    const status = document.getElementById('comicStatus');
+    if (!status) {
+      return;
+    }
+    status.textContent = message;
+    status.classList.remove('success', 'error', 'streaming');
+    if (tone) {
+      status.classList.add(tone);
+    }
+  }
+
+  function resetComicStage() {
+    const grid = document.getElementById('comicPanelGrid');
+    const empty = document.getElementById('comicEmptyState');
+    if (grid) {
+      grid.innerHTML = '';
+      grid.hidden = true;
+    }
+    if (empty) {
+      empty.hidden = false;
+    }
+    comicAutoPanelIndex = 1;
+  }
+
+  function ensureComicCard(index) {
+    const grid = document.getElementById('comicPanelGrid');
+    const empty = document.getElementById('comicEmptyState');
+    if (!grid || !empty) {
+      return null;
+    }
+
+    empty.hidden = true;
+    grid.hidden = false;
+
+    let card = grid.querySelector('[data-panel-index="' + index + '"]');
+    if (card) {
+      return card;
+    }
+
+    card = document.createElement('article');
+    card.className = 'comic-panel-card';
+    card.setAttribute('data-panel-index', String(index));
+    card.setAttribute('data-panel-state', 'loading');
+    card.innerHTML = '' +
+            '<div class="comic-panel-label">Panel ' + index + '</div>' +
+            '<div class="comic-panel-frame">' +
+            '  <div class="comic-panel-placeholder">Artwork is still loading for this panel.</div>' +
+            '</div>' +
+            '<div class="comic-panel-title">Panel ' + index + '</div>' +
+            '<div class="comic-bubble">Waiting for narration...</div>' +
+            '<div class="comic-meta"><span>Streaming</span><span>#' + index + '</span></div>';
+    grid.appendChild(card);
+    return card;
+  }
+
+  function normalizeImageSource(value) {
+    if (!value || typeof value !== 'string') {
+      return '';
+    }
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return '';
+    }
+    if (trimmed.startsWith('data:image') || trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/')) {
+      return trimmed;
+    }
+    if (/^[A-Za-z]:\\/.test(trimmed)) {
+      return comicImageProxyUrl + '?path=' + encodeURIComponent(trimmed);
+    }
+    const compact = trimmed.replace(/\s+/g, '');
+    if (/^[A-Za-z0-9+/=]+$/.test(compact) && compact.length > 120) {
+      return 'data:image/png;base64,' + compact;
+    }
+    return '';
+  }
+
+  function updateComicPanel(panel) {
+    const index = panel.index || comicAutoPanelIndex++;
+    const card = ensureComicCard(index);
+    if (!card) {
+      return;
+    }
+
+    const title = card.querySelector('.comic-panel-title');
+    const bubble = card.querySelector('.comic-bubble');
+    const frame = card.querySelector('.comic-panel-frame');
+    const meta = card.querySelector('.comic-meta');
+
+    card.setAttribute('data-panel-state', 'complete');
+    title.textContent = panel.title || ('Panel ' + index);
+    bubble.textContent = panel.caption || panel.summary || 'New panel received.';
+
+    if (panel.image) {
+      const normalizedImage = normalizeImageSource(panel.image);
+      if (normalizedImage) {
+        frame.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = normalizedImage;
+        img.alt = panel.title || ('Comic panel ' + index);
+        frame.appendChild(img);
+      }
+    }
+
+    meta.innerHTML = '<span>' + (panel.tag || 'Panel ready') + '</span><span>#' + index + '</span>';
+  }
+
+  function finalizeComicPanels() {
+    const grid = document.getElementById('comicPanelGrid');
+    const empty = document.getElementById('comicEmptyState');
+    if (!grid || !empty) {
+      return;
+    }
+
+    const danglingPanels = grid.querySelectorAll('[data-panel-state="loading"]');
+    danglingPanels.forEach(function(card) {
+      card.remove();
+    });
+
+    if (!grid.children.length) {
+      grid.hidden = true;
+      empty.hidden = false;
+    }
+  }
+
+  function extractPanelData(payload) {
+    if (!payload || typeof payload !== 'object') {
+      return null;
+    }
+
+    const candidate = payload.panel || payload.panel_data || payload.result || payload.chunk || payload;
+    if (!candidate || typeof candidate !== 'object') {
+      return null;
+    }
+
+    const indexValue = candidate.panel_index || candidate.panel_number || candidate.index || candidate.panelNumber || payload.panel_index || payload.panel_number || payload.index;
+    const numericIndex = Number(indexValue);
+    const title = candidate.title || candidate.heading || candidate.scene_title || candidate.topic || payload.title || (Number.isFinite(numericIndex) && numericIndex > 0 ? ('Panel ' + numericIndex) : null);
+    const caption = candidate.dialogue || candidate.caption || candidate.description || candidate.explanation || candidate.narration || candidate.summary;
+    const image = candidate.image_url || candidate.imageUrl || candidate.image || candidate.panel_image || payload.image_url || payload.image;
+    const summary = candidate.prompt || candidate.summary || payload.message || payload.detail;
+
+    if (!title && !caption && !image && !summary) {
+      return null;
+    }
+
+    return {
+      index: Number.isFinite(numericIndex) && numericIndex > 0 ? numericIndex : null,
+      title: title || null,
+      caption: caption || null,
+      summary: summary || null,
+      image: image || null,
+      tag: payload.event || payload.status || 'Panel ready'
+    };
+  }
+
+  function parseErrorMessage(rawText, fallback) {
+    if (!rawText) {
+      return fallback;
+    }
+    try {
+      const parsed = JSON.parse(rawText);
+      return parsed.message || parsed.error || fallback;
+    } catch (error) {
+      return rawText.trim() || fallback;
+    }
+  }
+
+  function processStreamPayload(rawPayload) {
+    if (!rawPayload) {
+      return;
+    }
+
+    const payloadText = rawPayload.trim();
+    if (!payloadText) {
+      return;
+    }
+
+    if (payloadText === '[DONE]') {
+      finalizeComicPanels();
+      setComicStatus('Comic generation finished.', 'success');
+      return;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(payloadText);
+    } catch (error) {
+      setComicStatus(payloadText, 'streaming');
+      return;
+    }
+
+    if (parsed.event === 'error' || parsed.error) {
+      setComicStatus(parsed.message || parsed.error || 'Comic generation failed.', 'error');
+      return;
+    }
+
+    const status = parsed.status || parsed.event || '';
+    if (status === 'done') {
+      finalizeComicPanels();
+      setComicStatus(parsed.message || 'Comic generation finished.', 'success');
+      return;
+    }
+
+    if (status === 'info') {
+      setComicStatus(parsed.message || 'Generating comic...', 'streaming');
+      return;
+    }
+
+    if (status === 'panel_start') {
+      const panelNumber = Number(parsed.panel_number || parsed.index);
+      if (Number.isFinite(panelNumber) && panelNumber > 0) {
+        ensureComicCard(panelNumber);
+        setComicStatus('Generating panel ' + panelNumber + '...', 'streaming');
+      }
+      return;
+    }
+
+    const panel = extractPanelData(parsed);
+    if (panel && (status === 'panel_complete' || panel.image || panel.caption || panel.summary)) {
+      updateComicPanel(panel);
+      setComicStatus(panel.title ? ('Completed ' + panel.title) : 'Completed a panel.', 'streaming');
+      return;
+    }
+
+    if (parsed.message || parsed.status || parsed.detail) {
+      setComicStatus(parsed.message || parsed.status || parsed.detail, 'streaming');
+    }
+  }
+
+  function consumeSseBuffer(buffer) {
+    let remaining = buffer;
+
+    while (true) {
+      const boundaryMatch = remaining.match(/\r?\n\r?\n/);
+      if (!boundaryMatch || boundaryMatch.index == null) {
+        break;
+      }
+
+      const block = remaining.slice(0, boundaryMatch.index);
+      remaining = remaining.slice(boundaryMatch.index + boundaryMatch[0].length);
+
+      if (!block.trim()) {
+        continue;
+      }
+
+      const dataLines = block.split(/\r?\n/)
+              .filter(function(line) { return line.startsWith('data:'); })
+              .map(function(line) { return line.slice(5).trim(); });
+
+      if (dataLines.length) {
+        processStreamPayload(dataLines.join('\n'));
+      } else if (block.trim().startsWith('{')) {
+        processStreamPayload(block.trim());
+      }
+    }
+
+    return remaining;
+  }
+
+  function setComicButtons(isStreaming) {
+    const generateBtn = document.getElementById('comicGenerateBtn');
+    const stopBtn = document.getElementById('comicStopBtn');
+    if (generateBtn) {
+      generateBtn.disabled = isStreaming;
+    }
+    if (stopBtn) {
+      stopBtn.disabled = !isStreaming;
+    }
+  }
+
+  async function submitComicLearning(event) {
+    event.preventDefault();
+
+    const materialIdRaw = document.getElementById('comicMaterialId').value;
+    const materialId = materialIdRaw ? Number(materialIdRaw) : null;
+    const materialContent = document.getElementById('comicMaterialContent').value.trim();
+    const userQuery = document.getElementById('comicUserQuery').value.trim();
+    const studentLevel = document.getElementById('comicStudentLevel').value;
+    const panelCount = Number(document.getElementById('comicPanelCount').value);
+
+    if ((!materialId && !materialContent) || !userQuery || !studentLevel) {
+      setComicStatus('Select a study material or enter notes, then provide the learning goal and audience level.', 'error');
+      showTab('comic-learning');
+      return;
+    }
+
+    if (comicAbortController) {
+      comicAbortController.abort();
+    }
+
+    resetComicStage();
+    showTab('comic-learning');
+    setComicButtons(true);
+    setComicStatus('Connecting to the local comic generator...', 'streaming');
+
+    comicAbortController = new AbortController();
+
+    try {
+      const response = await fetch(comicStreamUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'text/event-stream'
+        },
+        body: JSON.stringify({
+          materialId: materialId,
+          materialContent: materialContent,
+          userQuery: userQuery,
+          studentLevel: studentLevel,
+          panelCount: panelCount
+        }),
+        signal: comicAbortController.signal
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(parseErrorMessage(errorText, 'Comic generation request failed.'));
+      }
+
+      if (!response.body) {
+        throw new Error('Streaming is not available in this browser.');
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const result = await reader.read();
+        if (result.done) {
+          break;
+        }
+        buffer += decoder.decode(result.value, { stream: true });
+        buffer = consumeSseBuffer(buffer);
+      }
+
+      const tail = decoder.decode();
+      if (tail) {
+        buffer += tail;
+      }
+      if (buffer.trim()) {
+        buffer = consumeSseBuffer(buffer + '\n\n');
+        const trailingPayload = buffer.replace(/^data:\s*/gm, '').trim();
+        if (trailingPayload) {
+          processStreamPayload(trailingPayload);
+        }
+      }
+
+      if (!document.getElementById('comicPanelGrid').hidden) {
+        finalizeComicPanels();
+        setComicStatus('Comic generation finished.', 'success');
+      } else {
+        setComicStatus('The generator responded, but no panels were returned yet.', 'error');
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        setComicStatus('Comic stream stopped.', 'error');
+      } else {
+        setComicStatus(error.message || 'Unable to reach the comic generator.', 'error');
+      }
+    } finally {
+      comicAbortController = null;
+      setComicButtons(false);
+    }
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    const firstTab = document.querySelector('.tabs .tab.active') || document.querySelector('.tabs .tab');
+    const firstTab = document.querySelector('.tabs .tab[data-tab="' + initialTab + '"]') || document.querySelector('.tabs .tab.active') || document.querySelector('.tabs .tab');
     if (firstTab) {
-      const label = firstTab.textContent || '';
-      if (label.indexOf('Course Work') >= 0) showTab('coursework', firstTab);
-      else if (label.indexOf('Quizzes') >= 0) showTab('quizzes', firstTab);
-      else if (label.indexOf('Assignment') >= 0) showTab('assignment', firstTab);
-      else showTab('resources', firstTab);
+      showTab(firstTab.getAttribute('data-tab') || 'resources', firstTab);
+    }
+
+    const comicForm = document.getElementById('comicLearningForm');
+    const materialSelect = document.getElementById('comicMaterialId');
+    const stopBtn = document.getElementById('comicStopBtn');
+    const resetBtn = document.getElementById('comicResetBtn');
+
+    if (comicForm) {
+      comicForm.addEventListener('submit', submitComicLearning);
+    }
+
+    if (materialSelect) {
+      materialSelect.addEventListener('change', updateSelectedMaterialBadge);
+      updateSelectedMaterialBadge();
+    }
+
+    if (stopBtn) {
+      stopBtn.addEventListener('click', function () {
+        if (comicAbortController) {
+          comicAbortController.abort();
+        }
+      });
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function () {
+        if (comicAbortController) {
+          comicAbortController.abort();
+        }
+        if (materialSelect) {
+          materialSelect.value = '';
+          updateSelectedMaterialBadge();
+        }
+        document.getElementById('comicMaterialContent').value = '';
+        resetComicStage();
+        setComicStatus('Ready. Choose a stored study material or add notes, then start the stream.');
+      });
     }
   });
 

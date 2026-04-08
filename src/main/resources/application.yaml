@@ -8,3 +8,6 @@ spring:
 server:
   tomcat:
     max-part-count: 50
+comic:
+  learning:
+    api-base-url: http://localhost:8000
