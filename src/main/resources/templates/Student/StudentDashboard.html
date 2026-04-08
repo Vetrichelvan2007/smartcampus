@@ -971,6 +971,34 @@
             line-height: 1.8;
         }
 
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .layout {
+                grid-template-columns: 1fr 280px;
+                gap: 16px;
+            }
+            .sidebar { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .layout {
+                grid-template-columns: 1fr;
+                padding: 12px;
+            }
+            .sidebar { display: none; }
+            .right { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .topbar { padding: 0 16px; }
+            .topbar input { width: 100%; max-width: 200px; }
+        }
+
+        @media (max-width: 480px) {
+            .layout { grid-template-columns: 1fr; padding: 8px; }
+            .right { grid-template-columns: 1fr; }
+            .topbar { height: auto; flex-direction: column; padding: 12px; gap: 12px; }
+            .topbar input { width: 100%; max-width: none; }
+            .card { padding: 16px; }
+        }
+
         /* ═══════════════════════════════════════════
            EMPTY STATE
         ═══════════════════════════════════════════ */

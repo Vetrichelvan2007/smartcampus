@@ -34,6 +34,9 @@ public class AuthController {
             if ("teacher".equalsIgnoreCase(role.toString())) {
                 return "redirect:/teacher-dashboard";
             }
+            if ("admin".equalsIgnoreCase(role.toString())) {
+                return "redirect:/admin-dashboard";
+            }
         }
 
         return null;
@@ -53,7 +56,7 @@ public class AuthController {
         session.removeAttribute("department_id");
     }
 
-    @GetMapping("/login")
+    @GetMapping({"/login", "/login.html"})
     public String login(HttpSession session) {
         String dashboardRedirect = resolveDashboardRedirect(session);
         return dashboardRedirect != null ? dashboardRedirect : "Auth/Login";
@@ -137,6 +140,9 @@ public class AuthController {
                     teacherPs.close();
 
                     return "redirect:/teacher-dashboard";
+                }
+                if ("admin".equalsIgnoreCase(role)) {
+                    return "redirect:/admin-dashboard";
                 }
 
                 session.invalidate();

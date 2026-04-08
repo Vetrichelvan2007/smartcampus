@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Welcome</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -521,7 +521,9 @@
 <!-- Version Tag -->
 <div class="version-tag">SMARTCAMPUS v2.0</div>
 
-<script>
+<script th:inline="javascript">
+  const loginRoute = /*[[@{/login}]]*/ '/login';
+
   // ── Generate Floating Particles ──
   (function() {
     var container = document.getElementById('particles');
@@ -575,7 +577,7 @@
   setTimeout(function() {
     document.body.classList.add('exit-animation');
     setTimeout(function() {
-      window.location.href = "login";
+      window.location.href = loginRoute;
     }, 800);
   }, 5500);
 </script>

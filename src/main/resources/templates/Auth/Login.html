@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,72 @@
 
     <style>
 
+        /* ============================================================================
+           CSS VARIABLES FOR DARK/LIGHT MODE THEMING
+           ============================================================================ */
+        :root {
+            /* Light Theme */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #eef2ff;
+
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-tertiary: #94a3b8;
+
+            --color-primary: #4f46e5;
+            --color-primary-light: #6366f1;
+            --color-accent: #22d3ee;
+            --color-accent-dark: #06b6d4;
+
+            --border-light: rgba(79, 70, 229, 0.1);
+            --border-medium: rgba(79, 70, 229, 0.15);
+            --border-focus: rgba(79, 70, 229, 0.3);
+
+            --input-bg: #f1f5f9;
+            --input-border: rgba(79, 70, 229, 0.12);
+            --input-focus-bg: rgba(79, 70, 229, 0.05);
+            --input-focus-border: #4f46e5;
+
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.12);
+            --shadow-glow: 0 0 30px rgba(79, 70, 229, 0.15);
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #11183f;
+            --bg-tertiary: #1a2551;
+
+            --text-primary: #e0e7ff;
+            --text-secondary: #a5b4fc;
+            --text-tertiary: #818cf8;
+
+            --color-primary: #6366f1;
+            --color-primary-light: #818cf8;
+            --color-accent: #06b6d4;
+            --color-accent-dark: #0891b2;
+
+            --border-light: rgba(99, 102, 241, 0.15);
+            --border-medium: rgba(99, 102, 241, 0.25);
+            --border-focus: rgba(99, 102, 241, 0.4);
+
+            --input-bg: #0f172a;
+            --input-border: rgba(99, 102, 241, 0.2);
+            --input-focus-bg: rgba(99, 102, 241, 0.08);
+            --input-focus-border: #6366f1;
+
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.6);
+            --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.25);
+        }
+
+        /* ============================================================================
+           RESET & BASE STYLES
+           ============================================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -22,25 +88,31 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: #0a0e27;
+            background: var(--bg-primary);
             display: flex;
             justify-content: center;
             align-items: center;
             perspective: 1000px;
             position: relative;
+            transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* ============================================================================
+           ANIMATED BACKGROUND WITH GRADIENT BLOBS
+           ============================================================================ */
         body::before {
             content: '';
             position: fixed;
             inset: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 40% 0%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+            background: radial-gradient(circle at 20% 50%, rgba(79, 70, 229, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 40% 0%, rgba(6, 182, 212, 0.06) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* Enhanced animated background container */
         .animated-bg {
             position: fixed;
             inset: 0;
@@ -52,13 +124,14 @@
             position: absolute;
             border-radius: 50%;
             filter: blur(80px);
-            opacity: 0.4;
+            opacity: 0.3;
+            transition: opacity 0.5s ease;
         }
 
         .orb-1 {
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, #6366f1, transparent);
+            background: linear-gradient(135deg, #4f46e5, #22d3ee);
             top: -100px;
             right: -100px;
             animation: float1 15s ease-in-out infinite;
@@ -67,7 +140,7 @@
         .orb-2 {
             width: 300px;
             height: 300px;
-            background: radial-gradient(circle, #ec4899, transparent);
+            background: linear-gradient(135deg, #22d3ee, #06b6d4);
             bottom: -50px;
             left: -50px;
             animation: float2 20s ease-in-out infinite;
@@ -76,27 +149,101 @@
         .orb-3 {
             width: 350px;
             height: 350px;
-            background: radial-gradient(circle, #06b6d4, transparent);
+            background: linear-gradient(135deg, #6366f1, #22d3ee);
             top: 50%;
             right: 10%;
             animation: float3 18s ease-in-out infinite;
         }
 
         @keyframes float1 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(30px, -40px); }
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -40px) scale(1.05); }
         }
 
         @keyframes float2 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-50px, 50px); }
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-50px, 50px) scale(1.08); }
         }
 
         @keyframes float3 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-30px, 30px); }
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, 30px) scale(1.06); }
         }
 
+        /* ============================================================================
+           ENTRANCE ANIMATIONS
+           ============================================================================ */
+        @keyframes containerFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================================
+           GRADIENT ANIMATIONS
+           ============================================================================ */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes borderGlow {
+            0% {
+                border-color: rgba(79, 70, 229, 0.2);
+                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.1);
+            }
+            50% {
+                border-color: rgba(34, 211, 238, 0.4);
+                box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+            }
+            100% {
+                border-color: rgba(79, 70, 229, 0.2);
+                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.1);
+            }
+        }
+
+        /* ============================================================================
+           MAIN CONTAINER & CARD
+           ============================================================================ */
         .container {
             position: relative;
             z-index: 1;
@@ -106,61 +253,48 @@
             max-height: 620px;
             margin: 0 auto;
             padding: 20px;
-            animation: containerFadeIn 0.8s ease-out;
-        }
-
-        @keyframes containerFadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            animation: containerFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .card {
             display: flex;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(20px);
+            background: var(--bg-secondary);
+            backdrop-filter: blur(30px);
             border-radius: 24px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
-            0 0 0 1px rgba(255, 255, 255, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1.5px solid var(--border-light);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
             position: relative;
-            transition: all 0.5s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* Animated gradient border effect on hover */
         .card::before {
             content: '';
             position: absolute;
             inset: -2px;
-            background: linear-gradient(45deg, #6366f1, #ec4899, #06b6d4, #6366f1);
+            background: linear-gradient(45deg, #4f46e5, #22d3ee, #06b6d4, #4f46e5);
             border-radius: 24px;
             opacity: 0;
             z-index: -1;
             filter: blur(20px);
-            transition: opacity 0.5s ease;
-            animation: gradientRotate 8s linear infinite;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: gradientShift 8s ease infinite;
+            background-size: 300% 300%;
         }
 
         .card:hover::before {
-            opacity: 0.4;
+            opacity: 0.3;
         }
 
-        @keyframes gradientRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        /* ============================================================================
+           LEFT SECTION - BRANDING
+           ============================================================================ */
         .left-section {
             flex: 1;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #22d3ee 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -168,6 +302,7 @@
             padding: 50px;
             position: relative;
             overflow: hidden;
+            animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
         }
 
         .left-section::before {
@@ -208,18 +343,7 @@
             position: relative;
             z-index: 2;
             text-align: center;
-            animation: slideInLeft 0.8s ease-out 0.2s both;
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
         }
 
         .logo-circle {
@@ -235,6 +359,7 @@
             border: 2px solid rgba(255, 255, 255, 0.3);
             font-size: 60px;
             animation: rotateLogo 8s linear infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         @keyframes rotateLogo {
@@ -250,6 +375,7 @@
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
         }
 
         .left-section > p {
@@ -257,6 +383,7 @@
             color: rgba(255, 255, 255, 0.9);
             margin: 0 0 40px;
             font-weight: 300;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
         }
 
         .features {
@@ -274,7 +401,8 @@
             gap: 12px;
             font-size: 14px;
             color: white;
-            animation: slideInLeft 0.8s ease-out;
+            animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .feature:nth-child(2) {
@@ -285,6 +413,10 @@
             animation-delay: 0.6s;
         }
 
+        .feature:hover {
+            transform: translateX(5px);
+        }
+
         .feature-dot {
             width: 8px;
             height: 8px;
@@ -292,6 +424,7 @@
             border-radius: 50%;
             box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
             animation: blink 2s ease-in-out infinite;
+            flex-shrink: 0;
         }
 
         .feature:nth-child(2) .feature-dot {
@@ -307,61 +440,61 @@
             50% { opacity: 0.4; }
         }
 
+        /* ============================================================================
+           RIGHT SECTION - LOGIN FORM
+           ============================================================================ */
         .right-section {
             flex: 1;
             padding: 50px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background: rgba(10, 14, 27, 0.5);
+            background: var(--bg-secondary);
             backdrop-filter: blur(10px);
-            animation: slideInRight 0.8s ease-out 0.2s both;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            animation: slideInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+            transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .right-section h2 {
             font-size: 32px;
             font-weight: 700;
-            color: #f1f5f9;
+            color: var(--text-primary);
             margin-bottom: 8px;
-            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-family: 'Orbitron', sans-serif;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
         }
 
         .right-section > p {
             font-size: 15px;
-            color: #94a3b8;
+            color: var(--text-secondary);
             margin-bottom: 35px;
             font-weight: 300;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
         }
 
+        /* ============================================================================
+           FORM ELEMENTS
+           ============================================================================ */
         .form {
             display: flex;
             flex-direction: column;
             gap: 24px;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
         }
 
         .form-group {
             position: relative;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .form-group.focused .input-icon {
-            color: #6366f1;
-            filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6));
+            color: var(--color-primary);
+            filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.6));
+            transform: scale(1.15);
         }
 
         .input-icon {
@@ -369,8 +502,8 @@
             left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: #64748b;
-            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 2;
             pointer-events: none;
             width: 20px;
@@ -388,32 +521,17 @@
         select {
             width: 100%;
             padding: 16px 16px 16px 48px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1.5px solid rgba(100, 116, 139, 0.3);
+            background: var(--input-bg);
+            border: 1.5px solid var(--input-border);
             border-radius: 12px;
-            color: #f1f5f9;
+            color: var(--text-primary);
             font-size: 15px;
             font-weight: 400;
             font-family: 'Poppins', sans-serif;
             outline: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             z-index: 1;
-        }
-
-        select {
-            appearance: none;
-            cursor: pointer;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            padding-right: 48px;
-        }
-
-        select option {
-            background: #0f172a;
-            color: #f1f5f9;
-            padding: 10px;
         }
 
         input[type="email"]::placeholder,
@@ -422,15 +540,36 @@
             color: transparent;
         }
 
+        input[type="email"]:hover,
+        input[type="password"]:hover,
+        input[type="text"]:hover,
+        select:hover {
+            border-color: var(--color-primary);
+            background: var(--input-focus-bg);
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.1);
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="text"]:focus,
+        select:focus {
+            border-color: var(--input-focus-border);
+            background: var(--input-focus-bg);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15),
+            inset 0 0 0 1px var(--color-accent),
+            0 0 20px rgba(79, 70, 229, 0.25);
+            transform: translateY(-2px);
+        }
+
         .form-label {
             position: absolute;
             left: 48px;
             top: 50%;
             transform: translateY(-50%);
-            color: #64748b;
+            color: var(--text-secondary);
             font-size: 15px;
             pointer-events: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background: transparent;
             padding: 0 4px;
             z-index: 2;
@@ -443,9 +582,10 @@
             top: -10px;
             left: 44px;
             font-size: 12px;
-            color: #6366f1;
-            background: rgba(10, 14, 27, 0.95);
+            color: var(--color-primary);
+            background: var(--bg-secondary);
             font-weight: 500;
+            padding: 0 4px;
         }
 
         select:focus + .form-label,
@@ -453,9 +593,28 @@
             top: -10px;
             left: 44px;
             font-size: 12px;
-            color: #6366f1;
-            background: rgba(10, 14, 27, 0.95);
+            color: var(--color-primary);
+            background: var(--bg-secondary);
             font-weight: 500;
+        }
+
+        select {
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 48px;
+        }
+
+        [data-theme="dark"] select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        }
+
+        select option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 10px;
         }
 
         .input-border {
@@ -464,32 +623,14 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: linear-gradient(90deg, #6366f1, #ec4899, #06b6d4);
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
             transform: scaleX(0);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 0 0 12px 12px;
         }
 
         .form-group.focused .input-border {
             transform: scaleX(1);
-        }
-
-        input[type="email"]:hover,
-        input[type="password"]:hover,
-        input[type="text"]:hover,
-        select:hover {
-            border-color: rgba(99, 102, 241, 0.4);
-            background: rgba(15, 23, 42, 0.9);
-        }
-
-        input[type="email"]:focus,
-        input[type="password"]:focus,
-        input[type="text"]:focus,
-        select:focus {
-            border-color: #6366f1;
-            background: rgba(15, 23, 42, 0.95);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1),
-            0 0 20px rgba(99, 102, 241, 0.25);
         }
 
         .password-toggle {
@@ -499,27 +640,35 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #64748b;
+            color: var(--text-secondary);
             cursor: pointer;
             padding: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 3;
             font-size: 18px;
         }
 
         .password-toggle:hover {
-            color: #6366f1;
-            filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.4));
+            color: var(--color-primary);
+            filter: drop-shadow(0 0 6px rgba(79, 70, 229, 0.4));
+            transform: translateY(-50%) scale(1.1);
         }
 
+        .password-toggle:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* ============================================================================
+           SUBMIT BUTTON
+           ============================================================================ */
         .submit-btn {
             position: relative;
             margin-top: 10px;
             padding: 16px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
             border: none;
             border-radius: 12px;
             color: white;
@@ -528,11 +677,12 @@
             font-family: 'Poppins', sans-serif;
             cursor: pointer;
             overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4),
-            0 0 20px rgba(99, 102, 241, 0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4),
+            0 0 20px rgba(79, 70, 229, 0);
             text-transform: uppercase;
             letter-spacing: 1px;
+            background-size: 200% 200%;
         }
 
         .submit-btn::before {
@@ -541,13 +691,14 @@
             inset: 0;
             background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transform: translateX(-100%);
-            transition: transform 0.6s ease;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .submit-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6),
-            0 0 40px rgba(236, 72, 153, 0.3);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.6),
+            0 0 40px rgba(34, 211, 238, 0.3);
+            background-position: 100% center;
         }
 
         .submit-btn:hover::before {
@@ -558,18 +709,23 @@
             transform: translateY(-1px);
         }
 
+        /* ============================================================================
+           FORM FOOTER
+           ============================================================================ */
         .form-footer {
             margin-top: 20px;
             text-align: center;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both;
         }
 
         .forgot-link {
-            color: #94a3b8;
+            color: var(--color-primary);
             font-size: 14px;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             display: inline-block;
+            font-weight: 500;
         }
 
         .forgot-link::after {
@@ -578,15 +734,16 @@
             bottom: -2px;
             left: 0;
             right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, #6366f1, #ec4899);
+            height: 1.5px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
             transform: scaleX(0);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             transform-origin: left;
         }
 
         .forgot-link:hover {
-            color: #6366f1;
+            color: var(--color-accent);
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.3);
         }
 
         .forgot-link:hover::after {
@@ -595,12 +752,52 @@
 
         .copyright {
             margin-top: 40px;
-            color: #475569;
+            color: var(--text-tertiary);
             font-size: 13px;
             text-align: center;
             font-weight: 300;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
         }
 
+        /* ============================================================================
+           THEME TOGGLE BUTTON
+           ============================================================================ */
+        .theme-toggle-btn {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100;
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-light);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-md), var(--shadow-glow);
+            backdrop-filter: blur(20px);
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .theme-toggle-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            border-color: var(--color-primary);
+            background: var(--bg-tertiary);
+            box-shadow: var(--shadow-lg), 0 0 30px rgba(79, 70, 229, 0.3);
+        }
+
+        .theme-toggle-btn:active {
+            transform: translateY(-1px) scale(0.95);
+        }
+
+        /* ============================================================================
+           MEDIA QUERIES - RESPONSIVE DESIGN
+           ============================================================================ */
         @media (max-width: 768px) {
             .card {
                 flex-direction: column;
@@ -704,6 +901,12 @@
                 padding: 14px;
                 font-size: 14px;
             }
+
+            .theme-toggle-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -714,6 +917,11 @@
     <div class="orb orb-3"></div>
 </div>
 
+<!-- THEME TOGGLE BUTTON - NEW ADDITION -->
+<button class="theme-toggle-btn" id="themeToggle" title="Toggle dark/light mode" aria-label="Toggle theme">
+    <span id="themeIcon">🌙</span>
+</button>
+
 <div class="container">
     <div class="card">
         <div class="left-section">
@@ -722,6 +930,20 @@
                 <h1>SMART CAMPUS</h1>
                 <p>Smart learning. Smart management.</p>
 
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-dot"></div>
+                        <span>Intelligent Learning</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-dot"></div>
+                        <span>Real-time Analytics</span>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-dot"></div>
+                        <span>Secure Access</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -729,14 +951,13 @@
             <h2>Welcome Back</h2>
             <p>Access your dashboard</p>
 
-            <form class="form" id="loginForm" action="/login" method="post">
+            <form class="form" id="loginForm" th:action="@{/login}" action="/login" method="post">
 
                 <div class="form-group" id="emailGroup">
                     <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="2" y="4" width="20" height="16" rx="2"></rect>
                         <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                     </svg>
-                    <!-- changed id + name -->
                     <input type="email" id="username" name="username" required placeholder=" ">
                     <label class="form-label">Email</label>
                     <div class="input-border"></div>
@@ -764,8 +985,62 @@
 
 <script>
 
+    /* ============================================================================
+       DARK/LIGHT MODE THEME TOGGLE
+       ============================================================================ */
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const html = document.documentElement;
+
+    // Initialize theme from localStorage or system preference
+    function initializeTheme() {
+        const savedTheme = localStorage.getItem('smartcampus-theme');
+
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+    }
+
+    // Set theme function
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            html.setAttribute('data-theme', 'dark');
+            themeIcon.textContent = '☀️';
+            localStorage.setItem('smartcampus-theme', 'dark');
+        } else {
+            html.removeAttribute('data-theme');
+            themeIcon.textContent = '🌙';
+            localStorage.setItem('smartcampus-theme', 'light');
+        }
+    }
+
+    // Toggle theme on button click
+    themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+    });
+
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('smartcampus-theme')) {
+            setTheme(e.matches ? 'dark' : 'light');
+        }
+    });
+
+    // Initialize theme on page load
+    initializeTheme();
+
+    /* ============================================================================
+       FORM ELEMENTS - PRESERVED EXISTING LOGIC
+       ============================================================================ */
     const emailInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
+
     const emailGroup = document.getElementById('emailGroup');
     const passwordGroup = document.getElementById('passwordGroup');
 
@@ -793,6 +1068,27 @@
         updateGroupState(emailInput, emailGroup);
         updateGroupState(passwordInput, passwordGroup);
     });
+
+    /* ============================================================================
+       PARALLAX EFFECT ON MOUSE MOVE - SUBTLE ENHANCEMENT
+       ============================================================================ */
+    document.addEventListener('mousemove', (e) => {
+        const card = document.querySelector('.card');
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+
+        // Subtle 3D rotation effect (max 2 degrees)
+        const rotateX = (y - 0.5) * 2;
+        const rotateY = (x - 0.5) * -2;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    document.addEventListener('mouseleave', () => {
+        document.querySelector('.card').style.transform = '';
+    });
+
 </script>
 </body>
 </html>

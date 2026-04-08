@@ -33,3 +33,4 @@ INSERT INTO smartcampus.users (id, email, password, role) VALUES (32, 'sanjay.ai
 INSERT INTO smartcampus.users (id, email, password, role) VALUES (33, 'sneha.aids6@gmail.com', 'pass123', 'STUDENT');
 INSERT INTO smartcampus.users (id, email, password, role) VALUES (34, 'surya.cse3@gmail.com', 'pass123', 'STUDENT');
 INSERT INTO smartcampus.users (id, email, password, role) VALUES (35, 'vikram.aids7@gmail.com', 'pass123', 'STUDENT');
+INSERT INTO smartcampus.users (id, email, password, role) VALUES (36, 'admin@smartcampus.local', 'pass123', 'ADMIN');
