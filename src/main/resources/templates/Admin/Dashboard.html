@@ -10,7 +10,7 @@
     <style>
         :root {
             --bg: #f3efe7;
-            --panel: rgba(255, 252, 246, 0.86);
+            --panel: rgba(255, 252, 246, 0.88);
             --panel-strong: #fffdf8;
             --ink: #182126;
             --muted: #64707a;
@@ -32,6 +32,10 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -153,6 +157,7 @@
         .nav-badge strong {
             font-size: 1.05rem;
             line-height: 1.5;
+            word-break: break-word;
         }
 
         .main {
@@ -239,12 +244,12 @@
         .hero h3 {
             font-family: 'Space Grotesk', sans-serif;
             font-size: 2rem;
-            max-width: 520px;
+            max-width: 620px;
             margin-bottom: 14px;
         }
 
         .hero p {
-            max-width: 620px;
+            max-width: 720px;
             line-height: 1.7;
             color: rgba(254, 250, 245, 0.78);
             margin-bottom: 22px;
@@ -272,7 +277,7 @@
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 18px;
         }
 
@@ -329,6 +334,11 @@
         .grid-two {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .stack {
+            display: grid;
             gap: 24px;
         }
 
@@ -415,12 +425,6 @@
             transform: none;
         }
 
-        .teacher-card {
-            display: grid;
-            gap: 20px;
-            align-content: start;
-        }
-
         .teacher-note {
             border-radius: 20px;
             padding: 18px;
@@ -430,18 +434,16 @@
             line-height: 1.7;
         }
 
-        .promotion-panel {
-            display: grid;
-            gap: 18px;
-        }
-
         .table-wrap {
             overflow-x: auto;
+            border-radius: 18px;
+            border: 1px solid rgba(24, 33, 38, 0.08);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.36);
         }
 
         thead th {
@@ -452,16 +454,27 @@
             text-transform: uppercase;
             letter-spacing: 0.08em;
             border-bottom: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.52);
         }
 
         tbody td {
             padding: 16px 14px;
             border-bottom: 1px solid rgba(24, 33, 38, 0.08);
-            vertical-align: middle;
+            vertical-align: top;
         }
 
         tbody tr:hover {
             background: rgba(255, 255, 255, 0.42);
+        }
+
+        .person strong,
+        .subject strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .muted {
+            color: var(--muted);
         }
 
         .pill {
@@ -476,12 +489,14 @@
             font-size: 0.88rem;
         }
 
-        .muted {
-            color: var(--muted);
+        .pill.secondary {
+            background: rgba(23, 126, 137, 0.12);
+            color: var(--accent);
         }
 
-        .promote-form {
-            margin: 0;
+        .pill.neutral {
+            background: rgba(24, 33, 38, 0.08);
+            color: var(--muted);
         }
 
         .empty-state {
@@ -492,7 +507,7 @@
             color: var(--muted);
         }
 
-        @media (max-width: 1100px) {
+        @media (max-width: 1200px) {
             .shell {
                 grid-template-columns: 1fr;
             }
@@ -542,14 +557,17 @@
         <div class="brand">
             <div class="brand-mark">SC</div>
             <h1>Admin Console</h1>
-            <p>Manage onboarding and academic progression from one place.</p>
+            <p>Manage people, subject allocations, and academic progression from one dashboard.</p>
         </div>
 
         <nav class="nav-group">
             <a class="nav-link active" href="#overview">Overview</a>
             <a class="nav-link" href="#add-student">Add Student</a>
             <a class="nav-link" href="#add-teacher">Add Teacher</a>
-            <a class="nav-link" href="#promote-student">Promote Student</a>
+            <a class="nav-link" href="#view-students">View Students</a>
+            <a class="nav-link" href="#view-teachers">View Teachers</a>
+            <a class="nav-link" href="#assign-subject">Assign Subjects</a>
+            <a class="nav-link" href="#promote-student">Promote Students</a>
         </nav>
 
         <div class="nav-badge">
@@ -562,7 +580,7 @@
         <div class="topbar">
             <div class="page-title">
                 <h2>Smart Campus Administration</h2>
-                <p>Review academic capacity, onboard new users, and move students into the next semester.</p>
+                <p>Add faculty and students, review directories, assign subjects to classes, and manage promotions.</p>
             </div>
             <div class="top-actions">
                 <div class="admin-chip">Role: Admin</div>
@@ -571,14 +589,14 @@
         </div>
 
         <section class="hero" id="overview">
-            <h3>Campus operations dashboard for admissions, staffing, and promotion cycles.</h3>
+            <h3>One operating view for onboarding, faculty allocation, and student progression.</h3>
             <p>
-                This page gives admin users direct control over three core workflows: creating student accounts,
-                creating teacher accounts, and promoting existing students to the next semester.
+                This dashboard now covers the full admin flow requested for Smart Campus:
+                add teachers, add students, view both directories, and assign subject offerings by department and semester.
             </p>
             <div class="hero-actions">
-                <a class="hero-link" href="#add-student">Create Student</a>
-                <a class="hero-link secondary" href="#promote-student">Review Promotions</a>
+                <a class="hero-link" href="#assign-subject">Assign Subject</a>
+                <a class="hero-link secondary" href="#view-students">Review Students</a>
             </div>
         </section>
 
@@ -591,12 +609,17 @@
             <div class="panel stat-card">
                 <small>Total Teachers</small>
                 <strong th:text="${totalTeachers}">0</strong>
-                <p>Teaching staff accounts registered and ready for dashboard access.</p>
+                <p>Faculty records with teacher dashboard access.</p>
+            </div>
+            <div class="panel stat-card">
+                <small>Subject Allocations</small>
+                <strong th:text="${totalAllocations}">0</strong>
+                <p>Teacher-to-subject allocations configured in the platform.</p>
             </div>
             <div class="panel stat-card">
                 <small>Promotion Queue</small>
                 <strong th:text="${pendingPromotions}">0</strong>
-                <p>Students who can still move forward to a higher semester.</p>
+                <p>Students who can still move forward to the next semester.</p>
             </div>
         </section>
 
@@ -645,6 +668,15 @@
                         </select>
                     </div>
                     <div class="field">
+                        <label for="batchId">Batch</label>
+                        <select id="batchId" name="batchId" required>
+                            <option value="">Select batch</option>
+                            <option th:each="batch : ${batches}"
+                                    th:value="${batch.id}"
+                                    th:text="|${batch.departmentName} - ${batch.batchName} (${batch.batchYear})|">2025-CSE</option>
+                        </select>
+                    </div>
+                    <div class="field">
                         <label for="currentYear">Current Year</label>
                         <select id="currentYear" name="currentYear" required>
                             <option value="">Select year</option>
@@ -690,50 +722,204 @@
                 </form>
             </div>
 
-            <div class="panel teacher-card" id="add-teacher">
-                <div class="section-head">
-                    <div class="section-kicker">Faculty Intake</div>
-                    <h3>Add Teacher</h3>
-                    <p>Create a teacher login and primary teacher record used by the teacher dashboard.</p>
-                </div>
+            <div class="panel stack" id="add-teacher">
+                <div>
+                    <div class="section-head">
+                        <div class="section-kicker">Faculty Intake</div>
+                        <h3>Add Teacher</h3>
+                        <p>Create a teacher login and primary teacher record used by the teacher dashboard.</p>
+                    </div>
 
-                <form method="post" action="/admin/add-teacher" class="form-grid">
-                    <div class="field">
-                        <label for="teacherCollegeId">Teacher College ID</label>
-                        <input id="teacherCollegeId" name="teacherCollegeId" type="text" placeholder="TCH-CSE-11" required>
-                    </div>
-                    <div class="field">
-                        <label for="teacherName">Teacher Name</label>
-                        <input id="teacherName" name="name" type="text" placeholder="Faculty full name" required>
-                    </div>
-                    <div class="field full">
-                        <label for="teacherEmail">Email</label>
-                        <input id="teacherEmail" name="email" type="email" placeholder="teacher@college.edu" required>
-                    </div>
-                    <div class="field full">
-                        <label for="teacherPassword">Password</label>
-                        <input id="teacherPassword" name="password" type="password" placeholder="Create login password" required>
-                    </div>
-                    <div class="field full">
-                        <button class="submit-btn" type="submit">Add Teacher</button>
-                    </div>
-                </form>
+                    <form method="post" action="/admin/add-teacher" class="form-grid">
+                        <div class="field">
+                            <label for="teacherCollegeId">Teacher College ID</label>
+                            <input id="teacherCollegeId" name="teacherCollegeId" type="text" placeholder="TCH-CSE-11" required>
+                        </div>
+                        <div class="field">
+                            <label for="teacherName">Teacher Name</label>
+                            <input id="teacherName" name="name" type="text" placeholder="Faculty full name" required>
+                        </div>
+                        <div class="field full">
+                            <label for="teacherEmail">Email</label>
+                            <input id="teacherEmail" name="email" type="email" placeholder="teacher@college.edu" required>
+                        </div>
+                        <div class="field full">
+                            <label for="teacherPassword">Password</label>
+                            <input id="teacherPassword" name="password" type="password" placeholder="Create login password" required>
+                        </div>
+                        <div class="field full">
+                            <button class="submit-btn" type="submit">Add Teacher</button>
+                        </div>
+                    </form>
+                </div>
 
                 <div class="teacher-note">
                     Use a unique college ID and email address. This action creates both the teacher profile and
-                    the corresponding login entry in the `users` table.
+                    the corresponding login entry in the <code>users</code> table.
                 </div>
             </div>
         </section>
 
-        <section class="panel promotion-panel" id="promote-student">
+        <section class="grid-two">
+            <div class="panel" id="view-students">
+                <div class="section-head">
+                    <div class="section-kicker">Student Directory</div>
+                    <h3>View Students</h3>
+                    <p>Review department, current year and semester, contact details, and registered subject count.</p>
+                </div>
+
+                <div class="table-wrap" th:if="${studentDirectory != null and !#lists.isEmpty(studentDirectory)}">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Department</th>
+                            <th>Level</th>
+                            <th>Subjects</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="student : ${studentDirectory}">
+                            <td class="person">
+                                <strong th:text="${student.name}">Student Name</strong>
+                                <span class="muted" th:text="${student.rollNumber}">CSE24001</span><br>
+                                <span class="muted" th:text="${student.email}">student@college.edu</span><br>
+                                <span class="muted" th:text="${student.phone}">9876543210</span>
+                            </td>
+                            <td th:text="${student.departmentName}">CSE</td>
+                            <td th:text="|Year ${student.currentYear} / Semester ${student.currentSemester}|">Year 1 / Semester 1</td>
+                            <td>
+                                <span class="pill secondary" th:text="|${student.registeredSubjects} registered|">0 registered</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="empty-state" th:if="${studentDirectory == null or #lists.isEmpty(studentDirectory)}">
+                    No students are available yet.
+                </div>
+            </div>
+
+            <div class="panel" id="view-teachers">
+                <div class="section-head">
+                    <div class="section-kicker">Faculty Directory</div>
+                    <h3>View Teachers</h3>
+                    <p>Review teacher identities, login emails, and how many subjects each faculty member handles.</p>
+                </div>
+
+                <div class="table-wrap" th:if="${teacherDirectory != null and !#lists.isEmpty(teacherDirectory)}">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Teacher</th>
+                            <th>College ID</th>
+                            <th>Assigned Subjects</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="teacher : ${teacherDirectory}">
+                            <td class="person">
+                                <strong th:text="${teacher.name}">Teacher Name</strong>
+                                <span class="muted" th:text="${teacher.email}">teacher@college.edu</span>
+                            </td>
+                            <td th:text="${teacher.teacherCollegeId}">TCH-CSE-01</td>
+                            <td>
+                                <span class="pill" th:text="|${teacher.assignedSubjects} subjects|">0 subjects</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="empty-state" th:if="${teacherDirectory == null or #lists.isEmpty(teacherDirectory)}">
+                    No teachers are available yet.
+                </div>
+            </div>
+        </section>
+
+        <section class="grid-two" id="assign-subject">
+            <div class="panel">
+                <div class="section-head">
+                    <div class="section-kicker">Class Allocation</div>
+                    <h3>Assign Subjects to Teachers</h3>
+                    <p>Choose a teacher and a department-semester subject offering. The allocation will be used by the teacher and student flows already in the app.</p>
+                </div>
+
+                <form method="post" action="/admin/assign-subject" class="form-grid">
+                    <div class="field full">
+                        <label for="teacherId">Teacher</label>
+                        <select id="teacherId" name="teacherId" required>
+                            <option value="">Select teacher</option>
+                            <option th:each="teacher : ${teacherDirectory}"
+                                    th:value="${teacher.id}"
+                                    th:text="|${teacher.name} (${teacher.teacherCollegeId})|">Teacher</option>
+                        </select>
+                    </div>
+                    <div class="field full">
+                        <label for="courseOfferingId">Subject Offering</label>
+                        <select id="courseOfferingId" name="courseOfferingId" required>
+                            <option value="">Select subject offering</option>
+                            <option th:each="offering : ${courseOfferings}"
+                                    th:value="${offering.id}"
+                                    th:text="|${offering.departmentName} - Semester ${offering.semester} - ${offering.courseCode} - ${offering.courseName}|">Subject</option>
+                        </select>
+                    </div>
+                    <div class="field full">
+                        <button class="submit-btn" type="submit">Assign Subject</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="panel">
+                <div class="section-head">
+                    <div class="section-kicker">Current Allocations</div>
+                    <h3>View Assigned Classes</h3>
+                    <p>Existing subject allocations visible across department and semester offerings.</p>
+                </div>
+
+                <div class="table-wrap" th:if="${allocationRows != null and !#lists.isEmpty(allocationRows)}">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Subject</th>
+                            <th>Class</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="allocation : ${allocationRows}">
+                            <td class="person">
+                                <strong th:text="${allocation.teacherName}">Teacher Name</strong>
+                                <span class="muted" th:text="${allocation.teacherCollegeId}">TCH-CSE-01</span><br>
+                                <span class="muted" th:text="${allocation.teacherEmail}">teacher@college.edu</span>
+                            </td>
+                            <td class="subject">
+                                <strong th:text="${allocation.courseName}">Course Name</strong>
+                                <span class="muted" th:text="${allocation.courseCode}">CS23531</span><br>
+                                <span class="pill secondary" th:text="|${allocation.credits} credits|">4 credits</span>
+                                <span class="pill neutral" th:text="${allocation.courseType}">THEORY</span>
+                            </td>
+                            <td th:text="|${allocation.departmentName} / Semester ${allocation.semester}|">CSE / Semester 5</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="empty-state" th:if="${allocationRows == null or #lists.isEmpty(allocationRows)}">
+                    No subject allocations have been created yet.
+                </div>
+            </div>
+        </section>
+
+        <section class="panel" id="promote-student">
             <div class="section-head">
                 <div class="section-kicker">Academic Progression</div>
-                <h3>Promote Student</h3>
+                <h3>Promote Students</h3>
                 <p>Advance a student to the next semester. Year is automatically increased after even semesters.</p>
             </div>
 
-            <div class="table-wrap" th:if="${students != null and !#lists.isEmpty(students)}">
+            <div class="table-wrap" th:if="${promotionStudents != null and !#lists.isEmpty(promotionStudents)}">
                 <table>
                     <thead>
                     <tr>
@@ -745,19 +931,19 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="student : ${students}">
-                        <td>
-                            <strong th:text="${student.name}">Student Name</strong><br>
+                    <tr th:each="student : ${promotionStudents}">
+                        <td class="person">
+                            <strong th:text="${student.name}">Student Name</strong>
                             <span class="muted" th:text="${student.rollNumber}">CSE24001</span>
                         </td>
                         <td th:text="${student.departmentName}">CSE</td>
                         <td th:text="|Year ${student.currentYear} / Semester ${student.currentSemester}|">Year 1 / Semester 1</td>
                         <td>
                             <span class="pill" th:if="${student.currentSemester < 8}">Eligible for next semester</span>
-                            <span class="pill" th:if="${student.currentSemester >= 8}" style="background: rgba(23, 126, 137, 0.12); color: var(--accent);">Final semester reached</span>
+                            <span class="pill secondary" th:if="${student.currentSemester >= 8}">Final semester reached</span>
                         </td>
                         <td>
-                            <form class="promote-form" method="post" action="/admin/promote-student">
+                            <form method="post" action="/admin/promote-student">
                                 <input type="hidden" name="studentId" th:value="${student.id}">
                                 <button class="promote-btn" type="submit" th:disabled="${student.currentSemester >= 8}">Promote</button>
                             </form>
@@ -767,7 +953,7 @@
                 </table>
             </div>
 
-            <div class="empty-state" th:if="${students == null or #lists.isEmpty(students)}">
+            <div class="empty-state" th:if="${promotionStudents == null or #lists.isEmpty(promotionStudents)}">
                 No students are available for promotion yet.
             </div>
         </section>
