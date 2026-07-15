@@ -68,7 +68,7 @@ public class AdminDashboardController {
                 "(roll_number, name, dob, gender, address, dept_id, batch_id, batch_year, current_year, current_semester, email, phone) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String userSql = "INSERT INTO users (email, password, role) VALUES (?, ?, 'STUDENT')";
-        String batchSql = "SELECT id, dept_id, YEAR(batch_year) AS batch_year, batch_name FROM batch WHERE id = ?";
+        String batchSql = "SELECT id, dept_id, batch_year, batch_name FROM batch WHERE id = ?";
 
         try (Connection con = DataBaseConnection.getConnection()) {
             con.setAutoCommit(false);
@@ -323,7 +323,7 @@ public class AdminDashboardController {
 
     private List<BatchOption> loadBatches(Connection con) throws Exception {
         List<BatchOption> batches = new ArrayList<>();
-        String sql = "SELECT b.id, b.dept_id, YEAR(b.batch_year) AS batch_year, b.batch_name, d.dept_name " +
+        String sql = "SELECT b.id, b.dept_id, b.batch_year, b.batch_name, d.dept_name " +
                 "FROM batch b " +
                 "JOIN department d ON d.id = b.dept_id " +
                 "ORDER BY d.dept_name, b.batch_year DESC, b.batch_name";
@@ -334,7 +334,7 @@ public class AdminDashboardController {
                 batches.add(new BatchOption(
                         rs.getLong("id"),
                         rs.getLong("dept_id"),
-                        rs.getInt("batch_year"),
+                        readBatchYear(rs),
                         rs.getString("batch_name"),
                         rs.getString("dept_name")
                 ));
@@ -529,14 +529,19 @@ public class AdminDashboardController {
                 }
 
                 return new BatchOption(
-                        rs.getLong("id"),
-                        rs.getLong("dept_id"),
-                        rs.getInt("batch_year"),
-                        rs.getString("batch_name"),
-                        null
+                    rs.getLong("id"),
+                    rs.getLong("dept_id"),
+                    readBatchYear(rs),
+                    rs.getString("batch_name"),
+                    null
                 );
             }
         }
+    }
+
+    private int readBatchYear(ResultSet rs) throws Exception {
+        Date batchYear = rs.getDate("batch_year");
+        return batchYear == null ? 0 : batchYear.toLocalDate().getYear();
     }
 
     public record DepartmentOption(Long id, String name) { }

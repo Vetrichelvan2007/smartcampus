@@ -1,6 +1,11 @@
 spring:
   application:
     name: SmartCampus
+  datasource:
+    url: jdbc:postgresql://db.wcdahlvkddpfqgkuqzyd.supabase.co:5432/postgres?sslmode=require
+    username: postgres
+    password: sudo_me@123
+    driver-class-name: org.postgresql.Driver
   servlet:
     multipart:
       max-file-size: 100MB

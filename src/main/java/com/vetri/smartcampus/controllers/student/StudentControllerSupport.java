@@ -42,63 +42,19 @@ abstract class StudentControllerSupport {
     }
 
     protected static boolean feedbackTablesExist(Connection con) throws Exception {
-        PreparedStatement ps = con.prepareStatement(
-                "SELECT COUNT(*) AS cnt " +
-                        "FROM information_schema.tables " +
-                        "WHERE table_schema = DATABASE() " +
-                        "AND table_name IN ('feedback_form','feedback_question','feedback_submission','feedback_answer')"
-        );
-        ResultSet rs = ps.executeQuery();
-        int cnt = 0;
-        if (rs.next()) cnt = rs.getInt("cnt");
-        rs.close();
-        ps.close();
-        return cnt == 4;
+        return DataBaseConnection.countExistingTables(con, "feedback_form", "feedback_question", "feedback_submission", "feedback_answer") == 4;
     }
 
     protected static boolean materialTablesExist(Connection con) throws Exception {
-        PreparedStatement ps = con.prepareStatement(
-                "SELECT COUNT(*) AS cnt " +
-                        "FROM information_schema.tables " +
-                        "WHERE table_schema = DATABASE() " +
-                        "AND table_name = 'course_material'"
-        );
-        ResultSet rs = ps.executeQuery();
-        int cnt = 0;
-        if (rs.next()) cnt = rs.getInt("cnt");
-        rs.close();
-        ps.close();
-        return cnt == 1;
+        return DataBaseConnection.tableExists(con, "course_material");
     }
 
     protected static boolean assignmentTablesExist(Connection con) throws Exception {
-        PreparedStatement ps = con.prepareStatement(
-                "SELECT COUNT(*) AS cnt " +
-                        "FROM information_schema.tables " +
-                        "WHERE table_schema = DATABASE() " +
-                        "AND table_name IN ('course_assignment','course_assignment_submission')"
-        );
-        ResultSet rs = ps.executeQuery();
-        int cnt = 0;
-        if (rs.next()) cnt = rs.getInt("cnt");
-        rs.close();
-        ps.close();
-        return cnt == 2;
+        return DataBaseConnection.countExistingTables(con, "course_assignment", "course_assignment_submission") == 2;
     }
 
     protected static boolean quizTablesExist(Connection con) throws Exception {
-        PreparedStatement ps = con.prepareStatement(
-                "SELECT COUNT(*) AS cnt " +
-                        "FROM information_schema.tables " +
-                        "WHERE table_schema = DATABASE() " +
-                        "AND table_name IN ('quiz','quiz_question','quiz_option','quiz_submission','quiz_answer')"
-        );
-        ResultSet rs = ps.executeQuery();
-        int cnt = 0;
-        if (rs.next()) cnt = rs.getInt("cnt");
-        rs.close();
-        ps.close();
-        return cnt == 5;
+        return DataBaseConnection.countExistingTables(con, "quiz", "quiz_question", "quiz_option", "quiz_submission", "quiz_answer") == 5;
     }
 
     protected static List<CourseAssignmentDTO> loadAssignmentsForCourse(Connection con, long studentId, long courseId) throws Exception {

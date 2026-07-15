@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -20,13 +19,8 @@ public class StudentProfileController extends StudentControllerSupport {
             return "redirect:/login";
         }
 
-        String url = "jdbc:mysql://localhost:3306/smartcampus";
-        String dbUser = "root";
-        String dbPass = "root";
-
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection(url, dbUser, dbPass);
+            Connection con = openConnection();
 
             PreparedStatement studentPs = con.prepareStatement(
                     "SELECT s.id, s.roll_number, s.name, s.dob, s.gender, s.blood_group, s.mother_tongue, s.nationality, s.address, s.dept_id, d.dept_name, s.current_year, s.current_semester, s.email, s.phone " +
