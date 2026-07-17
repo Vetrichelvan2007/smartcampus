@@ -4,6 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import DashboardLayout from '../components/DashboardLayout';
 import './Classroom.css';
 
+// Import background images for matching course cards
+import webtechBg from '../assets/webtech.png';
+import databaseBg from '../assets/database.png';
+import fullstackBg from '../assets/fullstack.png';
+
 export default function Classroom() {
     const { user } = useAuth();
     const [courses, setCourses] = useState([]);
@@ -46,19 +51,83 @@ export default function Classroom() {
         return matchesSem && matchesQuery;
     });
 
+    /* ── Coordinate Tracker for Pixel Hover grid ── */
+    const handleCardMouseMove = (e) => {
+        const card = e.currentTarget;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+    };
+
+    /* ── Magnetic Hover on Semester Buttons ── */
+    const handleBtnMouseMove = (e) => {
+        const btn = e.currentTarget;
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - (rect.left + rect.width / 2);
+        const y = e.clientY - (rect.top + rect.height / 2);
+        const dist = Math.sqrt(x * x + y * y);
+        if (dist < 100) {
+            btn.style.transform = `translate(${x * 0.12}px, ${y * 0.12}px)`;
+        } else {
+            btn.style.transform = '';
+        }
+    };
+
+    const handleBtnMouseLeave = (e) => {
+        e.currentTarget.style.transform = '';
+    };
+
+    /* ── Click Ripple Trigger ── */
+    const handleButtonClick = (e) => {
+        const button = e.currentTarget;
+        const old = button.querySelector('.ripple');
+        if (old) old.remove();
+
+        const circle = document.createElement('span');
+        const diameter = Math.max(button.clientWidth, button.clientHeight);
+        const radius = diameter / 2;
+        const rect = button.getBoundingClientRect();
+
+        circle.style.width  = circle.style.height = `${diameter}px`;
+        circle.style.left   = `${e.clientX - rect.left - radius}px`;
+        circle.style.top    = `${e.clientY - rect.top  - radius}px`;
+        circle.classList.add('ripple');
+        button.appendChild(circle);
+    };
+
     return (
         <DashboardLayout role="student">
             <div className="classroom-page-content">
-                {error && <div className="error-banner">{error}</div>}
+                
+                {/* Ambient Background Glow Layer */}
+                <div className="ambient-orbs" aria-hidden="true">
+                    <div className="orb orb-purple" />
+                    <div className="orb orb-cyan"   />
+                    <div className="orb orb-emerald"/>
+                </div>
+
+                {error && (
+                    <div className="error-banner card">
+                        <span className="error-icon">⚠️</span>
+                        <div>
+                            <strong>Connection Failure</strong>
+                            <p>{error}</p>
+                        </div>
+                    </div>
+                )}
 
                 {loading ? (
                     <div className="loading-state">
-                        <h2>Loading Classroom...</h2>
+                        <div className="spinner-glow"></div>
+                        <h2>Decrypting Classroom Data...</h2>
                     </div>
                 ) : (
                     <div className="layout">
                         {/* Semester Selector Sidebar */}
-                        <aside className="sidebar">
+                        <aside className="sidebar card" onMouseMove={handleCardMouseMove}>
+                            <div className="pixel-grid-hover" aria-hidden="true"></div>
                             <div className="sidebar-header">
                                 <h3>Semester</h3>
                             </div>
@@ -69,11 +138,14 @@ export default function Classroom() {
                                     return (
                                         <button
                                             key={sem}
-                                            onClick={() => setSelectedSem(sem)}
+                                            onClick={(e) => { handleButtonClick(e); setSelectedSem(sem); }}
+                                            onMouseMove={handleBtnMouseMove}
+                                            onMouseLeave={handleBtnMouseLeave}
                                             className={`sem-btn ${isActive ? 'active' : ''}`}
                                         >
                                             <span className="sem-num">{sem}</span>
                                             <span>Semester {sem}</span>
+                                            <span className="sem-arrow">→</span>
                                         </button>
                                     );
                                 })}
@@ -85,14 +157,21 @@ export default function Classroom() {
                             <div className="content-header">
                                 <span className="content-title">Courses</span>
                                 <div className="classroom-header-right">
-                                    <input
-                                        type="text"
-                                        placeholder="Search courses..."
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="classroom-search-input"
-                                    />
+                                    <div className="search-wrap">
+                                        <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <circle cx="11" cy="11" r="8"></circle>
+                                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                        </svg>
+                                        <input
+                                            type="text"
+                                            placeholder="Search courses..."
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            className="classroom-search-input"
+                                        />
+                                    </div>
                                     <span className="course-count">
+                                        <span className="pulse-dot"></span>
                                         {filteredCourses.length} courses
                                     </span>
                                 </div>
@@ -101,13 +180,43 @@ export default function Classroom() {
                             <div className="course-grid">
                                 {filteredCourses.map((course, i) => {
                                     const typeClass = course.courseType ? course.courseType.toLowerCase() : '';
+                                    
+                                    // Determine theme background image based on course title
+                                    let bgImage = '';
+                                    const name = course.courseName.toLowerCase();
+                                    if (name.includes('web programming')) {
+                                        bgImage = webtechBg;
+                                    } else if (name.includes('database management systems')) {
+                                        bgImage = databaseBg;
+                                    } else if (name.includes('full stack development')) {
+                                        bgImage = fullstackBg;
+                                    }
+
+                                    const style = {
+                                        animationDelay: `${i * 0.05}s`,
+                                        textDecoration: 'none'
+                                    };
+
+                                    if (bgImage) {
+                                        style.backgroundImage = `
+                                            linear-gradient(135deg, rgba(4, 10, 25, 0.72) 0%, rgba(16, 25, 53, 0.72) 100%),
+                                            linear-gradient(135deg, rgba(0, 229, 255, 0.12) 0%, rgba(124, 77, 255, 0.12) 100%),
+                                            url(${bgImage})
+                                        `;
+                                        style.backgroundSize = 'cover';
+                                        style.backgroundPosition = 'center';
+                                    }
+
                                     return (
                                         <Link
                                             key={course.courseCode}
                                             to={`/student-classroom/${course.courseCode}`}
-                                            className="course-card show"
-                                            style={{ animationDelay: `${i * 0.05}s`, textDecoration: 'none' }}
+                                            className={`course-card show ${bgImage ? 'has-bg' : ''}`}
+                                            style={style}
+                                            onMouseMove={handleCardMouseMove}
                                         >
+                                            <div className="pixel-grid-hover" aria-hidden="true"></div>
+                                            <div className="card-overlay" aria-hidden="true"></div>
                                             <div className="card-meta">
                                                 <span className={`badge ${typeClass}`}>
                                                     {course.courseType}
@@ -120,7 +229,8 @@ export default function Classroom() {
                                 })}
 
                                 {filteredCourses.length === 0 && (
-                                    <div className="empty-state">
+                                    <div className="empty-state card">
+                                        <div className="empty-illustration">📭</div>
                                         <p>No courses found for Semester {selectedSem}</p>
                                     </div>
                                 )}
