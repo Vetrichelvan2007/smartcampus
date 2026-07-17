@@ -9,8 +9,8 @@ import java.sql.ResultSet;
 public class DataBaseConnection {
 
     public static Connection getConnection() {
-        String url = getSetting("SMARTCAMPUS_DB_URL", "smartcampus.db.url", "jdbc:postgresql://db.wcdahlvkddpfqgkuqzyd.supabase.co:5432/postgres?sslmode=require");
-        String dbUser = getSetting("SMARTCAMPUS_DB_USER", "smartcampus.db.user", "postgres");
+        String url = getSetting("SMARTCAMPUS_DB_URL", "smartcampus.db.url", "jdbc:postgresql://aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require");
+        String dbUser = getSetting("SMARTCAMPUS_DB_USER", "smartcampus.db.user", "postgres.wcdahlvkddpfqgkuqzyd");
         String dbPass = getSetting("SMARTCAMPUS_DB_PASSWORD", "smartcampus.db.password", "sudo_me@123");
         String driver = getSetting("SMARTCAMPUS_DB_DRIVER", "smartcampus.db.driver", defaultDriver(url));
 
