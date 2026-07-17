@@ -30,6 +30,7 @@ export default function DashboardLayout({ children, role }) {
         { path: '/student-courses', label: 'Registration', icon: '✍️' },
         { path: '/student-feedback', label: 'Feedback', icon: '📝' },
         { path: '/student-profile', label: 'Profile', icon: '👤' },
+        { path: '/logout', label: 'Logout', icon: '👤' },
     ];
 
     // Teacher Navigation Links
