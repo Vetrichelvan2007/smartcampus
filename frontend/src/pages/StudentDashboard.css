@@ -1,151 +1,769 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+/* ══════════════════════════════════════════════════════════════
+   COLOR SYSTEM VARIABLES
+══════════════════════════════════════════════════════════════ */
+:root {
+    --bg-primary:      #101935;
+    --bg-secondary:    #0B1020;
+    --card-bg:         rgba(26, 36, 72, 0.65);
+    --cyan:            #00E5FF;
+    --purple:          #7C4DFF;
+    --emerald:         #00FFB3;
+    --text-primary:    #F1F5FF;
+    --text-secondary:  #B7C6E6;
+    --text-muted:      #8FA3C7;
+}
+
+/* Apply full-page ambient background fallback & grid if needed */
 .student-dashboard-content {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    animation: fadeUp 0.6s ease-out both;
+    gap: 32px;
+    padding: 10px 0 30px;
+    animation: contentFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* ── Welcome Banner ── */
-.student-dashboard-content .welcome-banner {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.70) 0%, rgba(26, 35, 71, 0.50) 100%);
+/* Faint page background animated grid overlay */
+.student-dashboard-content::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(0, 229, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.015) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: -2;
+    animation: pageGridPulse 12s ease-in-out infinite alternate;
+}
+
+@keyframes pageGridPulse {
+    0% { opacity: 0.3; transform: scale(1); }
+    100% { opacity: 0.7; transform: scale(1.03); }
+}
+
+@keyframes contentFadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   AMBIENT BACKGROUND LIGHTING (3 Orbs)
+══════════════════════════════════════════════════════════════ */
+.student-dashboard-content .ambient-orbs {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.student-dashboard-content .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(130px);
+    opacity: 0.45;
+    animation: orbFloat 25s ease-in-out infinite alternate;
+}
+
+.student-dashboard-content .orb-purple {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(124, 77, 255, 0.3) 0%, transparent 70%);
+    top: -150px;
+    left: -150px;
+    animation-duration: 20s;
+}
+
+.student-dashboard-content .orb-cyan {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.25) 0%, transparent 70%);
+    top: -100px;
+    right: -100px;
+    animation-duration: 24s;
+    animation-delay: -5s;
+}
+
+.student-dashboard-content .orb-emerald {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 255, 179, 0.2) 0%, transparent 70%);
+    bottom: -100px;
+    left: 45%;
+    animation-duration: 22s;
+    animation-delay: -10s;
+}
+
+@keyframes orbFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(40px, -40px) scale(1.08); }
+    100% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PREMIUM GLASSMORPHISM CARDS
+══════════════════════════════════════════════════════════════ */
+.student-dashboard-content .card {
+    position: relative;
+    background: var(--card-bg);
+    backdrop-filter: blur(18px) saturate(210%);
+    -webkit-backdrop-filter: blur(18px) saturate(210%);
+    border-radius: 24px;
     padding: 30px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 229, 255, 0.18);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        0 15px 35px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(0, 229, 255, 0.12),
+        0 0 60px rgba(124, 77, 255, 0.08);
+    overflow: hidden;
+    animation: floatCard 6s ease-in-out infinite;
+    transition: transform 0.12s ease-out, box-shadow 0.4s ease, border-color 0.4s ease;
 }
 
-.student-dashboard-content .welcome-banner h2 {
-    font-size: 24px;
+/* Subtle Anti-Gravity Card Floating */
+@keyframes floatCard {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* Hover Interactive Lift & Glow */
+.student-dashboard-content .card:hover {
+    transform: translateY(-8px) scale(1.01);
+    border-color: rgba(0, 229, 255, 0.35);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.28),
+        0 25px 50px rgba(0, 0, 0, 0.6),
+        0 0 35px rgba(0, 229, 255, 0.25),
+        0 0 70px rgba(124, 77, 255, 0.18);
+}
+
+/* Gradient Animated Border Overlay (No border-radius override) */
+.student-dashboard-content .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.3), rgba(124, 77, 255, 0.3), rgba(0, 229, 255, 0.3));
+    background-size: 200% 200%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+    animation: borderShift 6s linear infinite;
+    transition: opacity 0.3s ease;
+}
+
+@keyframes borderShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Diagonal Holographic Shimmer Sweep */
+.student-dashboard-content .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        110deg,
+        transparent 35%,
+        rgba(0, 229, 255, 0.05) 45%,
+        rgba(124, 77, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0.12) 55%,
+        rgba(0, 229, 255, 0.05) 60%,
+        transparent 70%
+    );
+    background-size: 200% 100%;
+    animation: cardHoloShimmer 6s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes cardHoloShimmer {
+    0% { background-position: 150% 0; }
+    100% { background-position: -50% 0; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PIXEL-GRID HOVER EFFECT
+══════════════════════════════════════════════════════════════ */
+.student-dashboard-content .pixel-grid-hover {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    background-image: 
+        radial-gradient(rgba(0, 229, 255, 0.35) 1px, transparent 1px),
+        radial-gradient(rgba(0, 162, 255, 0.35) 1px, transparent 1px);
+    background-size: 10px 10px;
+    background-position: 0 0, 5px 5px;
+    mask-image: radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), black 20%, transparent 80%);
+    -webkit-mask-image: radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), black 20%, transparent 80%);
+}
+
+.student-dashboard-content .card:hover .pixel-grid-hover,
+.student-dashboard-content .action-btn:hover .pixel-grid-hover {
+    opacity: 1;
+}
+
+/* Card Titles */
+.student-dashboard-content .card h3 {
+    font-family: 'Space Grotesk', 'Orbitron', sans-serif;
+    font-size: 18px;
     font-weight: 700;
-    color: #f1f5f9;
-    margin-bottom: 10px;
+    color: var(--text-primary);
+    margin-bottom: 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 12px;
+    letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WELCOME BANNER (Hero Banner Section)
+══════════════════════════════════════════════════════════════ */
+.student-dashboard-content .welcome-banner {
+    background: linear-gradient(135deg, rgba(124, 77, 255, 0.22) 0%, rgba(16, 25, 53, 0.8) 50%, rgba(0, 229, 255, 0.2) 100%);
+    border: 1px solid rgba(0, 229, 255, 0.35);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        0 20px 45px rgba(0, 0, 0, 0.55),
+        0 0 35px rgba(0, 229, 255, 0.25),
+        0 0 70px rgba(124, 77, 255, 0.15);
+    padding: 40px;
+    animation: floatCard 8s ease-in-out infinite; /* Slower floating rhythm */
+}
+
+/* Banner background grid pulse overlay */
+.student-dashboard-content .welcome-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+    animation: gridPulseBanner 5s ease-in-out infinite alternate;
+}
+
+@keyframes gridPulseBanner {
+    0% { opacity: 0.3; transform: scale(1); }
+    100% { opacity: 0.85; transform: scale(1.02); }
+}
+
+.student-dashboard-content .welcome-banner-text {
+    position: relative;
+    z-index: 3;
+}
+
+/* Float halo glow behind the welcome message */
+.student-dashboard-content .holo-glow-halo {
+    position: absolute;
+    width: 250px;
+    height: 100px;
+    background: radial-gradient(ellipse, rgba(0, 229, 255, 0.22) 0%, rgba(124, 77, 255, 0.14) 60%, transparent 100%);
+    filter: blur(25px);
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Pills row inside the banner */
+.student-dashboard-content .banner-pills-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+}
+
+/* Status Badge */
+.student-dashboard-content .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 229, 255, 0.1);
+    border: 1px solid rgba(0, 229, 255, 0.4);
+    color: var(--cyan);
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
+}
+
+.student-dashboard-content .pulse-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--cyan);
+    border-radius: 50%;
+    position: relative;
+}
+
+.student-dashboard-content .pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1.5px solid var(--cyan);
+    animation: badgePulse 1.5s infinite ease-out;
+}
+
+@keyframes badgePulse {
+    0% { transform: scale(0.6); opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* Banner Class status Pill */
+.student-dashboard-content .banner-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.student-dashboard-content .classes-pill {
+    background: rgba(0, 255, 179, 0.1);
+    border: 1px solid rgba(0, 255, 179, 0.35);
+    color: var(--emerald);
+    box-shadow: 0 0 12px rgba(0, 255, 179, 0.15);
+}
+
+.student-dashboard-content .pill-icon {
+    width: 14px;
+    height: 14px;
+    color: currentColor;
+}
+
+/* Gradient Welcome Header Text */
+.student-dashboard-content .welcome-banner h2 {
+    font-family: 'Space Grotesk', 'Orbitron', sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--text-primary) 20%, var(--cyan) 60%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
 }
 
 .student-dashboard-content .welcome-banner p {
-    font-size: 14px;
-    color: #94a3b8;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--text-secondary);
     line-height: 1.6;
-    max-width: 750px;
+    max-width: 780px;
+    margin-bottom: 26px;
 }
 
-/* ── Dashboard Grid ── */
+/* Widget row inside welcome card */
+.student-dashboard-content .banner-widgets-row {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+/* Clock Widget */
+.student-dashboard-content .clock-widget {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0, 229, 255, 0.05);
+    border: 1px solid rgba(0, 229, 255, 0.18);
+    border-radius: 12px;
+    padding: 8px 16px;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.1);
+}
+
+.student-dashboard-content .clock-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--cyan);
+    filter: drop-shadow(0 0 5px var(--cyan));
+}
+
+.student-dashboard-content .clock-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.student-dashboard-content .clock-time {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.student-dashboard-content .clock-date {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+/* Attendance progress ring widget */
+.student-dashboard-content .attendance-ring-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.student-dashboard-content .attendance-ring-svg {
+    width: 76px;
+    height: 76px;
+    filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.3));
+}
+
+.student-dashboard-content .ring-progress {
+    animation: ringProgressPulse 3s ease-in-out infinite;
+}
+
+@keyframes ringProgressPulse {
+    0%, 100% { filter: drop-shadow(0 0 4px rgba(0, 229, 255, 0.5)); }
+    50% { filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.9)); }
+}
+
+.student-dashboard-content .attendance-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DASHBOARD GRID LAYOUT
+══════════════════════════════════════════════════════════════ */
 .student-dashboard-content .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 30px;
 }
 
-@media (max-width: 768px) {
-    .student-dashboard-content .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.student-dashboard-content .card {
-    background: rgba(15, 23, 42, 0.70);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.student-dashboard-content .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.student-dashboard-content .card h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #f1f5f9;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    padding-bottom: 10px;
-}
-
-/* ── Profile List ── */
+/* ══════════════════════════════════════════════════════════════
+   PROFILE SECTION & ANCHOR DIVIDER ANIMATIONS
+══════════════════════════════════════════════════════════════ */
 .student-dashboard-content .info-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
 }
 
 .student-dashboard-content .info-item {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.08);
+    position: relative;
+}
+
+/* Underline glow slide in row hover */
+.student-dashboard-content .info-item::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.student-dashboard-content .info-item:hover::after {
+    transform: scaleX(1);
 }
 
 .student-dashboard-content .info-item:last-child {
     border-bottom: none;
 }
 
+.student-dashboard-content .info-item:last-child::after {
+    display: none;
+}
+
 .student-dashboard-content .label {
-    color: #64748b;
-    font-size: 13.5px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.student-dashboard-content .info-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--cyan);
+    filter: drop-shadow(0 0 5px var(--cyan));
 }
 
 .student-dashboard-content .val {
-    color: #f1f5f9;
+    color: var(--text-primary);
     font-weight: 500;
-    font-size: 13.5px;
+    font-size: 14px;
 }
 
-.student-dashboard-content .uppercase {
+/* Glowing role badge */
+.student-dashboard-content .role-badge {
+    background: rgba(0, 229, 255, 0.1);
+    border: 1px solid rgba(0, 229, 255, 0.45);
+    color: var(--cyan);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+    display: inline-block;
     text-transform: uppercase;
 }
 
-/* ── Quick Navigation ── */
+/* ══════════════════════════════════════════════════════════════
+   QUICK NAVIGATION GLASS TILES & MAGNETIC HOVER
+══════════════════════════════════════════════════════════════ */
 .student-dashboard-content .quick-actions-card p.sub {
-    font-size: 13px;
-    color: #94a3b8;
-    margin-bottom: 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
 }
 
 .student-dashboard-content .action-buttons {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
+/* Quick Navigation glass tile button */
 .student-dashboard-content .action-btn {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 14px 18px;
-    background: rgba(10, 14, 27, 0.60);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
+    gap: 18px;
+    padding: 20px 24px;
+    background: rgba(16, 25, 53, 0.65);
+    border: 1px solid rgba(0, 229, 255, 0.14);
+    border-radius: 18px;
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s ease;
+    transition: transform 0.1s ease-out, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s;
+    position: relative;
+    overflow: hidden;
+    /* Bobbing button floats */
+    animation: floatBtn 5s ease-in-out infinite;
 }
 
+.student-dashboard-content .action-buttons .action-btn:nth-child(2) {
+    animation-delay: 1.5s;
+}
+
+@keyframes floatBtn {
+    0%, 100% { translate: 0 0px; }
+    50% { translate: 0 -4px; }
+}
+
+/* Action button dynamic hover background */
 .student-dashboard-content .action-btn:hover {
-    background: rgba(99, 102, 241, 0.10);
-    border-color: rgba(99, 102, 241, 0.30);
-    transform: translateX(4px);
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
+    background: rgba(0, 229, 255, 0.08);
+    border-color: var(--cyan);
+    box-shadow: 
+        0 8px 25px rgba(0, 229, 255, 0.3),
+        0 0 15px rgba(124, 77, 255, 0.15);
 }
 
+/* Border sweep shimmer shine */
+.student-dashboard-content .action-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    transform: translateX(-150%);
+    transition: none;
+}
+
+.student-dashboard-content .action-btn:hover::before {
+    transform: translateX(150%);
+    transition: transform 0.8s ease-in-out;
+}
+
+/* Glowing border spinner on hover */
+.student-dashboard-content .action-btn::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, transparent, var(--cyan), var(--purple), transparent);
+    background-size: 200% 200%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.student-dashboard-content .action-btn:hover::after {
+    opacity: 1;
+    animation: borderShift 3s linear infinite;
+}
+
+/* Icon */
 .student-dashboard-content .action-btn .icon {
-    font-size: 24px;
+    font-size: 28px;
+    filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.35));
+    transition: transform 0.3s ease;
+}
+
+.student-dashboard-content .action-btn:hover .icon {
+    transform: scale(1.15) rotate(5deg);
 }
 
 .student-dashboard-content .action-btn strong {
     display: block;
-    font-size: 14px;
-    color: #f1f5f9;
+    font-size: 15px;
+    color: var(--text-primary);
     font-weight: 600;
+    font-family: 'Space Grotesk', sans-serif;
 }
 
 .student-dashboard-content .action-btn small {
     display: block;
-    font-size: 11.5px;
-    color: #94a3b8;
-    margin-top: 2px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 3px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Arrow slide transition indicators */
+.student-dashboard-content .action-btn .arrow {
+    margin-left: auto;
+    font-size: 18px;
+    color: var(--cyan);
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.student-dashboard-content .action-btn:hover .arrow {
+    transform: translateX(5px);
+    filter: drop-shadow(0 0 6px var(--cyan));
+}
+
+/* Button ripple expand spans */
+.student-dashboard-content .action-btn .ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: tileRipple 0.6s linear forwards;
+    background-color: rgba(0, 229, 255, 0.25);
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes tileRipple {
+    to {
+        transform: scale(3.5);
+        opacity: 0;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE & TABLET RESPONSIVENESS
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 992px) {
+    .student-dashboard-content .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .student-dashboard-content .welcome-banner {
+        padding: 30px 25px;
+    }
+
+    .student-dashboard-content .welcome-banner h2 {
+        font-size: 28px;
+    }
+
+    .student-dashboard-content .banner-widgets-row {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 550px) {
+    .student-dashboard-content {
+        gap: 20px;
+        padding: 5px 0;
+    }
+
+    .student-dashboard-content .welcome-banner {
+        padding: 25px 20px;
+        border-radius: 20px;
+    }
+
+    .student-dashboard-content .status-badge {
+        padding: 4px 10px;
+        font-size: 10px;
+        margin-bottom: 12px;
+    }
+
+    .student-dashboard-content .welcome-banner h2 {
+        font-size: 24px;
+    }
+
+    .student-dashboard-content .welcome-banner p {
+        font-size: 13px;
+    }
+
+    .student-dashboard-content .card {
+        padding: 20px 18px;
+        border-radius: 20px;
+    }
+
+    .student-dashboard-content .card h3 {
+        font-size: 16px;
+        margin-bottom: 16px;
+    }
+
+    .student-dashboard-content .action-btn {
+        padding: 14px 16px;
+        border-radius: 12px;
+    }
+
+    .student-dashboard-content .action-btn .icon {
+        font-size: 22px;
+    }
+
+    .student-dashboard-content .action-btn strong {
+        font-size: 13.5px;
+    }
+
+    .student-dashboard-content .action-btn small {
+        font-size: 11px;
+    }
+
+    .student-dashboard-content .attendance-ring-svg {
+        width: 64px;
+        height: 64px;
+    }
 }

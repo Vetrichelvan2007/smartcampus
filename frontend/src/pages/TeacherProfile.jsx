@@ -31,9 +31,17 @@ export default function TeacherProfile() {
         fetchProfileData();
     }, []);
 
-    // Magnetic micro-interaction handler for fields
+    // Magnetic micro-interaction handler for fields + Pixel Hover tracking
     const handleMouseMove = (e, target) => {
         const rect = target.getBoundingClientRect();
+        
+        // Pixel coordinates
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        target.style.setProperty('--mouse-x', `${x}px`);
+        target.style.setProperty('--mouse-y', `${y}px`);
+
+        // Magnetic displacement
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
         const dx = (e.clientX - cx) / (rect.width / 2);
@@ -48,15 +56,34 @@ export default function TeacherProfile() {
     return (
         <DashboardLayout role="teacher">
             <div className="teacher-profile-content">
-                {error && <div className="error-banner">{error}</div>}
+                
+                {/* Ambient background orbs */}
+                <div className="ambient-orbs" aria-hidden="true">
+                    <div className="orb orb-purple" />
+                    <div className="orb orb-cyan"   />
+                    <div className="orb orb-emerald"/>
+                </div>
+
+                {error && (
+                    <div className="error-banner card">
+                        <span className="error-icon">⚠️</span>
+                        <div>
+                            <strong>Access Error</strong>
+                            <p>{error}</p>
+                        </div>
+                    </div>
+                )}
 
                 {loading ? (
                     <div className="loading-state">
-                        <h2>Loading profile...</h2>
+                        <div className="spinner-glow"></div>
+                        <h2>Decrypting Faculty Profile...</h2>
                     </div>
                 ) : (
                     profile && (
                         <div className="card main-profile-card">
+                            <div className="pixel-grid-hover" aria-hidden="true"></div>
+
                             {/* Profile Top Summary */}
                             <div className="profile-top">
                                 <div className="avatar-wrap">
@@ -68,6 +95,7 @@ export default function TeacherProfile() {
                                 <div className="name-block">
                                     <h2>{profile.teacher?.name}</h2>
                                     <div className="roll-badge">
+                                        <span className="pulse-dot"></span>
                                         College ID: {profile.teacher?.teacherClgId}
                                     </div>
                                     <div className="profile-meta">
@@ -80,12 +108,15 @@ export default function TeacherProfile() {
 
                             {/* Teacher Personal Details */}
                             <div className="section-block">
-                                <div className="section-title">Teacher Details</div>
+                                <div className="section-title">
+                                    <span className="title-icon">👤</span>
+                                    Teacher Details
+                                </div>
                                 <div className="grid">
                                     {[
                                         { label: 'Name', value: profile.teacher?.name },
-                                        { label: 'College ID', value: profile.teacher?.teacherClgId },
-                                        { label: 'Email', value: profile.teacher?.email },
+                                        { label: 'College ID', value: profile.teacher?.teacherClgId, glow: true },
+                                        { label: 'Email', value: profile.teacher?.email, glow: true },
                                         { label: 'Phone', value: profile.teacher?.phone },
                                         { label: 'Gender', value: profile.teacher?.gender },
                                         { label: 'Date of Birth', value: profile.teacher?.dateOfBirth },
@@ -93,7 +124,7 @@ export default function TeacherProfile() {
                                         { label: 'Address', value: profile.teacher?.address },
                                         { label: 'Designation', value: profile.teacher?.designation },
                                         { label: 'Office Location', value: profile.teacher?.officeLocation },
-                                        { label: 'Account Status', value: profile.teacher?.accountStatus },
+                                        { label: 'Account Status', value: profile.teacher?.accountStatus, badge: true },
                                     ].map((f, i) => (
                                         <div
                                             key={i}
@@ -101,8 +132,18 @@ export default function TeacherProfile() {
                                             onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
                                             onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
                                         >
+                                            <div className="pixel-grid-hover" aria-hidden="true"></div>
                                             <span>{f.label}</span>
-                                            <div className="value">{f.value || 'N/A'}</div>
+                                            {f.badge ? (
+                                                <div className="status-badge-inline">
+                                                    <span className="pulse-dot-inline"></span>
+                                                    {f.value || 'N/A'}
+                                                </div>
+                                            ) : f.glow ? (
+                                                <div className="value glow-value">{f.value || 'N/A'}</div>
+                                            ) : (
+                                                <div className="value">{f.value || 'N/A'}</div>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -112,23 +153,30 @@ export default function TeacherProfile() {
 
                             {/* Research & Publications */}
                             <div className="section-block">
-                                <div className="section-title">Research & Publications</div>
+                                <div className="section-title">
+                                    <span className="title-icon">📚</span>
+                                    Research & Publications
+                                </div>
                                 <div className="grid">
                                     {[
-                                        { label: 'Papers Published', value: profile.teacher?.papersPublished },
-                                        { label: 'Conferences Attended', value: profile.teacher?.conferencesAttended },
-                                        { label: 'Workshops Attended', value: profile.teacher?.workshopsAttended },
-                                        { label: 'Patents Filed', value: profile.teacher?.patents },
-                                        { label: 'Funded Projects', value: profile.teacher?.fundedProjects },
+                                        { label: 'Papers Published', value: profile.teacher?.papersPublished, icon: '📄' },
+                                        { label: 'Conferences Attended', value: profile.teacher?.conferencesAttended, icon: '🤝' },
+                                        { label: 'Workshops Attended', value: profile.teacher?.workshopsAttended, icon: '🛠️' },
+                                        { label: 'Patents Filed', value: profile.teacher?.patents, icon: '💡' },
+                                        { label: 'Funded Projects', value: profile.teacher?.fundedProjects, icon: '💰' },
                                     ].map((f, i) => (
                                         <div
                                             key={i}
-                                            className="field"
+                                            className="field metric-field"
                                             onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
                                             onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
                                         >
-                                            <span>{f.label}</span>
-                                            <div className="value">{f.value !== undefined ? f.value : '0'}</div>
+                                            <div className="pixel-grid-hover" aria-hidden="true"></div>
+                                            <span className="metric-header">
+                                                <span className="metric-icon">{f.icon}</span>
+                                                {f.label}
+                                            </span>
+                                            <div className="value metric-value">{f.value !== undefined ? f.value : '0'}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -138,7 +186,10 @@ export default function TeacherProfile() {
 
                             {/* Leaves Balance */}
                             <div className="section-block">
-                                <div className="section-title">Leave Balance Details</div>
+                                <div className="section-title">
+                                    <span className="title-icon">📅</span>
+                                    Leave Balance Details
+                                </div>
                                 <div className="grid">
                                     {[
                                         { label: 'Casual Leaves', value: profile.teacher?.casualLeaveBalance },
@@ -151,8 +202,13 @@ export default function TeacherProfile() {
                                             onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
                                             onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
                                         >
+                                            <div className="pixel-grid-hover" aria-hidden="true"></div>
                                             <span>{f.label}</span>
                                             <div className="value">{f.value !== undefined ? f.value : '0'}</div>
+                                            {/* Progress bar container */}
+                                            <div className="leave-progress-bar">
+                                                <div className="progress-fill" style={{ width: `${Math.min(100, ((f.value || 0) / 15) * 100)}%` }}></div>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -162,11 +218,24 @@ export default function TeacherProfile() {
 
                             {/* Qualifications List */}
                             <div className="section-block">
-                                <div className="section-title">Qualifications & Degrees</div>
+                                <div className="section-title">
+                                    <span className="title-icon">🎓</span>
+                                    Qualifications & Degrees
+                                </div>
                                 {profile.qualifications && profile.qualifications.length > 0 ? (
                                     <div className="qualifications-list">
                                         {profile.qualifications.map((q, idx) => (
-                                            <div key={idx} className="qualification-card">
+                                            <div 
+                                                key={idx} 
+                                                className="qualification-card"
+                                                onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
+                                                onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
+                                            >
+                                                <div className="pixel-grid-hover" aria-hidden="true"></div>
+                                                <div className="qual-card-header">
+                                                    <span className="grad-icon">🎓</span>
+                                                    <h4>Degree Record #{idx + 1}</h4>
+                                                </div>
                                                 <div className="qual-grid">
                                                     <div className="field"><span>UG Degree</span><div className="value">{q.ugDegree || 'N/A'}</div></div>
                                                     <div className="field"><span>PG Degree</span><div className="value">{q.pgDegree || 'N/A'}</div></div>

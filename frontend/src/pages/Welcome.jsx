@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Welcome.css';
+import recCampus from '../assets/rec-campus.jpg';
 
 export default function Welcome() {
     const navigate = useNavigate();
@@ -40,7 +41,10 @@ export default function Welcome() {
     }, [navigate]);
 
     return (
-        <div className={`welcome-page-body ${exit ? 'exit-animation' : ''}`}>
+        <div 
+            className={`welcome-page-body ${exit ? 'exit-animation' : ''}`}
+            style={{ '--bg-image': `url(${recCampus})` }}
+        >
             {/* Ambient Orbs */}
             <div className="orb orb-1"></div>
             <div className="orb orb-2"></div>
@@ -107,7 +111,7 @@ export default function Welcome() {
                             </span>
                         ))}
                     </h1>
-                    <p className="subtitle">Welcome to SmartCampus</p>
+                    <p className="subtitle">The intelligent digital ecosystem for connected learning</p>
                     <div className="divider"></div>
 
                     <div className="loading-section">
