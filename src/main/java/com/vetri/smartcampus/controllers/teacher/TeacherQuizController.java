@@ -28,12 +28,12 @@ import java.util.Map;
 @Controller
 public class TeacherQuizController extends TeacherControllerSupport {
 
-    @GetMapping("/teacher-create-quiz")
+    @GetMapping("/old-teacher-create-quiz")
     public String teacherCreateQuiz() {
-        return "redirect:/teacher-assign-quiz";
+        return "redirect:/old-teacher-assign-quiz";
     }
 
-    @GetMapping("/teacher-assign-quiz")
+    @GetMapping("/old-teacher-assign-quiz")
     public String teacherAssignQuiz(HttpSession session,
                                     @RequestParam(value = "courseId", required = false) Long courseId,
                                     Model model) {
@@ -51,7 +51,7 @@ public class TeacherQuizController extends TeacherControllerSupport {
             if (courseId != null) {
                 if (!isTeacherCourseAllocated(con, teacherId, courseId)) {
                     con.close();
-                    return "redirect:/teacher-assign-quiz";
+                    return "redirect:/old-teacher-assign-quiz";
                 }
 
                 model.addAttribute("selectedCourse", findAssignedCourse(courses, courseId));
@@ -126,7 +126,7 @@ public class TeacherQuizController extends TeacherControllerSupport {
         return "Teacher/AssignQuiz";
     }
 
-    @PostMapping("/teacher-assign-quiz/create")
+    @PostMapping("/old-teacher-assign-quiz/create")
     public String teacherCreateQuizForCourse(HttpSession session,
                                              @RequestParam("courseId") long courseId,
                                              @RequestParam("title") String title,
@@ -151,10 +151,10 @@ public class TeacherQuizController extends TeacherControllerSupport {
             }
 
             if (title == null || title.trim().isEmpty()) {
-                return "redirect:/teacher-assign-quiz?courseId=" + courseId;
+                return "redirect:/old-teacher-assign-quiz?courseId=" + courseId;
             }
             if (questionText == null || questionText.length == 0) {
-                return "redirect:/teacher-assign-quiz?courseId=" + courseId;
+                return "redirect:/old-teacher-assign-quiz?courseId=" + courseId;
             }
 
             LocalDateTime startAt;
@@ -163,10 +163,10 @@ public class TeacherQuizController extends TeacherControllerSupport {
                 startAt = LocalDateTime.parse(startDate + "T" + startTime);
                 endAt = LocalDateTime.parse(endDate + "T" + endTime);
             } catch (DateTimeParseException ex) {
-                return "redirect:/teacher-assign-quiz?courseId=" + courseId;
+                return "redirect:/old-teacher-assign-quiz?courseId=" + courseId;
             }
             if (!startAt.isBefore(endAt)) {
-                return "redirect:/teacher-assign-quiz?courseId=" + courseId;
+                return "redirect:/old-teacher-assign-quiz?courseId=" + courseId;
             }
 
             Connection con = openConnection();
@@ -175,13 +175,13 @@ public class TeacherQuizController extends TeacherControllerSupport {
             if (!quizTablesExist(con)) {
                 con.rollback();
                 con.close();
-                return "redirect:/teacher-assign-quiz?courseId=" + courseId;
+                return "redirect:/old-teacher-assign-quiz?courseId=" + courseId;
             }
 
             if (!isTeacherCourseAllocated(con, teacherId, courseId)) {
                 con.rollback();
                 con.close();
-                return "redirect:/teacher-assign-quiz";
+                return "redirect:/old-teacher-assign-quiz";
             }
 
             int totalMarks = 0;
@@ -302,14 +302,14 @@ public class TeacherQuizController extends TeacherControllerSupport {
             con.commit();
             con.close();
 
-            return "redirect:/teacher-assign-quiz?courseId=" + courseId;
+            return "redirect:/old-teacher-assign-quiz?courseId=" + courseId;
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/teacher-assign-quiz?courseId=" + courseId;
+            return "redirect:/old-teacher-assign-quiz?courseId=" + courseId;
         }
     }
 
-    @GetMapping("/teacher-quiz/{quizId}")
+    @GetMapping("/old-teacher-quiz/{quizId}")
     public String teacherViewQuizStatus(@PathVariable("quizId") long quizId, HttpSession session, Model model) {
         try {
             Long teacherId = getTeacherId(session);
@@ -320,7 +320,7 @@ public class TeacherQuizController extends TeacherControllerSupport {
             Connection con = openConnection();
             if (!quizTablesExist(con)) {
                 con.close();
-                return "redirect:/teacher-assign-quiz";
+                return "redirect:/old-teacher-assign-quiz";
             }
 
             PreparedStatement psQuiz = con.prepareStatement(
@@ -337,7 +337,7 @@ public class TeacherQuizController extends TeacherControllerSupport {
                 rsQuiz.close();
                 psQuiz.close();
                 con.close();
-                return "redirect:/teacher-assign-quiz";
+                return "redirect:/old-teacher-assign-quiz";
             }
 
             QuizDTO quiz = new QuizDTO();
@@ -427,12 +427,12 @@ public class TeacherQuizController extends TeacherControllerSupport {
             con.close();
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/teacher-assign-quiz";
+            return "redirect:/old-teacher-assign-quiz";
         }
         return "Teacher/ViewQuizStatus";
     }
 
-    @PostMapping("/teacher-quiz/{quizId}/publish-score")
+    @PostMapping("/old-teacher-quiz/{quizId}/publish-score")
     public String teacherPublishQuizScore(@PathVariable("quizId") long quizId,
                                           @RequestParam("published") boolean published,
                                           HttpSession session) {
@@ -443,7 +443,7 @@ public class TeacherQuizController extends TeacherControllerSupport {
             Connection con = openConnection();
             if (!quizTablesExist(con)) {
                 con.close();
-                return "redirect:/teacher-assign-quiz";
+                return "redirect:/old-teacher-assign-quiz";
             }
 
             PreparedStatement ps = con.prepareStatement(
@@ -457,16 +457,16 @@ public class TeacherQuizController extends TeacherControllerSupport {
             con.close();
 
             if (updated == 0) {
-                return "redirect:/teacher-assign-quiz";
+                return "redirect:/old-teacher-assign-quiz";
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "redirect:/teacher-quiz/" + quizId;
+        return "redirect:/old-teacher-quiz/" + quizId;
     }
 
-    @GetMapping("/teacher-quiz/{quizId}/student/{studentId}")
+    @GetMapping("/old-teacher-quiz/{quizId}/student/{studentId}")
     public String teacherViewQuizSubmission(@PathVariable("quizId") long quizId,
                                             @PathVariable("studentId") long studentId,
                                             HttpSession session,
@@ -478,7 +478,7 @@ public class TeacherQuizController extends TeacherControllerSupport {
             Connection con = openConnection();
             if (!quizTablesExist(con)) {
                 con.close();
-                return "redirect:/teacher-assign-quiz";
+                return "redirect:/old-teacher-assign-quiz";
             }
 
             PreparedStatement psSub = con.prepareStatement(
@@ -499,7 +499,7 @@ public class TeacherQuizController extends TeacherControllerSupport {
                 rsSub.close();
                 psSub.close();
                 con.close();
-                return "redirect:/teacher-quiz/" + quizId;
+                return "redirect:/old-teacher-quiz/" + quizId;
             }
             long submissionId = rsSub.getLong("submission_id");
             model.addAttribute("submittedAt", rsSub.getTimestamp("submitted_at"));
@@ -549,7 +549,7 @@ public class TeacherQuizController extends TeacherControllerSupport {
             con.close();
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/teacher-quiz/" + quizId;
+            return "redirect:/old-teacher-quiz/" + quizId;
         }
         return "Teacher/ViewQuizSubmission";
     }

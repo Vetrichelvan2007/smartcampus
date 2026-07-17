@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 @Controller
 public class StudentProfileController extends StudentControllerSupport {
 
-    @GetMapping("/student-profile")
+    @GetMapping("/old-student-profile")
     public String studentProfile(HttpSession session, Model model) {
         Long studentId = getStudentId(session);
         if (studentId == null) {

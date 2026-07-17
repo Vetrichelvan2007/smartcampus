@@ -1,0 +1,234 @@
+.student-profile-content {
+    animation: fadeUp 0.6s ease-out both;
+    width: 100%;
+}
+
+.student-profile-content .main-profile-card {
+    background: rgba(15, 23, 42, 0.70);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 36px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── PROFILE TOP ── */
+.student-profile-content .profile-top {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 36px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.student-profile-content .avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.student-profile-content .avatar-glow {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.25), transparent 70%);
+    z-index: 0;
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+.student-profile-content .avatar-placeholder {
+    position: relative;
+    z-index: 2;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: 700;
+    color: white;
+}
+
+.student-profile-content .name-block h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #f1f5f9;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.student-profile-content .roll-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: rgba(10, 14, 27, 0.55);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    font-size: 12px;
+    font-weight: 500;
+    color: #a5b4fc;
+    letter-spacing: 0.04em;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.12);
+}
+
+.student-profile-content .roll-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #ec4899);
+    box-shadow: 0 0 6px rgba(99, 102, 241, 0.7);
+}
+
+.student-profile-content .profile-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.student-profile-content .meta-chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(10, 14, 27, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    font-size: 11.5px;
+    color: #94a3b8;
+}
+
+/* ── SECTION TITLE ── */
+.student-profile-content .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 34px 0 16px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+.student-profile-content .section-title::before {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 18px;
+    flex-shrink: 0;
+    border-radius: 2px;
+    background: linear-gradient(180deg, #6366f1, #ec4899);
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+}
+
+.student-profile-content .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.25), transparent);
+}
+
+/* ── GRID ── */
+.student-profile-content .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+
+/* ── FIELD ── */
+.student-profile-content .field {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1.5px solid rgba(100, 116, 139, 0.18);
+    border-radius: 14px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease-out, background 0.3s ease;
+    cursor: default;
+}
+
+.student-profile-content .field::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+}
+
+.student-profile-content .field:hover {
+    border-color: rgba(99, 102, 241, 0.3);
+    background: rgba(15, 23, 42, 0.92);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(99, 102, 241, 0.12);
+}
+
+.student-profile-content .field span {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 5px;
+}
+
+.student-profile-content .field .value {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: #f1f5f9;
+    line-height: 1.5;
+}
+
+.student-profile-content .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    margin: 24px 0;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(99, 102, 241, 0.15), 0 0 0 1px rgba(99, 102, 241, 0.20); }
+    50%      { box-shadow: 0 0 28px rgba(99, 102, 241, 0.30), 0 0 0 1px rgba(139, 92, 246, 0.35); }
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.student-profile-content .loading-state {
+    padding: 40px;
+    text-align: center;
+    color: #94a3b8;
+}
+
+.student-profile-content .error-banner {
+    padding: 12px 20px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .student-profile-content .profile-top {
+        flex-direction: column;
+        text-align: center;
+    }
+    .student-profile-content .profile-meta {
+        justify-content: center;
+    }
+    .student-profile-content .main-profile-card {
+        padding: 22px 16px;
+    }
+}

@@ -17,7 +17,7 @@ import java.util.List;
 @Controller
 public class TeacherStudentController extends TeacherControllerSupport {
 
-    @GetMapping("/teacher-view-student")
+    @GetMapping("/old-teacher-view-student")
     public String teacherViewStudentLanding(HttpSession session, Model model) {
         try {
             Long teacherId = getTeacherId(session);
@@ -40,7 +40,7 @@ public class TeacherStudentController extends TeacherControllerSupport {
         return "Teacher/ViewStudentsByCourse";
     }
 
-    @GetMapping("/teacher-view-student/{teacherId}/{courseId}")
+    @GetMapping("/old-teacher-view-student/{teacherId}/{courseId}")
     public String teacherViewStudentByCourse(@PathVariable("teacherId") long teacherId,
                                              @PathVariable("courseId") long courseId,
                                              HttpSession session,
@@ -52,7 +52,7 @@ public class TeacherStudentController extends TeacherControllerSupport {
             }
 
             if (sessionTeacherId != teacherId) {
-                return "redirect:/teacher-view-student/" + sessionTeacherId + "/" + courseId;
+                return "redirect:/old-teacher-view-student/" + sessionTeacherId + "/" + courseId;
             }
 
             Connection con = openConnection();

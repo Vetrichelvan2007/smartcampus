@@ -15,7 +15,7 @@ import java.util.List;
 @Controller
 public class TeacherDashboardController extends TeacherControllerSupport {
 
-    @GetMapping("/teacher-dashboard")
+    @GetMapping("/old-teacher-dashboard")
     public String teacherDashboard(HttpSession session, Model model) {
         try {
             Long teacherId = getTeacherId(session);

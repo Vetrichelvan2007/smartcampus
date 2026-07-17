@@ -26,7 +26,7 @@ import java.util.Map;
 @Controller
 public class TeacherFeedbackController extends TeacherControllerSupport {
 
-    @GetMapping("/teacher-assign-feedback")
+    @GetMapping("/old-teacher-assign-feedback")
     public String teacherAssignFeedback(HttpSession session,
                                         @RequestParam(value = "courseId", required = false) Long courseId,
                                         Model model) {
@@ -45,7 +45,7 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
             if (courseId != null) {
                 if (!isTeacherCourseAllocated(con, teacherId, courseId)) {
                     con.close();
-                    return "redirect:/teacher-assign-feedback";
+                    return "redirect:/old-teacher-assign-feedback";
                 }
 
                 model.addAttribute("selectedCourse", findAssignedCourse(courses, courseId));
@@ -114,7 +114,7 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
         return "Teacher/AssignFeedback";
     }
 
-    @PostMapping("/teacher-assign-feedback/create")
+    @PostMapping("/old-teacher-assign-feedback/create")
     public String teacherCreateFeedbackForm(HttpSession session,
                                             @RequestParam("courseId") long courseId,
                                             @RequestParam("title") String title,
@@ -130,10 +130,10 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
             }
 
             if (title == null || title.trim().isEmpty()) {
-                return "redirect:/teacher-assign-feedback?courseId=" + courseId;
+                return "redirect:/old-teacher-assign-feedback?courseId=" + courseId;
             }
             if (questionText == null || questionText.length == 0) {
-                return "redirect:/teacher-assign-feedback?courseId=" + courseId;
+                return "redirect:/old-teacher-assign-feedback?courseId=" + courseId;
             }
 
             Connection con = openConnection();
@@ -142,13 +142,13 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
             if (!feedbackTablesExist(con)) {
                 con.rollback();
                 con.close();
-                return "redirect:/teacher-assign-feedback?courseId=" + courseId;
+                return "redirect:/old-teacher-assign-feedback?courseId=" + courseId;
             }
 
             if (!isTeacherCourseAllocated(con, teacherId, courseId)) {
                 con.rollback();
                 con.close();
-                return "redirect:/teacher-assign-feedback";
+                return "redirect:/old-teacher-assign-feedback";
             }
 
             PreparedStatement psForm = con.prepareStatement(
@@ -222,7 +222,7 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
                 psQ.close();
                 con.rollback();
                 con.close();
-                return "redirect:/teacher-assign-feedback?courseId=" + courseId;
+                return "redirect:/old-teacher-assign-feedback?courseId=" + courseId;
             }
 
             psQ.executeBatch();
@@ -231,14 +231,14 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
             con.commit();
             con.close();
 
-            return "redirect:/teacher-assign-feedback?courseId=" + courseId;
+            return "redirect:/old-teacher-assign-feedback?courseId=" + courseId;
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/teacher-assign-feedback?courseId=" + courseId;
+            return "redirect:/old-teacher-assign-feedback?courseId=" + courseId;
         }
     }
 
-    @GetMapping("/teacher-feedback/{formId}")
+    @GetMapping("/old-teacher-feedback/{formId}")
     public String teacherViewFeedbackStatus(@PathVariable("formId") long formId, HttpSession session, Model model) {
         try {
             Long teacherId = getTeacherId(session);
@@ -249,7 +249,7 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
             Connection con = openConnection();
             if (!feedbackTablesExist(con)) {
                 con.close();
-                return "redirect:/teacher-assign-feedback";
+                return "redirect:/old-teacher-assign-feedback";
             }
 
             PreparedStatement psForm = con.prepareStatement(
@@ -266,7 +266,7 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
                 rsForm.close();
                 psForm.close();
                 con.close();
-                return "redirect:/teacher-assign-feedback";
+                return "redirect:/old-teacher-assign-feedback";
             }
 
             FeedbackFormDTO form = new FeedbackFormDTO();
@@ -351,12 +351,12 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
             con.close();
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/teacher-assign-feedback";
+            return "redirect:/old-teacher-assign-feedback";
         }
         return "Teacher/ViewFeedbackStatus";
     }
 
-    @GetMapping("/teacher-feedback/{formId}/student/{studentId}")
+    @GetMapping("/old-teacher-feedback/{formId}/student/{studentId}")
     public String teacherViewFeedbackSubmissionForStudent(@PathVariable("formId") long formId,
                                                           @PathVariable("studentId") long studentId,
                                                           HttpSession session,
@@ -370,7 +370,7 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
             Connection con = openConnection();
             if (!feedbackTablesExist(con)) {
                 con.close();
-                return "redirect:/teacher-assign-feedback";
+                return "redirect:/old-teacher-assign-feedback";
             }
 
             PreparedStatement psSub = con.prepareStatement(
@@ -391,7 +391,7 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
                 rsSub.close();
                 psSub.close();
                 con.close();
-                return "redirect:/teacher-feedback/" + formId;
+                return "redirect:/old-teacher-feedback/" + formId;
             }
             long submissionId = rsSub.getLong("submission_id");
             model.addAttribute("submittedAt", rsSub.getTimestamp("submitted_at"));
@@ -434,7 +434,7 @@ public class TeacherFeedbackController extends TeacherControllerSupport {
             con.close();
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/teacher-feedback/" + formId;
+            return "redirect:/old-teacher-feedback/" + formId;
         }
         return "Teacher/ViewFeedbackSubmission";
     }

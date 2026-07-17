@@ -20,7 +20,7 @@ import java.util.Map;
 @Controller
 public class StudentRegistrationController extends StudentControllerSupport {
 
-    @GetMapping("/courseregistration")
+    @GetMapping("/old-courseregistration")
     public String courseRegistration(HttpSession session, Model model) {
         try {
             Long studentId = getStudentId(session);
@@ -109,7 +109,7 @@ public class StudentRegistrationController extends StudentControllerSupport {
         return "Student/CourseRegistration";
     }
 
-    @PostMapping("/courseregistraction-submit")
+    @PostMapping("/old-courseregistraction-submit")
     public String handleCourseRegistration(@RequestBody List<CourseDTO> selectedCourses, HttpSession session) {
         try {
             Long studentId = getStudentId(session);
@@ -154,7 +154,7 @@ public class StudentRegistrationController extends StudentControllerSupport {
         }
     }
 
-    @GetMapping("/registered-course")
+    @GetMapping("/old-registered-course")
     public String registeredCourse(HttpSession session, Model model) {
         try {
             Long studentId = getStudentId(session);

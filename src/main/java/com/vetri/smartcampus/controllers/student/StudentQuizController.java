@@ -19,7 +19,7 @@ import java.util.Map;
 @Controller
 public class StudentQuizController extends StudentControllerSupport {
 
-    @GetMapping("/quiz/{quizId}")
+    @GetMapping("/old-quiz/{quizId}")
     public String takeQuiz(@PathVariable("quizId") long quizId, HttpSession session, Model model) {
         Long studentId = getStudentId(session);
         if (studentId == null) return "redirect:/login";
@@ -133,7 +133,7 @@ public class StudentQuizController extends StudentControllerSupport {
         return "Student/TakeQuiz";
     }
 
-    @PostMapping("/quiz/{quizId}/submit")
+    @PostMapping("/old-quiz/{quizId}/submit")
     public String submitQuiz(@PathVariable("quizId") long quizId, HttpSession session, @RequestParam Map<String, String> params) {
         Long studentId = getStudentId(session);
         if (studentId == null) return "redirect:/login";

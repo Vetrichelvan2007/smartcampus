@@ -1,0 +1,302 @@
+.classroom-page-content {
+    animation: fadeUp 0.6s ease-out both;
+    width: 100%;
+}
+
+.classroom-page-content .layout {
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+}
+
+/* ── SIDEBAR ── */
+.classroom-page-content .sidebar {
+    width: 230px;
+    flex-shrink: 0;
+    background: rgba(15, 23, 42, 0.70);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 22px;
+    padding: 24px 18px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.classroom-page-content .sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.classroom-page-content .sidebar-header h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+.classroom-page-content .sem-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* ── SEM BUTTON ── */
+.classroom-page-content .sem-btn {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: all 0.22s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.classroom-page-content .sem-btn .sem-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    transition: all 0.22s ease;
+    flex-shrink: 0;
+}
+
+.classroom-page-content .sem-btn:hover {
+    background: rgba(99,102,241,0.1);
+    color: #c7d2fe;
+    border-color: rgba(99,102,241,0.2);
+    transform: translateX(3px);
+}
+
+.classroom-page-content .sem-btn:hover .sem-num {
+    background: rgba(99,102,241,0.2);
+    color: #a5b4fc;
+}
+
+.classroom-page-content .sem-btn.active {
+    background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(236,72,153,0.12));
+    color: #c7d2fe;
+    border-color: rgba(99,102,241,0.3);
+    font-weight: 600;
+}
+
+.classroom-page-content .sem-btn.active .sem-num {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+}
+
+/* ── CONTENT ── */
+.classroom-page-content .content {
+    flex: 1;
+    min-width: 0;
+}
+
+.classroom-page-content .content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.classroom-page-content .content-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+.classroom-page-content .classroom-header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.classroom-page-content .classroom-search-input {
+    background: rgba(15, 23, 42, 0.80);
+    border: 1.5px solid rgba(100, 116, 139, 0.25);
+    border-radius: 10px;
+    padding: 8px 14px;
+    color: #f1f5f9;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 200px;
+}
+
+.classroom-page-content .classroom-search-input:focus {
+    border-color: #6366f1;
+    background: rgba(15, 23, 42, 0.95);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.classroom-page-content .course-count {
+    font-size: 12px;
+    color: #64748b;
+    background: rgba(10, 14, 27, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    padding: 4px 12px;
+    border-radius: 999px;
+}
+
+/* ── COURSE GRID ── */
+.classroom-page-content .course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+
+/* ── CARD ── */
+.classroom-page-content .course-card {
+    position: relative;
+    padding: 28px 26px 24px;
+    border-radius: 20px;
+    background: rgba(15, 23, 42, 0.70);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.classroom-page-content .course-card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.classroom-page-content .course-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    border-color: rgba(255,255,255,0.16);
+}
+
+/* card glow overlay on hover */
+.classroom-page-content .course-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.classroom-page-content .course-card:hover::after {
+    opacity: 1;
+    background: radial-gradient(ellipse at 80% 0%, rgba(99,102,241,0.1) 0%, transparent 65%);
+}
+
+.classroom-page-content .course-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f1f5f9;
+    letter-spacing: 0.2px;
+    line-height: 1.4;
+}
+
+.classroom-page-content .code {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+    letter-spacing: 1px;
+    background: rgba(10, 14, 27, 0.5);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-top: auto;
+    width: fit-content;
+}
+
+/* ── BADGE ── */
+.classroom-page-content .badge {
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    width: fit-content;
+    display: inline-block;
+}
+
+.classroom-page-content .badge.lot {
+    background: rgba(34,197,94,0.12);
+    color: #4ade80;
+    border: 1px solid rgba(34,197,94,0.2);
+}
+
+.classroom-page-content .badge.theory {
+    background: rgba(99,102,241,0.15);
+    color: #a5b4fc;
+    border: 1px solid rgba(99,102,241,0.25);
+}
+
+/* ── OTHER STATES ── */
+.classroom-page-content .loading-state,
+.classroom-page-content .empty-state {
+    padding: 40px;
+    text-align: center;
+    color: #94a3b8;
+}
+
+.classroom-page-content .error-banner {
+    padding: 12px 20px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .classroom-page-content .layout {
+        flex-direction: column;
+    }
+    .classroom-page-content .sidebar {
+        width: 100%;
+    }
+    .classroom-page-content .classroom-header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .classroom-page-content .classroom-search-input {
+        width: 60%;
+    }
+}

@@ -14,7 +14,7 @@ import java.util.List;
 @Controller
 public class StudentCourseController extends StudentControllerSupport {
 
-    @GetMapping("/course/{courseCode}")
+    @GetMapping("/old-course/{courseCode}")
     public String course(@PathVariable String courseCode, Model model, HttpSession session) {
         Long studentId = getStudentId(session);
         if (studentId == null) {
@@ -58,7 +58,7 @@ public class StudentCourseController extends StudentControllerSupport {
         return "Student/Course";
     }
 
-    @GetMapping("/course/{id}/quizzes")
+    @GetMapping("/old-course/{id}/quizzes")
     public String quizzes(@PathVariable("id") long courseId, HttpSession session, Model model) {
         Long studentId = getStudentId(session);
         if (studentId == null) {

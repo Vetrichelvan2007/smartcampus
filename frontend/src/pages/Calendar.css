@@ -1,0 +1,320 @@
+.calendar-page-content {
+    animation: fadeUp 0.6s ease-out both;
+    width: 100%;
+}
+
+.calendar-page-content .glass {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 22px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.calendar-page-content .container-body {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* ── SIDEBAR FILTER ── */
+.sidebar-filter {
+    width: 240px;
+    flex-shrink: 0;
+    padding: 24px 18px;
+}
+
+.sidebar-filter .sidebar-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-filter .sidebar-header h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.checkbox-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #94a3b8;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 8px 10px;
+    border-radius: 10px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.checkbox-wrap:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: #f1f5f9;
+}
+
+.checkbox-wrap input[type="checkbox"] {
+    display: none;
+}
+
+.custom-box {
+    width: 16px;
+    height: 16px;
+    border-radius: 5px;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    background: rgba(2, 6, 23, 0.5);
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.checkbox-wrap input[type="checkbox"]:checked + .custom-box.academic {
+    background: #6366f1;
+    border-color: #6366f1;
+}
+
+.checkbox-wrap input[type="checkbox"]:checked + .custom-box.institutional {
+    background: #ec4899;
+    border-color: #ec4899;
+}
+
+.checkbox-wrap input[type="checkbox"]:checked + .custom-box.event {
+    background: #06b6d4;
+    border-color: #06b6d4;
+}
+
+.checkbox-wrap input[type="checkbox"]:checked + .custom-box::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* ── CALENDAR MAIN ── */
+.calendar-main {
+    flex: 1;
+    min-width: 0;
+    padding: 26px;
+}
+
+.calendar-header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.calendar-header-nav .header-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.calendar-header-nav .nav-btn {
+    background: rgba(10, 14, 27, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    padding: 7px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.22s ease;
+}
+
+.calendar-header-nav .nav-btn:hover {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.3);
+    color: #f1f5f9;
+}
+
+.month-year-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #f1f5f9;
+}
+
+/* Calendar Grid */
+.calendar-grid-canvas {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.day-name {
+    text-align: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #475569;
+    padding: 8px 0;
+    text-transform: uppercase;
+}
+
+.calendar-cell {
+    min-height: 80px;
+    padding: 8px;
+    border-radius: 12px;
+    background: rgba(10, 14, 27, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    font-size: 13px;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.calendar-cell.day {
+    cursor: pointer;
+}
+
+.calendar-cell.day:hover {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.2);
+    transform: translateY(-1px);
+}
+
+.calendar-cell.day.today {
+    border: 1px solid rgba(99, 102, 241, 0.5);
+    background: rgba(99, 102, 241, 0.12);
+}
+
+.calendar-cell.day.today .cell-num {
+    color: #a5b4fc;
+    font-weight: 700;
+}
+
+.calendar-cell.day.selected {
+    border-color: rgba(99, 102, 241, 0.7);
+    background: rgba(99, 102, 241, 0.2);
+}
+
+.cell-num {
+    font-weight: 500;
+    color: #94a3b8;
+}
+
+.cell-dots {
+    display: flex;
+    gap: 4px;
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+}
+
+.dot-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.dot-indicator.academic { background: #6366f1; }
+.dot-indicator.institutional { background: #ec4899; }
+.dot-indicator.event { background: #06b6d4; }
+
+/* ── EVENT DETAILS PANEL ── */
+.event-details-panel {
+    width: 280px;
+    flex-shrink: 0;
+    padding: 24px 18px;
+}
+
+.event-details-panel .panel-header {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.event-details-panel .panel-header h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+.selected-date-banner {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin-bottom: 16px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.event-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.event-details-card {
+    background: rgba(10, 14, 27, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.event-details-card h4 {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #f1f5f9;
+    line-height: 1.4;
+}
+
+.event-details-card p {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
+.type-chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 9.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.type-chip.academic { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; }
+.type-chip.institutional { background: rgba(236, 72, 153, 0.15); color: #f9a8d4; }
+.type-chip.event { background: rgba(6, 182, 212, 0.15); color: #67e8f9; }
+
+.no-events-msg {
+    font-size: 12px;
+    color: #475569;
+    text-align: center;
+    padding: 20px 0;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1024px) {
+    .calendar-page-content .container-body { flex-direction: column; align-items: stretch; }
+    .sidebar-filter, .event-details-panel { width: 100%; }
+}

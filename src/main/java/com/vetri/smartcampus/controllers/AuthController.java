@@ -56,13 +56,13 @@ public class AuthController {
         session.removeAttribute("department_id");
     }
 
-    @GetMapping({"/login", "/login.html"})
+    @GetMapping({"/old-login", "/old-login.html"})
     public String login(HttpSession session) {
         String dashboardRedirect = resolveDashboardRedirect(session);
         return dashboardRedirect != null ? dashboardRedirect : "Auth/Login";
     }
 
-    @GetMapping("/")
+    @GetMapping("/old-welcome")
     public String welcome() {
         return "Auth/Welcome";
     }

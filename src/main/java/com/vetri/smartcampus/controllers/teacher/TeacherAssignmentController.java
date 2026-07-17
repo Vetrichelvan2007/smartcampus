@@ -28,7 +28,7 @@ import java.util.Locale;
 @Controller
 public class TeacherAssignmentController extends TeacherControllerSupport {
 
-    @GetMapping("/teacher-upload-assignment")
+    @GetMapping("/old-teacher-upload-assignment")
     public String teacherUploadAssignment(HttpSession session,
                                           @RequestParam(value = "courseId", required = false) Long courseId,
                                           Model model) {
@@ -44,7 +44,7 @@ public class TeacherAssignmentController extends TeacherControllerSupport {
             if (courseId != null) {
                 if (!isTeacherCourseAllocated(con, teacherId, courseId)) {
                     con.close();
-                    return "redirect:/teacher-upload-assignment";
+                    return "redirect:/old-teacher-upload-assignment";
                 }
 
                 model.addAttribute("selectedCourse", findAssignedCourse(courses, courseId));
@@ -91,7 +91,7 @@ public class TeacherAssignmentController extends TeacherControllerSupport {
         return "Teacher/UploadAssignment";
     }
 
-    @PostMapping("/teacher-upload-assignment")
+    @PostMapping("/old-teacher-upload-assignment")
     public String teacherUploadAssignmentSubmit(HttpSession session,
                                                 @RequestParam("courseId") long courseId,
                                                 @RequestParam("assignmentTitle") String assignmentTitle,
@@ -275,7 +275,7 @@ public class TeacherAssignmentController extends TeacherControllerSupport {
         }
     }
 
-    @GetMapping("/teacher-assignment/{assignmentId}")
+    @GetMapping("/old-teacher-assignment/{assignmentId}")
     public String teacherAssignmentStatus(@PathVariable("assignmentId") long assignmentId,
                                           HttpSession session,
                                           Model model) {

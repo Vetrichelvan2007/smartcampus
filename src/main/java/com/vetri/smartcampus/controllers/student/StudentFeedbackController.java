@@ -20,7 +20,7 @@ import java.util.Map;
 @Controller
 public class StudentFeedbackController extends StudentControllerSupport {
 
-    @GetMapping("/feedback")
+    @GetMapping("/old-feedback")
     public String feedback(HttpSession session, Model model) {
         try {
             Long studentId = getStudentId(session);
@@ -79,7 +79,7 @@ public class StudentFeedbackController extends StudentControllerSupport {
         return "Student/Feedback";
     }
 
-    @GetMapping("/feedback/{formId}")
+    @GetMapping("/old-feedback/{formId}")
     public String viewFeedbackForm(@PathVariable("formId") long formId, HttpSession session, Model model) {
         try {
             Long studentId = getStudentId(session);
@@ -171,7 +171,7 @@ public class StudentFeedbackController extends StudentControllerSupport {
         return "Student/FeedbackForm";
     }
 
-    @PostMapping("/feedback/{formId}/submit")
+    @PostMapping("/old-feedback/{formId}/submit")
     public String submitFeedbackForm(@PathVariable("formId") long formId,
                                      HttpSession session,
                                      @RequestParam Map<String, String> params) {

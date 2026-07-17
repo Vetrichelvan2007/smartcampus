@@ -26,7 +26,7 @@ import java.util.List;
 @Controller
 public class TeacherMaterialController extends TeacherControllerSupport {
 
-    @GetMapping("/teacher-upload-material")
+    @GetMapping("/old-teacher-upload-material")
     public String teacherUploadMaterial(HttpSession session,
                                         @RequestParam(value = "courseId", required = false) Long courseId,
                                         Model model) {
@@ -44,7 +44,7 @@ public class TeacherMaterialController extends TeacherControllerSupport {
             if (courseId != null) {
                 if (!isTeacherCourseAllocated(con, teacherId, courseId)) {
                     con.close();
-                    return "redirect:/teacher-upload-material";
+                    return "redirect:/old-teacher-upload-material";
                 }
 
                 model.addAttribute("selectedCourse", findAssignedCourse(courses, courseId));
@@ -90,7 +90,7 @@ public class TeacherMaterialController extends TeacherControllerSupport {
         return "Teacher/UploadMaterial";
     }
 
-    @PostMapping("/teacher-upload-material")
+    @PostMapping("/old-teacher-upload-material")
     public String teacherUploadMaterialSubmit(HttpSession session,
                                               @RequestParam("courseId") long courseId,
                                               @RequestParam("materialTitle") String materialTitle,
@@ -106,7 +106,7 @@ public class TeacherMaterialController extends TeacherControllerSupport {
         }
 
         if (materialTitle == null || materialTitle.trim().isEmpty() || materialFile == null || materialFile.isEmpty()) {
-            return "redirect:/teacher-upload-material?courseId=" + courseId;
+            return "redirect:/old-teacher-upload-material?courseId=" + courseId;
         }
 
         boolean downloadAllowed = true;
@@ -133,12 +133,12 @@ public class TeacherMaterialController extends TeacherControllerSupport {
 
             if (!isTeacherCourseAllocated(con, teacherId, courseId)) {
                 con.close();
-                return "redirect:/teacher-upload-material";
+                return "redirect:/old-teacher-upload-material";
             }
 
             if (!materialTablesExist(con)) {
                 con.close();
-                return "redirect:/teacher-upload-material?courseId=" + courseId;
+                return "redirect:/old-teacher-upload-material?courseId=" + courseId;
             }
 
             Path base = Paths.get("material").toAbsolutePath().normalize();
@@ -151,7 +151,7 @@ public class TeacherMaterialController extends TeacherControllerSupport {
             Path dest = base.resolve(stored).normalize();
             if (!dest.startsWith(base)) {
                 con.close();
-                return "redirect:/teacher-upload-material?courseId=" + courseId;
+                return "redirect:/old-teacher-upload-material?courseId=" + courseId;
             }
             Files.copy(materialFile.getInputStream(), dest, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
@@ -185,7 +185,7 @@ public class TeacherMaterialController extends TeacherControllerSupport {
             e.printStackTrace();
         }
 
-        return "redirect:/teacher-upload-material?courseId=" + courseId;
+        return "redirect:/old-teacher-upload-material?courseId=" + courseId;
     }
 
     @GetMapping("/teacher/material/{id}/download")

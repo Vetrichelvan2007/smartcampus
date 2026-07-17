@@ -16,7 +16,7 @@ import java.util.List;
 @Controller
 public class TeacherProfileController extends TeacherControllerSupport {
 
-    @GetMapping("/profile")
+    @GetMapping("/old-profile")
     public String teacherProfile(HttpSession session, Model model) {
         try {
             Long teacherId = getTeacherId(session);

@@ -15,12 +15,12 @@ import java.util.List;
 @Controller
 public class StudentDashboardController extends StudentControllerSupport {
 
-    @GetMapping("/student-dashboard")
+    @GetMapping("/old-student-dashboard")
     public String studentDashboard(HttpSession session) {
         return getStudentId(session) == null ? "redirect:/login" : "Student/StudentDashboard";
     }
 
-    @GetMapping("/student-classroom")
+    @GetMapping("/old-student-classroom")
     public String classroom(Model model, HttpSession session) {
         List<CourseData> courseDatas = new ArrayList<>();
 

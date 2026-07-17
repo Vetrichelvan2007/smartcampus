@@ -19,7 +19,7 @@ import java.util.List;
 @Controller
 public class AdminDashboardController {
 
-    @GetMapping({"/admin", "/admin-dashboard"})
+    @GetMapping({"/old-admin", "/old-admin-dashboard"})
     public String adminDashboard(HttpSession session, Model model) {
         if (!isAdmin(session)) {
             return "redirect:/login";

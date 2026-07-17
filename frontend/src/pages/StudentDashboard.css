@@ -1,0 +1,151 @@
+.student-dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: fadeUp 0.6s ease-out both;
+}
+
+/* ── Welcome Banner ── */
+.student-dashboard-content .welcome-banner {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.70) 0%, rgba(26, 35, 71, 0.50) 100%);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.student-dashboard-content .welcome-banner h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 10px;
+}
+
+.student-dashboard-content .welcome-banner p {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.6;
+    max-width: 750px;
+}
+
+/* ── Dashboard Grid ── */
+.student-dashboard-content .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .student-dashboard-content .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.student-dashboard-content .card {
+    background: rgba(15, 23, 42, 0.70);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.student-dashboard-content .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.student-dashboard-content .card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 10px;
+}
+
+/* ── Profile List ── */
+.student-dashboard-content .info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.student-dashboard-content .info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.student-dashboard-content .info-item:last-child {
+    border-bottom: none;
+}
+
+.student-dashboard-content .label {
+    color: #64748b;
+    font-size: 13.5px;
+}
+
+.student-dashboard-content .val {
+    color: #f1f5f9;
+    font-weight: 500;
+    font-size: 13.5px;
+}
+
+.student-dashboard-content .uppercase {
+    text-transform: uppercase;
+}
+
+/* ── Quick Navigation ── */
+.student-dashboard-content .quick-actions-card p.sub {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 16px;
+}
+
+.student-dashboard-content .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.student-dashboard-content .action-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    background: rgba(10, 14, 27, 0.60);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+.student-dashboard-content .action-btn:hover {
+    background: rgba(99, 102, 241, 0.10);
+    border-color: rgba(99, 102, 241, 0.30);
+    transform: translateX(4px);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
+}
+
+.student-dashboard-content .action-btn .icon {
+    font-size: 24px;
+}
+
+.student-dashboard-content .action-btn strong {
+    display: block;
+    font-size: 14px;
+    color: #f1f5f9;
+    font-weight: 600;
+}
+
+.student-dashboard-content .action-btn small {
+    display: block;
+    font-size: 11.5px;
+    color: #94a3b8;
+    margin-top: 2px;
+}
