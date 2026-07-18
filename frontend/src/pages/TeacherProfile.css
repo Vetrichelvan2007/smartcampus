@@ -103,17 +103,16 @@
    MAIN CARD (Faculty Profile Glassmorphism Card)
 ══════════════════════════════════════════════════════════════ */
 .teacher-profile-content .main-profile-card {
-    background: var(--card-bg);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
     border-radius: 24px;
     padding: 36px;
-    border: 1px solid rgba(0, 229, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow: 
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
         0 20px 45px rgba(0, 0, 0, 0.5),
-        0 0 35px rgba(0, 229, 255, 0.12),
-        0 0 60px rgba(124, 77, 255, 0.08);
+        0 0 35px rgba(99, 102, 241, 0.15);
     position: relative;
     overflow: hidden;
     animation: floatCard 8s ease-in-out infinite;
@@ -226,15 +225,15 @@
 .teacher-profile-content .avatar-wrap::after {
     content: '';
     position: absolute;
-    inset: -6px;
+    inset: -8px;
     border-radius: 50%;
-    padding: 2px;
-    background: linear-gradient(135deg, var(--cyan), var(--purple), var(--cyan));
+    padding: 2.5px;
+    background: linear-gradient(135deg, var(--cyan), var(--color-primary), var(--pink));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     z-index: 1;
-    animation: rotateAvatarRing 6s linear infinite;
+    animation: rotateAvatarRing 3s linear infinite;
 }
 
 @keyframes rotateAvatarRing {
@@ -378,15 +377,17 @@
 
 /* ── FIELD CARD (INTERACTIVE GLASS TILE) ── */
 .teacher-profile-content .field {
-    background: rgba(16, 25, 53, 0.7);
-    border: 1px solid rgba(0, 229, 255, 0.14);
+    background: rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 16px;
     padding: 18px 20px;
     position: relative;
     overflow: hidden;
-    transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.12s ease-out, background 0.3s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     cursor: default;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Glowing top highlight */
@@ -424,11 +425,12 @@
 }
 
 .teacher-profile-content .field:hover {
-    background: rgba(16, 25, 53, 0.85);
+    transform: translateY(-4px);
     border-color: var(--cyan);
     box-shadow: 
-        0 8px 25px rgba(0, 229, 255, 0.22),
-        0 0 15px rgba(124, 77, 255, 0.12);
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        0 12px 25px rgba(0, 0, 0, 0.4),
+        0 0 15px rgba(6, 182, 212, 0.3);
 }
 
 .teacher-profile-content .field span {
@@ -563,22 +565,25 @@
 }
 
 .teacher-profile-content .qualification-card {
-    background: rgba(16, 25, 53, 0.45);
-    border: 1px solid rgba(124, 77, 255, 0.22);
+    background: rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 20px;
     padding: 24px;
     position: relative;
     overflow: hidden;
-    transition: all 0.35s ease;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .teacher-profile-content .qualification-card:hover {
     transform: translateY(-4px);
-    border-color: var(--purple);
+    border-color: var(--cyan);
     box-shadow: 
-        0 12px 30px rgba(0, 0, 0, 0.35),
-        0 0 20px rgba(124, 77, 255, 0.15);
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        0 12px 30px rgba(0, 0, 0, 0.45),
+        0 0 20px rgba(6, 182, 212, 0.3);
 }
 
 .teacher-profile-content .qual-card-header {

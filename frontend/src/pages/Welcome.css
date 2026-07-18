@@ -18,9 +18,10 @@
 .welcome-page-body::before {
     content: '';
     position: absolute;
-    inset: -30px; /* Oversized for drift/parallax */
-    background-image: 
-        linear-gradient(135deg, rgba(11, 16, 32, 0.94) 0%, rgba(11, 16, 32, 0.8) 100%), 
+    inset: -30px;
+    /* Oversized for drift/parallax */
+    background-image:
+        linear-gradient(135deg, rgba(11, 16, 32, 0.94) 0%, rgba(11, 16, 32, 0.8) 100%),
         var(--bg-image);
     background-size: cover;
     background-position: center;
@@ -34,6 +35,7 @@
     0% {
         transform: scale(1.05) translate(-10px, -10px);
     }
+
     100% {
         transform: scale(1.1) translate(10px, 10px);
     }
@@ -79,8 +81,15 @@
 }
 
 @keyframes orbFadeIn {
-    from { opacity: 0; transform: scale(0.6); }
-    to { opacity: 0.55; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+
+    to {
+        opacity: 0.55;
+        transform: scale(1);
+    }
 }
 
 /* ── Floating Particles ── */
@@ -114,10 +123,23 @@
 }
 
 @keyframes floatUp {
-    0% { opacity: 0; transform: translateY(105vh) scale(0); }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+    0% {
+        opacity: 0;
+        transform: translateY(105vh) scale(0);
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-10vh) scale(1);
+    }
 }
 
 /* ── Grid Lines Background ── */
@@ -127,15 +149,24 @@
     z-index: 1;
     pointer-events: none;
     background-image:
-            linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
+        linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
     background-size: 50px 50px;
     animation: gridPulse 6s ease-in-out infinite;
 }
 
 @keyframes gridPulse {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.02); }
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.02);
+    }
 }
 
 /* ── Scanning Line ── */
@@ -154,8 +185,13 @@
 }
 
 @keyframes scanDown {
-    0% { top: -2px; }
-    100% { top: 100vh; }
+    0% {
+        top: -2px;
+    }
+
+    100% {
+        top: 100vh;
+    }
 }
 
 /* ── Main Container ── */
@@ -170,10 +206,10 @@
 }
 
 /* ── Logo Ring ── */
-.welcome-page-body .logo-ring {
-    width: 130px;
-    height: 130px;
+.welcome-page-body .logo-ring-wrapper {
     position: relative;
+    width: 140px;
+    height: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -181,27 +217,25 @@
     animation: logoAppear 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards, logoBreathing 4s ease-in-out infinite 1.7s;
 }
 
-.welcome-page-body .ring-outer {
+.welcome-page-body .logo-ring {
     position: absolute;
     inset: 0;
     border-radius: 50%;
     border: 2px solid transparent;
     border-top-color: #00E5FF;
     border-right-color: #7C4DFF;
-    animation: spinRing 3s linear infinite;
-}
-
-.welcome-page-body .ring-inner {
-    position: absolute;
-    inset: 12px;
-    border-radius: 50%;
-    border: 2px solid transparent;
     border-bottom-color: #7C4DFF;
     border-left-color: #00E5FF;
-    animation: spinRing 2s linear infinite reverse;
+    transform-origin: center center;
+    animation: rotateRing 6s linear infinite;
 }
 
-.welcome-page-body .ring-core {
+.welcome-page-body .logo-center {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 80px;
     height: 80px;
     border-radius: 50%;
@@ -209,31 +243,38 @@
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 32px rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.welcome-page-body .ring-core svg {
+.welcome-page-body .logo-center svg {
     width: 36px;
     height: 36px;
     color: #00E5FF;
     filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.6));
 }
 
-@keyframes spinRing {
-    to { transform: rotate(360deg); }
+@keyframes rotateRing {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes logoAppear {
-    from { opacity: 0; transform: scale(0.3) rotate(-180deg); }
-    to { opacity: 1; transform: scale(1) rotate(0deg); }
+    from {
+        opacity: 0;
+        transform: scale(0.3) rotate(-180deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
 }
 
 @keyframes logoBreathing {
     0%, 100% {
         filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.4)) drop-shadow(0 0 20px rgba(124, 77, 255, 0.2));
     }
+
     50% {
         filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.7)) drop-shadow(0 0 35px rgba(124, 77, 255, 0.5));
     }
@@ -247,10 +288,10 @@
     border-radius: 28px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow:
-            inset 0 1px 0 rgba(255, 255, 255, 0.15),
-            0 20px 50px rgba(0, 0, 0, 0.6),
-            0 0 40px rgba(124, 77, 255, 0.12),
-            0 0 80px rgba(0, 229, 255, 0.06);
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        0 20px 50px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(124, 77, 255, 0.12),
+        0 0 80px rgba(0, 229, 255, 0.06);
     backdrop-filter: blur(25px) saturate(180%);
     -webkit-backdrop-filter: blur(25px) saturate(180%);
     opacity: 0;
@@ -266,15 +307,13 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        110deg,
-        transparent 30%,
-        rgba(0, 229, 255, 0.08) 40%,
-        rgba(124, 77, 255, 0.08) 50%,
-        rgba(255, 255, 255, 0.15) 55%,
-        rgba(0, 229, 255, 0.08) 60%,
-        transparent 70%
-    );
+    background: linear-gradient(110deg,
+            transparent 30%,
+            rgba(0, 229, 255, 0.08) 40%,
+            rgba(124, 77, 255, 0.08) 50%,
+            rgba(255, 255, 255, 0.15) 55%,
+            rgba(0, 229, 255, 0.08) 60%,
+            transparent 70%);
     background-size: 200% 100%;
     animation: holographicShimmer 6s linear infinite;
     pointer-events: none;
@@ -282,27 +321,37 @@
 }
 
 @keyframes holographicShimmer {
-    0% { background-position: 150% 0; }
-    100% { background-position: -50% 0; }
+    0% {
+        background-position: 150% 0;
+    }
+
+    100% {
+        background-position: -50% 0;
+    }
 }
 
 @keyframes cardAppearAndFloat {
+
     /* Entrance (0s to 1s) */
     0% {
         opacity: 0;
         transform: translateY(35px) scale(0.97);
     }
+
     12.5% {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+
     /* Floating Loop (1s to 8s) */
     35% {
         transform: translateY(-8px) scale(1);
     }
+
     70% {
         transform: translateY(3px) scale(1);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -331,7 +380,10 @@
 }
 
 @keyframes charDrop {
-    to { opacity: 1; transform: translateY(0); }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ── Subtitle ── */
@@ -350,8 +402,15 @@
 }
 
 @keyframes fadeInSub {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 0.75; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 0.75;
+        transform: translateY(0);
+    }
 }
 
 /* ── Divider ── */
@@ -366,8 +425,15 @@
 }
 
 @keyframes dividerGrow {
-    from { opacity: 0; width: 0; }
-    to { opacity: 1; width: 100px; }
+    from {
+        opacity: 0;
+        width: 0;
+    }
+
+    to {
+        opacity: 1;
+        width: 100px;
+    }
 }
 
 /* ── Loading Section ── */
@@ -392,7 +458,8 @@
     height: 8px;
     background: rgba(11, 16, 32, 0.8);
     border-radius: 8px;
-    overflow: visible; /* Let the end dot glow overflow properly */
+    overflow: visible;
+    /* Let the end dot glow overflow properly */
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -418,8 +485,13 @@
 }
 
 @keyframes loadingShimmer {
-    0% { background-position: -150% 0; }
-    100% { background-position: 150% 0; }
+    0% {
+        background-position: -150% 0;
+    }
+
+    100% {
+        background-position: 150% 0;
+    }
 }
 
 /* Pulsing cyan end dot */
@@ -464,11 +536,13 @@
     animation: dotPulse 1.2s ease-in-out infinite;
     box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
 }
+
 .welcome-page-body .status-dot:nth-child(2) {
     background: #7C4DFF;
     animation-delay: 0.2s;
     box-shadow: 0 0 8px rgba(124, 77, 255, 0.4);
 }
+
 .welcome-page-body .status-dot:nth-child(3) {
     background: #00E5FF;
     animation-delay: 0.4s;
@@ -476,8 +550,17 @@
 }
 
 @keyframes dotPulse {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.5); }
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.5);
+    }
 }
 
 /* ── Corner Decorations ── */
@@ -497,6 +580,7 @@
     border-left: 3px solid #00E5FF;
     filter: drop-shadow(0 0 8px #00E5FF);
 }
+
 .welcome-page-body .corner-deco.tr {
     top: 30px;
     right: 30px;
@@ -504,6 +588,7 @@
     border-right: 3px solid #7C4DFF;
     filter: drop-shadow(0 0 8px #7C4DFF);
 }
+
 .welcome-page-body .corner-deco.bl {
     bottom: 30px;
     left: 30px;
@@ -511,6 +596,7 @@
     border-left: 3px solid #7C4DFF;
     filter: drop-shadow(0 0 8px #7C4DFF);
 }
+
 .welcome-page-body .corner-deco.br {
     bottom: 30px;
     right: 30px;
@@ -520,8 +606,13 @@
 }
 
 @keyframes cornerFade {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 /* ── Version Tag ── */
@@ -539,20 +630,28 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 /* ── Exit Animation ── */
 .exit-animation .welcome-box {
     animation: cardExit 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
 }
-.exit-animation .logo-ring {
+
+.exit-animation .logo-ring-wrapper {
     animation: logoExit 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
 }
+
 .exit-animation .orb {
     animation: orbExit 0.8s ease forwards !important;
 }
+
 .exit-animation .corner-deco {
     animation: cornerFadeOut 0.5s ease forwards !important;
 }
@@ -563,6 +662,7 @@
         transform: translateY(0) scale(1);
         filter: blur(0px);
     }
+
     100% {
         opacity: 0;
         transform: translateY(-45px) scale(0.93);
@@ -571,15 +671,24 @@
 }
 
 @keyframes logoExit {
-    to { opacity: 0; transform: scale(0.3) rotate(90deg); filter: blur(5px); }
+    to {
+        opacity: 0;
+        transform: scale(0.3) rotate(90deg);
+        filter: blur(5px);
+    }
 }
 
 @keyframes orbExit {
-    to { opacity: 0; transform: scale(1.3); }
+    to {
+        opacity: 0;
+        transform: scale(1.3);
+    }
 }
 
 @keyframes cornerFadeOut {
-    to { opacity: 0; }
+    to {
+        opacity: 0;
+    }
 }
 
 /* ── Responsive styling ── */
@@ -588,9 +697,11 @@
         padding: 45px 50px;
         max-width: 500px;
     }
+
     .welcome-page-body .title {
         font-size: 26px;
     }
+
     .welcome-page-body .subtitle {
         font-size: 14px;
     }
@@ -602,32 +713,54 @@
         width: 85vw;
         border-radius: 20px;
     }
+
     .welcome-page-body .title {
         font-size: 20px;
         margin-bottom: 8px;
     }
+
     .welcome-page-body .subtitle {
         font-size: 13px;
         margin-bottom: 20px;
     }
-    .welcome-page-body .logo-ring {
-        width: 100px;
-        height: 100px;
+
+    .welcome-page-body .logo-ring-wrapper {
+        width: 110px;
+        height: 110px;
     }
-    .welcome-page-body .ring-core {
+
+    .welcome-page-body .logo-center {
         width: 60px;
         height: 60px;
     }
-    .welcome-page-body .ring-core svg {
+
+    .welcome-page-body .logo-center svg {
         width: 28px;
         height: 28px;
     }
+
     .welcome-page-body .corner-deco {
         width: 40px;
         height: 40px;
     }
-    .welcome-page-body .corner-deco.tl { top: 15px; left: 15px; }
-    .welcome-page-body .corner-deco.tr { top: 15px; right: 15px; }
-    .welcome-page-body .corner-deco.bl { bottom: 15px; left: 15px; }
-    .welcome-page-body .corner-deco.br { bottom: 15px; right: 15px; }
+
+    .welcome-page-body .corner-deco.tl {
+        top: 15px;
+        left: 15px;
+    }
+
+    .welcome-page-body .corner-deco.tr {
+        top: 15px;
+        right: 15px;
+    }
+
+    .welcome-page-body .corner-deco.bl {
+        bottom: 15px;
+        left: 15px;
+    }
+
+    .welcome-page-body .corner-deco.br {
+        bottom: 15px;
+        right: 15px;
+    }
 }

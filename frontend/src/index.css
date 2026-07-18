@@ -1,65 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root {
-    /* Light Theme */
-    --bg-primary: #f8fafc;
-    --bg-secondary: #ffffff;
-    --bg-tertiary: #eef2ff;
+    /* ══════════════════════════════════════════════════════════════
+       LIQUID GLASS CYBER DASHBOARD GLOBAL PALETTE
+    ══════════════════════════════════════════════════════════════ */
+    --bg-primary: #060816;
+    --bg-secondary: #0a102a;
+    --surface: #0f172a;
+    
+    --color-primary: #6366f1; /* Primary Glow (Indigo) */
+    --color-primary-light: #8b5cf6; /* Secondary Glow (Purple) */
+    
+    --color-accent: #06b6d4; /* Accent Cyan */
+    --color-accent-dark: #0284c7;
+    --color-pink: #ec4899; /* Accent Pink */
 
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
-    --text-tertiary: #94a3b8;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-tertiary: #64748b; /* Text Muted */
 
-    --color-primary: #4f46e5;
-    --color-primary-light: #6366f1;
-    --color-accent: #22d3ee;
-    --color-accent-dark: #06b6d4;
-
-    --border-light: rgba(79, 70, 229, 0.1);
-    --border-medium: rgba(79, 70, 229, 0.15);
-    --border-focus: rgba(79, 70, 229, 0.3);
-
-    --input-bg: #f1f5f9;
-    --input-border: rgba(79, 70, 229, 0.12);
-    --input-focus-bg: rgba(79, 70, 229, 0.05);
-    --input-focus-border: #4f46e5;
-
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.12);
-    --shadow-glow: 0 0 30px rgba(79, 70, 229, 0.15);
-}
-
-/* Dark Theme */
-[data-theme="dark"] {
-    --bg-primary: #0a0e27;
-    --bg-secondary: #11183f;
-    --bg-tertiary: #1a2551;
-
-    --text-primary: #e0e7ff;
-    --text-secondary: #a5b4fc;
-    --text-tertiary: #818cf8;
-
-    --color-primary: #6366f1;
-    --color-primary-light: #818cf8;
-    --color-accent: #06b6d4;
-    --color-accent-dark: #0891b2;
-
-    --border-light: rgba(99, 102, 241, 0.15);
-    --border-medium: rgba(99, 102, 241, 0.25);
+    --border-light: rgba(255, 255, 255, 0.14);
+    --border-medium: rgba(255, 255, 255, 0.22);
     --border-focus: rgba(99, 102, 241, 0.4);
 
-    --input-bg: #0f172a;
-    --input-border: rgba(99, 102, 241, 0.2);
-    --input-focus-bg: rgba(99, 102, 241, 0.08);
+    --input-bg: rgba(15, 23, 42, 0.4);
+    --input-border: rgba(255, 255, 255, 0.14);
+    --input-focus-bg: rgba(99, 102, 241, 0.1);
     --input-focus-border: #6366f1;
 
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.6);
-    --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.25);
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 12px 40px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.45);
+    --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.15);
 }
 
+/* ── BASE HTML / BODY ── */
 * {
     margin: 0;
     padding: 0;
@@ -88,4 +63,119 @@ a {
 
 button {
     font-family: inherit;
+    cursor: pointer;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GLOBAL LIQUID GLASS UTILITIES
+══════════════════════════════════════════════════════════════ */
+
+/* Standard Liquid Glass Container */
+.liquid-glass {
+    background: rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        var(--shadow-md);
+    border-radius: 22px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Internal Layered Reflections */
+.liquid-glass::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        145deg,
+        rgba(255,255,255,0.10) 0%,
+        rgba(255,255,255,0.03) 20%,
+        rgba(255,255,255,0.01) 50%,
+        rgba(255,255,255,0.05) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Hover Interaction */
+.liquid-glass-interactive {
+    cursor: pointer;
+}
+
+.liquid-glass-interactive:hover,
+.liquid-glass:hover.hoverable {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    border-color: rgba(99, 102, 241, 0.25);
+}
+
+/* Global Liquid Button CTA */
+.liquid-btn {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    padding: 10px 24px;
+    color: var(--text-primary);
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.liquid-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 12px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 0 15px rgba(99, 102, 241, 0.3);
+    border-color: rgba(99, 102, 241, 0.4);
+}
+
+.liquid-btn:active {
+    transform: translateY(0);
+}
+
+/* Smooth Page Transitions */
+.page-enter {
+    animation: smoothFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes smoothFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .liquid-glass-interactive:hover,
+    .liquid-glass:hover.hoverable {
+        transform: none;
+    }
 }

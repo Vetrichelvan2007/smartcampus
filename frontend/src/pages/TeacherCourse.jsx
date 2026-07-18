@@ -4,6 +4,37 @@ import { useAuth } from '../context/AuthContext';
 import DashboardLayout from '../components/DashboardLayout';
 import './TeacherCourse.css';
 
+// ── Premium LiquidButton with ripple effect ──
+function LiquidButton({ children, className = '', onClick, type = 'button', disabled = false, style = {} }) {
+    const handleClick = (e) => {
+        const btn = e.currentTarget;
+        const old = btn.querySelector('.ripple');
+        if (old) old.remove();
+        const circle = document.createElement('span');
+        const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+        const radius = diameter / 2;
+        const rect = btn.getBoundingClientRect();
+        circle.style.width = circle.style.height = `${diameter}px`;
+        circle.style.left = `${e.clientX - rect.left - radius}px`;
+        circle.style.top = `${e.clientY - rect.top - radius}px`;
+        circle.classList.add('ripple');
+        btn.appendChild(circle);
+        if (onClick) onClick(e);
+    };
+    return (
+        <button
+            type={type}
+            disabled={disabled}
+            className={`liquid-btn ${className}`}
+            onClick={handleClick}
+            style={style}
+        >
+            {children}
+        </button>
+    );
+}
+
+
 export default function TeacherCourse() {
     const { courseId } = useParams();
     const { user } = useAuth();
@@ -542,7 +573,7 @@ export default function TeacherCourse() {
                                 <div className="glass panel">
                                     <div className="panel-top-row">
                                         <div className="section-title"><span className="dot"></span> Lecture Materials</div>
-                                        <button className="btn btn--accent" onClick={() => setShowUploadModal(true)}>Upload Resource</button>
+                                        <LiquidButton className="liquid-btn--accent" onClick={() => setShowUploadModal(true)}>⬆ Upload Resource</LiquidButton>
                                     </div>
 
                                     {course.materials?.length > 0 ? (
@@ -590,7 +621,7 @@ export default function TeacherCourse() {
                                     <div className="glass panel">
                                         <div className="panel-top-row">
                                             <div className="section-title"><span className="dot"></span> Issued Assignments</div>
-                                            <button className="btn btn--accent" onClick={() => setShowAssignModal(true)}>Create Assignment</button>
+                                            <LiquidButton className="liquid-btn--accent" onClick={() => setShowAssignModal(true)}>＋ Create Assignment</LiquidButton>
                                         </div>
 
                                         {course.assignments?.length > 0 ? (
@@ -650,16 +681,15 @@ export default function TeacherCourse() {
                                                                             </td>
                                                                             <td>{sub.marksAwarded !== null ? `${sub.marksAwarded} Marks` : 'Pending'}</td>
                                                                             <td>
-                                                                                <button
-                                                                                    className="btn"
+                                                                                <LiquidButton
                                                                                     onClick={() => {
                                                                                         setGradingSubId(sub.submissionId);
                                                                                         setGradingMarks(sub.marksAwarded || '');
                                                                                         setGradingFeedback(sub.feedback || '');
                                                                                     }}
                                                                                 >
-                                                                                    Grade
-                                                                                </button>
+                                                                                    ✏ Grade
+                                                                                </LiquidButton>
                                                                             </td>
                                                                         </tr>
                                                                     ))}
@@ -685,7 +715,7 @@ export default function TeacherCourse() {
                                     <div className="glass panel">
                                         <div className="panel-top-row">
                                             <div className="section-title"><span className="dot"></span> Online Exam Sheets</div>
-                                            <button className="btn btn--accent" onClick={() => setShowQuizModal(true)}>Create Quiz</button>
+                                            <LiquidButton className="liquid-btn--accent" onClick={() => setShowQuizModal(true)}>＋ Create Quiz</LiquidButton>
                                         </div>
 
                                         {course.quizzes?.length > 0 ? (
@@ -730,17 +760,17 @@ export default function TeacherCourse() {
                                                                 <small style={{ color: 'var(--text-muted)' }}>Max Marks: {quizSubmissions.totalMarks}</small>
                                                             </div>
                                                             <div style={{ display: 'flex', gap: '10px' }}>
-                                                                <button className="btn" onClick={() => handleOpenEditQuizModal(course.quizzes.find(q => q.id === selectedQuizId))}>
+                                                                <LiquidButton onClick={() => handleOpenEditQuizModal(course.quizzes.find(q => q.id === selectedQuizId))}>
                                                                     📝 Edit Details
-                                                                </button>
+                                                                </LiquidButton>
                                                                 {course.quizzes?.find(q => q.id === selectedQuizId)?.isScorePublished ? (
-                                                                    <button className="btn" onClick={() => handlePublishQuizScore(selectedQuizId, false)}>
+                                                                    <LiquidButton onClick={() => handlePublishQuizScore(selectedQuizId, false)}>
                                                                         Unpublish Scores
-                                                                    </button>
+                                                                    </LiquidButton>
                                                                 ) : (
-                                                                    <button className="btn btn--accent" onClick={() => handlePublishQuizScore(selectedQuizId, true)}>
-                                                                        Publish Scores
-                                                                    </button>
+                                                                    <LiquidButton className="liquid-btn--accent" onClick={() => handlePublishQuizScore(selectedQuizId, true)}>
+                                                                        🚀 Publish Scores
+                                                                    </LiquidButton>
                                                                 )}
                                                             </div>
                                                         </div>
@@ -781,9 +811,9 @@ export default function TeacherCourse() {
                                                                                 </td>
                                                                                 <td>
                                                                                     {sub.submittedAt && (
-                                                                                        <button className="btn btn--accent" style={{ padding: '4px 10px', fontSize: '12px' }} onClick={() => handleViewStudentAnswers(sub.studentId)}>
+                                                                                        <LiquidButton className="liquid-btn--accent" style={{ padding: '5px 12px', fontSize: '12px' }} onClick={() => handleViewStudentAnswers(sub.studentId)}>
                                                                                             👁 View Answers
-                                                                                        </button>
+                                                                                        </LiquidButton>
                                                                                     )}
                                                                                 </td>
                                                                             </tr>
@@ -858,7 +888,7 @@ export default function TeacherCourse() {
                                     <div className="glass panel">
                                         <div className="panel-top-row">
                                             <div className="section-title"><span className="dot"></span> Feedback Forms</div>
-                                            <button className="btn btn--accent" onClick={() => setShowFeedbackModal(true)}>Assign Feedback</button>
+                                            <LiquidButton className="liquid-btn--accent" onClick={() => setShowFeedbackModal(true)}>＋ Assign Feedback</LiquidButton>
                                         </div>
 
                                         {loadingFeedbacks ? (
@@ -905,13 +935,13 @@ export default function TeacherCourse() {
                                                             </div>
                                                             <div>
                                                                 {feedbacks.find(f => f.id === selectedFeedbackId)?.isActive ? (
-                                                                    <button className="btn" onClick={() => handleToggleFeedbackActive(selectedFeedbackId, false)}>
-                                                                        Close Survey
-                                                                    </button>
+                                                                    <LiquidButton onClick={() => handleToggleFeedbackActive(selectedFeedbackId, false)}>
+                                                                        🔒 Close Survey
+                                                                    </LiquidButton>
                                                                 ) : (
-                                                                    <button className="btn btn--accent" onClick={() => handleToggleFeedbackActive(selectedFeedbackId, true)}>
-                                                                        Open Survey
-                                                                    </button>
+                                                                    <LiquidButton className="liquid-btn--accent" onClick={() => handleToggleFeedbackActive(selectedFeedbackId, true)}>
+                                                                        🔓 Open Survey
+                                                                    </LiquidButton>
                                                                 )}
                                                             </div>
                                                         </div>
@@ -948,9 +978,9 @@ export default function TeacherCourse() {
                                                                                 </td>
                                                                                 <td>
                                                                                     {sub.submittedAt && (
-                                                                                        <button className="btn btn--accent" style={{ padding: '4px 10px', fontSize: '12px' }} onClick={() => handleViewStudentFeedback(sub.studentId)}>
+                                                                                        <LiquidButton className="liquid-btn--accent" style={{ padding: '5px 12px', fontSize: '12px' }} onClick={() => handleViewStudentFeedback(sub.studentId)}>
                                                                                             👁 View Details
-                                                                                        </button>
+                                                                                        </LiquidButton>
                                                                                     )}
                                                                                 </td>
                                                                             </tr>
@@ -996,8 +1026,8 @@ export default function TeacherCourse() {
                                                 </select>
                                             </div>
                                             <div className="modal-actions">
-                                                <button type="button" className="btn" onClick={() => setShowUploadModal(false)}>Cancel</button>
-                                                <button type="submit" className="btn btn--accent">Upload</button>
+                                                <LiquidButton type="button" onClick={() => setShowUploadModal(false)}>Cancel</LiquidButton>
+                                                <LiquidButton type="submit" className="liquid-btn--accent">⬆ Upload</LiquidButton>
                                             </div>
                                         </form>
                                     </div>
@@ -1027,8 +1057,8 @@ export default function TeacherCourse() {
                                                 <input type="datetime-local" value={assDueAt} onChange={(e) => setAssDueAt(e.target.value)} required />
                                             </div>
                                             <div className="modal-actions">
-                                                <button type="button" className="btn" onClick={() => setShowAssignModal(false)}>Cancel</button>
-                                                <button type="submit" className="btn btn--accent">Issue</button>
+                                                <LiquidButton type="button" onClick={() => setShowAssignModal(false)}>Cancel</LiquidButton>
+                                                <LiquidButton type="submit" className="liquid-btn--accent">✔ Issue Assignment</LiquidButton>
                                             </div>
                                         </form>
                                     </div>
@@ -1069,7 +1099,7 @@ export default function TeacherCourse() {
                                             <div className="questions-section">
                                                 <div className="section-header">
                                                     <h4>Questions List</h4>
-                                                    <button type="button" className="btn btn--accent" onClick={addQuestionNode} style={{ padding: '4px 10px', fontSize: '11px' }}>+ Add Question</button>
+                                                    <LiquidButton type="button" className="liquid-btn--accent" onClick={addQuestionNode} style={{ padding: '5px 14px', fontSize: '12px' }}>＋ Add Question</LiquidButton>
                                                 </div>
 
                                                 {quizQuestions.map((q, idx) => (
@@ -1120,8 +1150,8 @@ export default function TeacherCourse() {
                                             </div>
 
                                             <div className="modal-actions">
-                                                <button type="button" className="btn" onClick={() => setShowQuizModal(false)}>Cancel</button>
-                                                <button type="submit" className="btn btn--accent">Generate Quiz</button>
+                                                <LiquidButton type="button" onClick={() => setShowQuizModal(false)}>Cancel</LiquidButton>
+                                                <LiquidButton type="submit" className="liquid-btn--accent">🚀 Generate Quiz</LiquidButton>
                                             </div>
                                         </form>
                                     </div>
@@ -1143,8 +1173,8 @@ export default function TeacherCourse() {
                                                 <textarea value={gradingFeedback} onChange={(e) => setGradingFeedback(e.target.value)} />
                                             </div>
                                             <div className="modal-actions">
-                                                <button type="button" className="btn" onClick={() => setGradingSubId(null)}>Cancel</button>
-                                                <button type="submit" className="btn btn--accent">Save Grade</button>
+                                                <LiquidButton type="button" onClick={() => setGradingSubId(null)}>Cancel</LiquidButton>
+                                                <LiquidButton type="submit" className="liquid-btn--accent">✔ Save Grade</LiquidButton>
                                             </div>
                                         </form>
                                     </div>
@@ -1220,7 +1250,7 @@ export default function TeacherCourse() {
                                         </div>
 
                                         <div className="modal-actions" style={{ marginTop: '20px' }}>
-                                            <button type="button" className="btn btn--accent" onClick={() => setShowAnswersModal(false)}>Close Paper</button>
+                                            <LiquidButton type="button" className="liquid-btn--accent" onClick={() => setShowAnswersModal(false)}>Close Paper</LiquidButton>
                                         </div>
                                     </div>
                                 </div>
@@ -1257,8 +1287,8 @@ export default function TeacherCourse() {
                                                 </div>
                                             </div>
                                             <div className="modal-actions">
-                                                <button type="button" className="btn" onClick={() => setShowEditQuizModal(false)}>Cancel</button>
-                                                <button type="submit" className="btn btn--accent">Save Changes</button>
+                                                <LiquidButton type="button" onClick={() => setShowEditQuizModal(false)}>Cancel</LiquidButton>
+                                                <LiquidButton type="submit" className="liquid-btn--accent">✔ Save Changes</LiquidButton>
                                             </div>
                                         </form>
                                     </div>
@@ -1283,7 +1313,7 @@ export default function TeacherCourse() {
                                             <div className="questions-section">
                                                 <div className="section-header">
                                                     <h4>Questions List</h4>
-                                                    <button type="button" className="btn btn--accent" onClick={addFeedbackQuestionNode} style={{ padding: '4px 10px', fontSize: '11px' }}>+ Add Question</button>
+                                                    <LiquidButton type="button" className="liquid-btn--accent" onClick={addFeedbackQuestionNode} style={{ padding: '5px 14px', fontSize: '12px' }}>＋ Add Question</LiquidButton>
                                                 </div>
 
                                                 {feedbackQuestions.map((q, idx) => (
@@ -1315,8 +1345,8 @@ export default function TeacherCourse() {
                                             </div>
 
                                             <div className="modal-actions">
-                                                <button type="button" className="btn" onClick={() => setShowFeedbackModal(false)}>Cancel</button>
-                                                <button type="submit" className="btn btn--accent">Generate Survey</button>
+                                                <LiquidButton type="button" onClick={() => setShowFeedbackModal(false)}>Cancel</LiquidButton>
+                                                <LiquidButton type="submit" className="liquid-btn--accent">🚀 Generate Survey</LiquidButton>
                                             </div>
                                         </form>
                                     </div>
@@ -1361,7 +1391,7 @@ export default function TeacherCourse() {
                                         </div>
 
                                         <div className="modal-actions" style={{ marginTop: '20px' }}>
-                                            <button type="button" className="btn btn--accent" onClick={() => setShowFeedbackAnswersModal(false)}>Close Answers</button>
+                                            <LiquidButton type="button" className="liquid-btn--accent" onClick={() => setShowFeedbackAnswersModal(false)}>Close Answers</LiquidButton>
                                         </div>
                                     </div>
                                 </div>

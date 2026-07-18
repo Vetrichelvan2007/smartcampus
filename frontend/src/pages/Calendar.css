@@ -4,12 +4,28 @@
 }
 
 .calendar-page-content .glass {
-    background: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 22px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 12px 40px rgba(0, 0, 0, 0.35);
+    position: relative;
+    overflow: hidden;
+}
+.calendar-page-content .glass::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        145deg,
+        rgba(255,255,255,0.10) 0%,
+        rgba(255,255,255,0.03) 20%,
+        rgba(255,255,255,0.01) 50%,
+        rgba(255,255,255,0.05) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
 }
 
 .calendar-page-content .container-body {
@@ -171,11 +187,13 @@
     min-height: 80px;
     padding: 8px;
     border-radius: 12px;
-    background: rgba(10, 14, 27, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(10, 14, 27, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
     font-size: 13px;
     position: relative;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2;
 }
 
 .calendar-cell.day {
@@ -183,24 +201,38 @@
 }
 
 .calendar-cell.day:hover {
-    background: rgba(99, 102, 241, 0.1);
-    border-color: rgba(99, 102, 241, 0.2);
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 8px 20px rgba(0, 0, 0, 0.3),
+        0 0 15px rgba(255, 255, 255, 0.05);
 }
 
 .calendar-cell.day.today {
-    border: 1px solid rgba(99, 102, 241, 0.5);
-    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(6, 182, 212, 0.5);
+    background: rgba(6, 182, 212, 0.1);
+    animation: cyanPulse 2.5s infinite alternate;
+}
+
+@keyframes cyanPulse {
+    0% { box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.1), 0 0 5px rgba(6, 182, 212, 0.2); }
+    100% { box-shadow: inset 0 0 20px rgba(6, 182, 212, 0.3), 0 0 15px rgba(6, 182, 212, 0.4); }
 }
 
 .calendar-cell.day.today .cell-num {
-    color: #a5b4fc;
+    color: var(--color-accent);
     font-weight: 700;
+    text-shadow: 0 0 8px var(--color-accent);
 }
 
 .calendar-cell.day.selected {
-    border-color: rgba(99, 102, 241, 0.7);
-    background: rgba(99, 102, 241, 0.2);
+    border-color: var(--color-primary);
+    background: rgba(99, 102, 241, 0.15);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 20px rgba(99, 102, 241, 0.3);
 }
 
 .cell-num {
@@ -220,11 +252,12 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
+    box-shadow: 0 0 8px currentColor;
 }
 
-.dot-indicator.academic { background: #6366f1; }
-.dot-indicator.institutional { background: #ec4899; }
-.dot-indicator.event { background: #06b6d4; }
+.dot-indicator.academic { background: var(--color-primary); color: var(--color-primary); }
+.dot-indicator.institutional { background: var(--color-pink); color: var(--color-pink); }
+.dot-indicator.event { background: var(--color-accent); color: var(--color-accent); }
 
 /* ── EVENT DETAILS PANEL ── */
 .event-details-panel {
@@ -266,13 +299,32 @@
 }
 
 .event-details-card {
-    background: rgba(10, 14, 27, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 4px solid rgba(255, 255, 255, 0.1); /* Overridden inline by type */
     border-radius: 12px;
     padding: 14px;
     display: flex;
     flex-direction: column;
     gap: 6px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+.event-details-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 255, 255, 0.05);
+}
+.event-details-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(255,255,255,0.05) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .event-details-card h4 {

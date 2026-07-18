@@ -133,14 +133,78 @@ export default function Feedback() {
         }
     };
 
+    // 3D Perspective mouse tilt tracker
+    const handleCardMouseMove = (e) => {
+        const card = e.currentTarget;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -5;
+        const rotateY = ((x - centerX) / centerX) * 5;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+    };
+
+    const handleCardMouseLeave = (e) => {
+        const card = e.currentTarget;
+        card.style.transform = '';
+    };
+
     return (
         <DashboardLayout role="student">
             <div className="feedback-page-content">
+                
+                {/* Cyberpunk background decorations */}
+                <div className="feedback-decorations" aria-hidden="true">
+                    <div className="decor-orb decor-orb--left"></div>
+                    <div className="decor-orb decor-orb--right"></div>
+                    <div className="decor-particles--left">
+                        <span className="p-dot p-dot-1"></span>
+                        <span className="p-dot p-dot-2"></span>
+                        <span className="p-dot p-dot-3"></span>
+                        <span className="p-dot p-dot-4"></span>
+                        <span className="p-dot p-dot-5"></span>
+                        <span className="p-dot p-dot-6"></span>
+                        <span className="p-dot p-dot-7"></span>
+                        <span className="p-dot p-dot-8"></span>
+                    </div>
+                    <div className="decor-lines--right">
+                        <svg className="holo-wave-svg" viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg">
+                            <path className="wave-path path-1" d="M 0 200 C 150 100, 350 300, 500 200 C 650 100, 850 300, 1000 200" fill="none" stroke="url(#holo-grad-1)" strokeWidth="2" />
+                            <path className="wave-path path-2" d="M 0 220 C 200 120, 300 280, 500 220 C 700 160, 800 320, 1000 220" fill="none" stroke="url(#holo-grad-2)" strokeWidth="1.5" />
+                            <path className="wave-path path-3" d="M 0 180 C 100 260, 400 120, 500 180 C 600 240, 900 100, 1000 180" fill="none" stroke="url(#holo-grad-3)" strokeWidth="1" />
+                            <defs>
+                                <linearGradient id="holo-grad-1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stopColor="rgba(0, 229, 255, 0)" />
+                                    <stop offset="50%" stopColor="rgba(0, 229, 255, 0.25)" />
+                                    <stop offset="100%" stopColor="rgba(0, 229, 255, 0)" />
+                                </linearGradient>
+                                <linearGradient id="holo-grad-2" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stopColor="rgba(124, 77, 255, 0)" />
+                                    <stop offset="50%" stopColor="rgba(124, 77, 255, 0.2)" />
+                                    <stop offset="100%" stopColor="rgba(124, 77, 255, 0)" />
+                                </linearGradient>
+                                <linearGradient id="holo-grad-3" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stopColor="rgba(255, 79, 216, 0)" />
+                                    <stop offset="50%" stopColor="rgba(255, 79, 216, 0.15)" />
+                                    <stop offset="100%" stopColor="rgba(255, 79, 216, 0)" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+
                 {error && <div className="error-banner">{error}</div>}
                 {successMsg && <div className="success-banner">{successMsg}</div>}
 
                 {loading ? (
                     <div className="loading-state">
+                        <div className="spinner-glow"></div>
                         <h2>Loading feedback surveys...</h2>
                     </div>
                 ) : (
@@ -153,15 +217,18 @@ export default function Feedback() {
                             
                             {forms.length > 0 ? (
                                 <div className="surveys-grid">
-                                    {forms.map(f => (
+                                    {forms.map((f, i) => (
                                         <div
                                             key={f.formId}
                                             className={`survey-item-card ${activeForm === f.formId ? 'active' : ''}`}
                                             onClick={() => !f.submitted && handleSelectForm(f.formId)}
+                                            onMouseMove={handleCardMouseMove}
+                                            onMouseLeave={handleCardMouseLeave}
+                                            style={{ animationDelay: `${i * 0.05}s` }}
                                         >
                                             <div className="item-meta">
                                                 <span className="course-code">{f.courseCode}</span>
-                                                <span className={`badge ${f.submitted ? 'badge--live' : 'badge--closed'}`}>
+                                                <span className={`badge ${f.submitted ? 'badge--closed' : 'badge--live'}`}>
                                                     {f.submitted ? 'Completed' : 'Pending'}
                                                 </span>
                                             </div>
@@ -182,10 +249,11 @@ export default function Feedback() {
                         </div>
 
                         {/* Right Column: Active Question Form Sheet */}
-                        <div className="glass survey-question-panel">
+                        <div className={`glass survey-question-panel ${activeForm ? 'has-active' : ''}`}>
                             {activeForm ? (
                                 loadingForm ? (
                                     <div className="loading-state">
+                                        <div className="spinner-glow"></div>
                                         <h3>Loading questions...</h3>
                                     </div>
                                 ) : (
@@ -261,7 +329,7 @@ export default function Feedback() {
                                             <div className="form-footer-action">
                                                 <button
                                                     type="submit"
-                                                    className="btn btn--accent btn-submit-feedback"
+                                                    className="liquid-btn btn-submit-feedback"
                                                     disabled={submitting}
                                                 >
                                                     {submitting ? 'Submitting Responses...' : 'Submit Feedback'}

@@ -51,7 +51,7 @@ export default function Classroom() {
         return matchesSem && matchesQuery;
     });
 
-    /* ── Coordinate Tracker for Pixel Hover grid ── */
+    /* ── Coordinate Tracker for Pixel Hover & 3D Tilt ── */
     const handleCardMouseMove = (e) => {
         const card = e.currentTarget;
         const rect = card.getBoundingClientRect();
@@ -59,6 +59,18 @@ export default function Classroom() {
         const y = e.clientY - rect.top;
         card.style.setProperty('--mouse-x', `${x}px`);
         card.style.setProperty('--mouse-y', `${y}px`);
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -10; // Max 10 deg tilt
+        const rotateY = ((x - centerX) / centerX) * 10;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    };
+
+    const handleCardMouseLeave = (e) => {
+        const card = e.currentTarget;
+        card.style.transform = '';
     };
 
     /* ── Magnetic Hover on Semester Buttons ── */
@@ -199,8 +211,8 @@ export default function Classroom() {
 
                                     if (bgImage) {
                                         style.backgroundImage = `
-                                            linear-gradient(135deg, rgba(4, 10, 25, 0.72) 0%, rgba(16, 25, 53, 0.72) 100%),
-                                            linear-gradient(135deg, rgba(0, 229, 255, 0.12) 0%, rgba(124, 77, 255, 0.12) 100%),
+                                            linear-gradient(135deg, rgba(6, 8, 22, 0.72) 0%, rgba(15, 23, 42, 0.72) 100%),
+                                            linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(99, 102, 241, 0.12) 100%),
                                             url(${bgImage})
                                         `;
                                         style.backgroundSize = 'cover';
@@ -211,9 +223,10 @@ export default function Classroom() {
                                         <Link
                                             key={course.courseCode}
                                             to={`/student-classroom/${course.courseCode}`}
-                                            className={`course-card show ${bgImage ? 'has-bg' : ''}`}
+                                            className={`course-card liquid-glass show ${bgImage ? 'has-bg' : ''}`}
                                             style={style}
                                             onMouseMove={handleCardMouseMove}
+                                            onMouseLeave={handleCardMouseLeave}
                                         >
                                             <div className="pixel-grid-hover" aria-hidden="true"></div>
                                             <div className="card-overlay" aria-hidden="true"></div>
